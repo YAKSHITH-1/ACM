@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════
-   STARS BACKGROUND ENGINE
+       BACKGROUND ENGINE
    Vanilla JS port of the React StarsBackground component.
    Three animated layers + spring-eased mouse parallax.
    Fully theme-aware (dark = white stars, light = teal/amber).
@@ -42,7 +42,7 @@
   function buildLayers() {
     const colors = getStarColors();
     const isLight = document.documentElement.classList.contains("light-theme") || document.body.classList.contains("light-theme");
-    
+
     if (isLight) {
       particles = [];
       for (let i = 0; i < 6; i++) {
@@ -99,16 +99,18 @@
     springY += velY;
 
     const isLight = document.documentElement.classList.contains("light-theme") || document.body.classList.contains("light-theme");
-    
+
     if (isLight) {
+      // Use CSS filter for hardware acceleration instead of CPU-heavy ctx.filter
+      if (canvas.style.filter !== 'blur(160px)') canvas.style.filter = 'blur(160px)';
+
       // Draw Animated Gradient Mesh
-      ctx.filter = 'blur(160px)';
       ctx.globalAlpha = 0.45; // Slightly more visible
       for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        
+
         // Soft bounce off edges
         if (p.x < -p.radius) p.vx = Math.abs(p.vx);
         if (p.x > W + p.radius) p.vx = -Math.abs(p.vx);
@@ -124,9 +126,9 @@
         ctx.fillStyle = p.color;
         ctx.fill();
       }
-      ctx.filter = 'none';
       ctx.globalAlpha = 1.0;
     } else {
+      if (canvas.style.filter !== 'none' && canvas.style.filter !== '') canvas.style.filter = 'none';
       layers.forEach((layer) => {
         // Scroll offset for this layer (continuous vertical drift)
         layer.offset = (layer.offset + layer.speed) % H;
@@ -530,7 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (announcements.length) {
       list.innerHTML = announcements.map((ann, index) => {
         const cat = escapeHtml(ann.category);
-        
+
         let iconSvg = '';
         if (cat === "event") {
           iconSvg = `<svg class="announcement-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2l.5-.5"></path><path d="M12 15l-3-3a22 22 0 0 1 3.86-8.86c.86-1.14 2.14-2.14 3.14-2.14 1 0 2 1 2 2 0 1-1 2.28-2.14 3.14A22 22 0 0 1 15 12z"></path></svg>`;

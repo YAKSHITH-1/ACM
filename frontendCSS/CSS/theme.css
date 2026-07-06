@@ -1,7 +1,7 @@
 /* 
    Vibrant & Block-Based Global Theme for ACM JIT 
 */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+/* Space Grotesk font imported in HTML for better performance */
 
 :root {
   /* DARK THEME (Default) */
