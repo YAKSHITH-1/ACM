@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /assets/
+Disallow: /CSS/
+
+Sitemap: https://acmjyothy.onrender.com/sitemap.xml
