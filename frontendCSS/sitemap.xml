@@ -6,11 +6,6 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://acmjyothy.onrender.com/index.html</loc>
-    <priority>0.9</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
     <loc>https://acmjyothy.onrender.com/events.html</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
