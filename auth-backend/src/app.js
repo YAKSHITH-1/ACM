@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/auth.routes.js";
 import eventRoutes from "./routes/event.routes.js";
@@ -14,9 +16,14 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 dotenv.config();
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Trust the reverse proxy (required for Render so rate-limiting works correctly)
 app.set("trust proxy", 1);
+
+// Serve static files from the root directory (for Google verification file and frontend)
+app.use(express.static(path.join(__dirname, "../../")));
+app.use(express.static(path.join(__dirname, "../../frontendCSS")));
 
 app.use(express.json());
 
