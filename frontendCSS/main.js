@@ -101,32 +101,9 @@
     const isLight = document.documentElement.classList.contains("light-theme") || document.body.classList.contains("light-theme");
 
     if (isLight) {
-      // Use CSS filter for hardware acceleration instead of CPU-heavy ctx.filter
-      if (canvas.style.filter !== 'blur(160px)') canvas.style.filter = 'blur(160px)';
-
-      // Draw Animated Gradient Mesh
-      ctx.globalAlpha = 0.45; // Slightly more visible
-      for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Soft bounce off edges
-        if (p.x < -p.radius) p.vx = Math.abs(p.vx);
-        if (p.x > W + p.radius) p.vx = -Math.abs(p.vx);
-        if (p.y < -p.radius) p.vy = Math.abs(p.vy);
-        if (p.y > H + p.radius) p.vy = -Math.abs(p.vy);
-
-        // Apply mouse parallax to the glowing blobs too
-        const drawX = p.x + springX * 5;
-        const drawY = p.y + springY * 5;
-
-        ctx.beginPath();
-        ctx.arc(drawX, drawY, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1.0;
+      // Voronoi WebGL canvas handles light-mode background — skip gradient mesh
+      animFrame = requestAnimationFrame(draw);
+      return;
     } else {
       if (canvas.style.filter !== 'none' && canvas.style.filter !== '') canvas.style.filter = 'none';
       layers.forEach((layer) => {

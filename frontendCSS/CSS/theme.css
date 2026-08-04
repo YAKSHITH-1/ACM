@@ -30,11 +30,11 @@ body.light-theme, .light-theme:root {
   --v-primary: #047857;
   --v-secondary: #34D399;
   --v-cta: #F59E0B;
-  --v-bg: #ECFDF5;
+  --v-bg: transparent; /* transparent so voronoi WebGL canvas shows through */
   --v-text: #064E3B;
   --v-white: #ffffff;
   --v-black: #0f172a;
-  --v-card-bg: #D1FAE5;
+  --v-card-bg: rgba(209, 250, 229, 0.85); /* semi-transparent for slight frosted look */
   
   --block-border: 2px solid var(--v-text);
   --block-shadow: 6px 6px 0px var(--v-text);

@@ -14,3 +14,30 @@
      without touching any other element's positioning */
   z-index: -1;
 }
+
+/* ══════════════════════════════════════
+   Voronoi WebGL Background Canvas
+   Light-theme only — replaces gradient mesh
+   ══════════════════════════════════════ */
+
+#voronoi-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  display: none; /* hidden in dark mode (default) */
+}
+
+/* Light theme: show voronoi, hide stars */
+.light-theme #voronoi-canvas,
+body.light-theme #voronoi-canvas {
+  display: block;
+}
+
+.light-theme #stars-canvas,
+body.light-theme #stars-canvas {
+  display: none !important;
+}
