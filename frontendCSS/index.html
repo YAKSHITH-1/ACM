@@ -62,45 +62,6 @@
   </div>
 
   <div class="bg-overlay"></div>
-  <div class="roadmap-space global-space-bg">
-    <!-- UFO -->
-    <svg class="roadmap-ufo" viewBox="0 0 100 100" style="width: 70px; height: 70px; left: 50vw; top: 10vh;">
-      <path d="M30 50 Q50 15 70 50" />
-      <ellipse cx="50" cy="50" rx="40" ry="12" />
-      <circle cx="30" cy="52" r="3" fill="currentColor" opacity="0.8" stroke="none" />
-      <circle cx="50" cy="54" r="3" fill="currentColor" opacity="0.8" stroke="none" />
-      <circle cx="70" cy="52" r="3" fill="currentColor" opacity="0.8" stroke="none" />
-    </svg>
-    <!-- Satellite -->
-    <svg class="roadmap-satellite" viewBox="0 0 100 100"
-      style="width: 60px; height: 60px; left: 80vw; top: 20vh; transform: rotate(15deg);">
-      <rect x="10" y="35" width="30" height="15" />
-      <rect x="60" y="35" width="30" height="15" />
-      <rect x="40" y="30" width="20" height="30" />
-      <line x1="50" y1="30" x2="50" y2="10" />
-      <path d="M35 10 Q50 0 65 10" />
-    </svg>
-    <!-- Astronaut Helmet -->
-    <svg class="roadmap-helmet" viewBox="0 0 100 100" style="width: 50px; height: 50px; left: 30vw; top: 80vh;">
-      <circle cx="50" cy="50" r="30" />
-      <path d="M28 45 Q50 25 72 45 Q75 60 50 65 Q25 60 28 45 Z" />
-      <path d="M50 80 Q65 95 85 85" />
-    </svg>
-    <!-- Rocket -->
-    <svg class="roadmap-rocket" viewBox="0 0 100 100"
-      style="width: 65px; height: 65px; left: 15vw; top: 75vh; transform: rotate(45deg);">
-      <path d="M50 10 C 70 30, 65 70, 50 80 C 35 70, 30 30, 50 10 Z" />
-      <path d="M38 60 L 20 80 L 42 75 Z" />
-      <path d="M62 60 L 80 80 L 58 75 Z" />
-      <circle cx="50" cy="40" r="8" />
-      <path d="M42 80 Q50 100 58 80 Z" />
-    </svg>
-    <!-- Galaxy -->
-    <svg class="roadmap-galaxy" viewBox="0 0 100 100" style="width: 65px; height: 65px; left: 85vw; top: 70vh;">
-      <path d="M50 50 C 50 30, 75 30, 75 50 C 75 75, 25 75, 25 50 C 25 15, 85 15, 85 50" />
-      <circle cx="50" cy="50" r="4" fill="currentColor" opacity="0.9" stroke="none" />
-    </svg>
-  </div>
   <div id="global-navbar"></div>
 
   <main>
@@ -140,20 +101,10 @@
               <div class="hero-card hero-card-main block-code-card" id="hero-roadmap-container"
                 style="padding: 0; height: 380px; position: relative; background: transparent !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important;">
                 <div class="roadmap-card" id="animated-roadmap">
-                  <!-- Space elements moved to global background -->
-                  <div class="roadmap-contours"></div>
                   <div class="roadmap-badge">Roadmap 2026</div>
-
-                  <div class="roadmap-particle"></div>
-                  <div class="roadmap-particle"></div>
-                  <div class="roadmap-particle"></div>
-                  <div class="roadmap-particle"></div>
-                  <div class="roadmap-particle"></div>
 
                   <svg class="roadmap-svg" viewBox="0 0 800 380" preserveAspectRatio="none">
                     <path class="roadmap-path-bg" d="M 60 120 Q 200 -20 350 150 Q 500 300 600 220 T 760 260" />
-                    <path class="roadmap-path-glow" id="roadmap-glow"
-                      d="M 60 120 Q 200 -20 350 150 Q 500 300 600 220 T 760 260" />
                     <path class="roadmap-path-active" id="roadmap-path"
                       d="M 60 120 Q 200 -20 350 150 Q 500 300 600 220 T 760 260" />
                   </svg>
@@ -161,7 +112,6 @@
                   <div class="milestone milestone--complete" data-delay="1" style="top: 27.3%; left: 5.5%;">
                     <div class="milestone-dot-wrap">
                       <div class="milestone-dot"></div>
-                      <div class="milestone-dot-ring"></div>
                     </div>
                     <div class="milestone-label">Kick-off</div>
                   </div>
@@ -169,7 +119,6 @@
                   <div class="milestone milestone--complete" data-delay="2" style="top: 20.6%; left: 34.3%;">
                     <div class="milestone-dot-wrap">
                       <div class="milestone-dot"></div>
-                      <div class="milestone-dot-ring"></div>
                     </div>
                     <div class="milestone-label">Design</div>
                   </div>
@@ -178,7 +127,6 @@
                     style="top: 60.8%; left: 62.0%;">
                     <div class="milestone-dot-wrap">
                       <div class="milestone-dot"></div>
-                      <div class="milestone-dot-ring"></div>
                     </div>
                     <div class="milestone-label">Development</div>
                   </div>
@@ -187,11 +135,9 @@
                     style="top: 64.73%; left: 93.25%;">
                     <div class="milestone-dot-wrap">
                       <div class="milestone-dot"></div>
-                      <div class="milestone-dot-ring"></div>
                     </div>
                     <div class="milestone-label">Launch</div>
                   </div>
-
 
                 </div>
 
@@ -627,9 +573,7 @@
       if (!roadmap) return;
 
       const pathEl = document.getElementById('roadmap-path');
-      const glowEl = document.getElementById('roadmap-glow');
       const milestones = roadmap.querySelectorAll('.milestone');
-      const particles = roadmap.querySelectorAll('.roadmap-particle');
 
       // Get total path length for dash animation
       let totalLength = 0;
@@ -638,25 +582,17 @@
         pathEl.style.strokeDasharray = totalLength;
         pathEl.style.strokeDashoffset = totalLength;
       }
-      if (glowEl && totalLength) {
-        glowEl.style.strokeDasharray = totalLength;
-        glowEl.style.strokeDashoffset = totalLength;
-      }
 
       if (pathEl) {
         pathEl.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
-      }
-      if (glowEl && totalLength) {
-        glowEl.style.transition = 'stroke-dashoffset 2.5s ease-in-out';
       }
 
       // Auto path drawing on load
       setTimeout(() => {
         if (pathEl) pathEl.style.strokeDashoffset = 0;
-        if (glowEl) glowEl.style.strokeDashoffset = 0;
       }, 500);
 
-      // IntersectionObserver for milestones & particles
+      // IntersectionObserver for milestones
       const milestoneObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -666,14 +602,12 @@
       }, { threshold: 0.3 });
 
       milestones.forEach(m => milestoneObserver.observe(m));
-      particles.forEach(p => milestoneObserver.observe(p));
 
       // Also trigger milestones when the roadmap card enters viewport
       const cardObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             milestones.forEach(m => m.classList.add('is-visible'));
-            particles.forEach(p => p.classList.add('is-visible'));
             cardObserver.unobserve(entry.target);
           }
         });
@@ -683,7 +617,6 @@
       // Initial state
       if (pathEl && totalLength) {
         pathEl.style.strokeDashoffset = totalLength;
-        if (glowEl) glowEl.style.strokeDashoffset = totalLength;
       }
     })();
   </script>

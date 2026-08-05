@@ -269,6 +269,18 @@ p, .hero-desc, .section-subtitle, .domain-desc, .feature-text, .cta-desc, .page-
   box-shadow: 10px 10px 0px var(--v-text) !important;
 }
 
+/* Roadmap container — undo block-code-card rotation & harsh shadows */
+#hero-roadmap-container.block-code-card {
+  transform: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+#hero-roadmap-container.block-code-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 .mac-window-header {
   display: flex;
   gap: 8px;
@@ -301,24 +313,30 @@ p, .hero-desc, .section-subtitle, .domain-desc, .feature-text, .cta-desc, .page-
 .token-function { color: #6EE7B7; }
 .token-operator { color: #FF7B72; }
 
-/* Float Cards */
+/* Float Cards — soft, no harsh offset shadows */
 .hero-card-float-1, .hero-card-float-2 {
   background: var(--v-card-bg) !important;
-  border: var(--block-border) !important;
-  border-radius: var(--block-radius) !important;
-  box-shadow: var(--block-shadow) !important;
+  border: 1px solid color-mix(in srgb, var(--v-text) 20%, transparent) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
   color: var(--v-text) !important;
 }
 
+body.light-theme .hero-card-float-1,
+body.light-theme .hero-card-float-2 {
+  border-color: rgba(6, 78, 59, 0.12) !important;
+  box-shadow: 0 10px 30px rgba(6, 78, 59, 0.1) !important;
+}
+
 .hero-card-float-1 {
-  transform: rotate(-3deg) translate(-20px, 30px) !important;
   z-index: 11;
   background: var(--v-cta) !important;
   color: var(--v-white) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22) !important;
 }
 
-.hero-card-float-1:hover, .hero-card-float-2:hover {
-  transform: rotate(0deg) !important;
+body.light-theme .hero-card-float-1 {
+  box-shadow: 0 10px 26px rgba(180, 83, 9, 0.15) !important;
 }
 
 .float-card-label {
@@ -570,18 +588,10 @@ body.light-theme select::placeholder {
 }
 
 /* Space Cards (Announcements) in Light Theme */
+/* Full soft design lives in announcements.css (loaded after theme.css).
+   Only a baseline is kept here — no brutalist borders/offset shadows. */
 body.light-theme .space-card {
-  background: var(--v-card-bg) !important;
-  border: var(--block-border) !important;
-  box-shadow: var(--block-shadow) !important;
   color: var(--v-text) !important;
-}
-body.light-theme .space-card:hover {
-  background: var(--v-primary) !important;
-  box-shadow: var(--block-shadow-hover) !important;
-}
-body.light-theme .space-card:hover * {
-  color: var(--v-white) !important;
 }
 
 /* Domain & Feature Cards Accent Icons & Stat Colors in Light Theme */

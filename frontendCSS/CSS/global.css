@@ -2691,15 +2691,14 @@ img {
 }
 
 .hero-card-float-1 {
-  top: -8%;
-  right: -5%;
-  width: 35%;
+  top: -4%;
+  right: 2%;
+  width: 34%;
   z-index: 4;
   padding: 0.8rem;
   background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(34, 211, 238, 0.15);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: floatCard1 6s ease-in-out infinite;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .hero-card-float-2 {
@@ -2711,31 +2710,6 @@ img {
   background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(139, 92, 246, 0.15);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: floatCard2 7s ease-in-out infinite;
-}
-
-@keyframes floatCard1 {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes floatCard2 {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(6px);
-  }
 }
 
 .float-card-label {

@@ -1,0 +1,391 @@
+/* ══════════════════════════════════════════════════════════
+   ANNOUNCEMENTS — "Chapter Bulletin" editorial feed
+   Soft, human-curated journal aesthetic: category-tinted
+   accents, ghosted index numbers, gentle blur shadows.
+   Loaded after theme.css; covers dark + light themes.
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Page header: editorial kicker + adaptive hairline ── */
+.ann-page-header {
+  position: relative;
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--v-text) 16%, transparent);
+}
+
+.ann-page-header .label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ann-page-header .label::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cyan-300), color-mix(in srgb, var(--cyan-300) 25%, transparent));
+}
+
+body.light-theme .ann-page-header .label { color: #0e7490; }
+body.light-theme .ann-page-header .label::before {
+  background: linear-gradient(90deg, #0891b2, rgba(8, 145, 178, 0.25));
+}
+
+/* ── Live badge — soft pulse ── */
+.badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.9rem;
+  background: color-mix(in srgb, var(--emerald-300, #34d399) 12%, #0B0F0D);
+  border: 1px solid color-mix(in srgb, var(--emerald-300, #34d399) 25%, #0B0F0D);
+}
+
+.badge-live::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: annPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes annPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.72); }
+}
+
+/* ── Feed grid ── */
+.announcements-grid {
+  counter-reset: ann;
+  gap: 1.25rem;
+}
+
+/* ── Announcement card ── */
+.space-card {
+  --ann-accent: #22d3ee;
+
+  position: relative;
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.5rem 1.5rem 1.5rem 1.6rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, #17241D, #111A16);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  counter-increment: ann;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+}
+
+/* category accents (admin values) */
+.space-card.cyan     { --ann-accent: #22d3ee; }
+.space-card.violet   { --ann-accent: #a78bfa; }
+.space-card.emerald  { --ann-accent: #34d399; }
+.space-card.rose     { --ann-accent: #fb7185; }
+/* legacy category names */
+.space-card.general  { --ann-accent: #22d3ee; }
+.space-card.event    { --ann-accent: #a78bfa; }
+.space-card.alert    { --ann-accent: #fb7185; }
+
+/* beat any legacy global.css category icon colors */
+.space-card.general .space-icon-wrapper,
+.space-card.event .space-icon-wrapper,
+.space-card.alert .space-icon-wrapper {
+  color: var(--ann-accent);
+  border-color: color-mix(in srgb, var(--ann-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--ann-accent) 12%, transparent);
+}
+
+/* soft ribbon edge in the category colour */
+.space-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--ann-accent), color-mix(in srgb, var(--ann-accent) 18%, #111A16));
+}
+
+/* ghosted editorial index number */
+.space-card::before {
+  content: counter(ann, decimal-leading-zero);
+  position: absolute;
+  top: 0.85rem;
+  right: 1.1rem;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ann-accent);
+  opacity: 0.13;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* hover — soft lift + category glow */
+.space-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--ann-accent) 32%, #111A16);
+  box-shadow:
+    0 18px 40px color-mix(in srgb, var(--ann-accent) 16%, transparent),
+    0 6px 18px rgba(0, 0, 0, 0.26);
+}
+
+/* entrance — gentle blur lift */
+.announcements-grid.visible .space-card {
+  animation: annLiftIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes annLiftIn {
+  from { opacity: 0; transform: translateY(26px); filter: blur(5px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+/* ── Category medallion ── */
+.space-icon-wrapper {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ann-accent) 12%, #111A16);
+  border: 1px solid color-mix(in srgb, var(--ann-accent) 30%, #111A16);
+  color: var(--ann-accent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.space-card:hover .space-icon-wrapper {
+  transform: scale(1.07);
+  background: color-mix(in srgb, var(--ann-accent) 18%, #111A16);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--ann-accent) 26%, transparent);
+}
+
+.announcement-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+/* ── Card content ── */
+.space-content {
+  position: relative;
+  z-index: 1;
+  gap: 0.55rem;
+}
+
+.item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* category pill badge — inherits the card accent */
+.space-card .item-badge {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--ann-accent) 12%, #111A16);
+  color: var(--ann-accent);
+  border: 1px solid color-mix(in srgb, var(--ann-accent) 26%, #111A16);
+}
+
+.item-time {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--v-text);
+  opacity: 0.55;
+}
+
+.item-title {
+  margin-top: 0.45rem;
+  font-size: 1.32rem;
+  font-weight: 800;
+  color: var(--v-text);
+  line-height: 1.3;
+}
+
+.item-body {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--v-text);
+  opacity: 0.72;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════════════════ */
+.ann-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.ann-side-title {
+  font-size: 1.05rem;
+  margin-bottom: 0.9rem;
+}
+
+.ann-side-title--spaced {
+  margin-top: 2.25rem;
+}
+
+.ann-side-card {
+  padding: 1.4rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, #17241D, #111A16);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+}
+
+/* category legend */
+.ann-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.ann-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ann-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-cyan    { background: #22d3ee; box-shadow: 0 0 10px rgba(34, 211, 238, 0.45); }
+.dot-violet  { background: #a78bfa; box-shadow: 0 0 10px rgba(167, 139, 250, 0.45); }
+.dot-emerald { background: #34d399; box-shadow: 0 0 10px rgba(52, 211, 153, 0.45); }
+.dot-rose    { background: #fb7185; box-shadow: 0 0 10px rgba(251, 113, 133, 0.45); }
+
+.ann-legend-label {
+  color: var(--v-text);
+  font-weight: 600;
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+/* activity stats */
+.ann-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.ann-stat-tile {
+  --ann-accent: #34d399;
+  text-align: center;
+  padding: 1.1rem 0.4rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ann-accent) 10%, #111A16);
+  border: 1px solid color-mix(in srgb, var(--ann-accent) 16%, #111A16);
+}
+
+.ann-stat-tile.num-cyan   { --ann-accent: #22d3ee; }
+.ann-stat-tile.num-violet { --ann-accent: #a78bfa; }
+
+.ann-stat-number {
+  display: block;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ann-accent);
+}
+
+.ann-stat-label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--v-text);
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIGHT THEME
+   ══════════════════════════════════════════════════════════ */
+body.light-theme .space-card,
+body.light-theme .ann-side-card {
+  border-color: rgba(6, 78, 59, 0.14);
+  border-top-color: rgba(6, 78, 59, 0.2);
+  background: linear-gradient(180deg, #FFFFFF, #E9F7EF);
+  box-shadow: 0 6px 24px rgba(6, 78, 59, 0.09);
+}
+
+body.light-theme .space-card.cyan     { --ann-accent: #0891b2; }
+body.light-theme .space-card.violet   { --ann-accent: #7c3aed; }
+body.light-theme .space-card.emerald  { --ann-accent: #047857; }
+body.light-theme .space-card.rose     { --ann-accent: #e11d48; }
+
+body.light-theme .space-card:hover {
+  border-color: color-mix(in srgb, var(--ann-accent) 32%, #FFFFFF);
+  box-shadow:
+    0 18px 40px color-mix(in srgb, var(--ann-accent) 18%, transparent),
+    0 6px 18px rgba(6, 78, 59, 0.1);
+}
+
+body.light-theme .space-card::before { opacity: 0.16; }
+
+body.light-theme .space-icon-wrapper {
+  background: color-mix(in srgb, var(--ann-accent) 10%, #FFFFFF);
+  border-color: color-mix(in srgb, var(--ann-accent) 28%, #FFFFFF);
+}
+
+body.light-theme .item-time { opacity: 0.6; }
+
+body.light-theme .dot-cyan    { background: #0891b2; box-shadow: 0 0 8px rgba(8, 145, 178, 0.3); }
+body.light-theme .dot-violet  { background: #7c3aed; box-shadow: 0 0 8px rgba(124, 58, 237, 0.3); }
+body.light-theme .dot-emerald { background: #047857; box-shadow: 0 0 8px rgba(4, 120, 87, 0.3); }
+body.light-theme .dot-rose    { background: #e11d48; box-shadow: 0 0 8px rgba(225, 29, 72, 0.3); }
+
+body.light-theme .ann-stat-tile.num-cyan   { --ann-accent: #0891b2; }
+body.light-theme .ann-stat-tile.num-violet { --ann-accent: #7c3aed; }
+
+/* solid tints for light theme (no alpha fills) */
+body.light-theme .space-card::after {
+  background: linear-gradient(180deg, var(--ann-accent), color-mix(in srgb, var(--ann-accent) 18%, #FFFFFF));
+}
+
+body.light-theme .space-card:hover .space-icon-wrapper {
+  background: color-mix(in srgb, var(--ann-accent) 16%, #FFFFFF);
+}
+
+body.light-theme .space-card .item-badge {
+  background: color-mix(in srgb, var(--ann-accent) 12%, #FFFFFF) !important;
+  border-color: color-mix(in srgb, var(--ann-accent) 24%, #FFFFFF) !important;
+}
+
+body.light-theme .ann-stat-tile {
+  background: color-mix(in srgb, var(--ann-accent) 10%, #FFFFFF);
+  border-color: color-mix(in srgb, var(--ann-accent) 16%, #FFFFFF);
+}
+
+body.light-theme .badge-live {
+  background: color-mix(in srgb, #047857 12%, #FFFFFF) !important;
+  border-color: color-mix(in srgb, #047857 24%, #FFFFFF) !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 639px) {
+  .space-card {
+    padding: 1.4rem 1.4rem 1.4rem 1.5rem;
+  }
+  .space-card::before {
+    font-size: 1.7rem;
+  }
+}
