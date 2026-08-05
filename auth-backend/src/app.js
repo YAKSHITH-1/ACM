@@ -49,7 +49,9 @@ app.use(
         origin === "http://localhost" ||
         origin === "http://127.0.0.1";
 
-      const isProductionClient = origin === process.env.CLIENT_URL;
+      const isProductionClient =
+        origin === "https://jyothyacm.vercel.app";
+
 
       if (isLocalhost || isProductionClient) {
         return callback(null, true);
@@ -65,4 +67,4 @@ app.use("/api/events", eventRoutes);
 
 app.use(errorMiddleware);
 
-export default app;
+export default app; 
