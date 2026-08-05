@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://acmjyothy.onrender.com/</loc>
+    <loc>https://jyothyacm.vercel.app/</loc>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://acmjyothy.onrender.com/events.html</loc>
+    <loc>https://jyothyacm.vercel.app/events.html</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://acmjyothy.onrender.com/announcements.html</loc>
+    <loc>https://jyothyacm.vercel.app/announcements.html</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://acmjyothy.onrender.com/community.html</loc>
+    <loc>https://jyothyacm.vercel.app/community.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://acmjyothy.onrender.com/know-us.html</loc>
+    <loc>https://jyothyacm.vercel.app/know-us.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>

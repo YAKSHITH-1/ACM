@@ -5,11 +5,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up | ACM JIT</title>
-  <link rel="canonical" href="https://acmjyothy.onrender.com/register.html" />
-  <meta name="description" content="Create your ACM JIT student account — join the chapter, access resources, and participate in events.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="canonical" href="https://jyothyacm.vercel.app/register.html" />
+  <meta name="description"
+    content="Create your ACM JIT student account — join the chapter, access resources, and participate in events.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="./CSS/global.css">
   <link rel="stylesheet" href="./CSS/theme.css">
   <link rel="stylesheet" href="./CSS/stars.css">
@@ -54,26 +57,32 @@
           <form id="register-form" class="auth-form" autocomplete="on">
             <div class="auth-field">
               <label for="reg-name" class="auth-label">Full Name</label>
-              <input id="reg-name" name="fullName" type="text" placeholder="Enter your full name" class="auth-input" autocomplete="name" required>
+              <input id="reg-name" name="fullName" type="text" placeholder="Enter your full name" class="auth-input"
+                autocomplete="name" required>
             </div>
 
             <div class="auth-field">
               <label for="reg-email" class="auth-label">Email</label>
-              <input id="reg-email" name="email" type="email" placeholder="name@gmail.com" class="auth-input" autocomplete="email" required>
+              <input id="reg-email" name="email" type="email" placeholder="name@gmail.com" class="auth-input"
+                autocomplete="email" required>
             </div>
 
             <div class="auth-field">
               <label for="reg-password" class="auth-label">Password</label>
               <div class="auth-input-group">
-                <input id="reg-password" name="password" type="password" placeholder="Create a strong password" class="auth-input auth-input--password" autocomplete="new-password" required>
-                <button type="button" class="auth-toggle-password" aria-label="Show password" data-target="reg-password">
+                <input id="reg-password" name="password" type="password" placeholder="Create a strong password"
+                  class="auth-input auth-input--password" autocomplete="new-password" required>
+                <button type="button" class="auth-toggle-password" aria-label="Show password"
+                  data-target="reg-password">
                   <!-- Eye icon -->
-                  <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                   </svg>
                   <!-- Eye-off icon -->
-                  <svg class="icon-eye-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="icon-eye-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
                     <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
                     <line x1="1" y1="1" x2="23" y2="23"></line>
@@ -98,11 +107,42 @@
     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px);animation:fadeIn 0.3s ease-out;"
     onkeydown="if(event.key==='Escape')document.getElementById('popup-btn').click()">
     <style>
-      @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-      @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-      #popup-content { animation: slideIn 0.4s ease-out; }
-      #popup-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(34,211,238,0.3); }
-      #popup-btn:active { transform: translateY(0); }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      #popup-content {
+        animation: slideIn 0.4s ease-out;
+      }
+
+      #popup-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(34, 211, 238, 0.3);
+      }
+
+      #popup-btn:active {
+        transform: translateY(0);
+      }
     </style>
     <div id="popup-content"
       style="background:linear-gradient(135deg,rgba(13,13,13,0.95),rgba(21,21,21,0.95));border:1px solid rgba(103,232,249,0.2);border-radius:1rem;padding:2.5rem;max-width:450px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.1);">

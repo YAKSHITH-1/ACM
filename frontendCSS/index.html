@@ -5,23 +5,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ACM JIT Community | Events, Projects, Domains & Design</title>
-  <meta name="description" content="ACM Student Chapter at JIT. Join our community for events, hands-on projects, UI/UX design, and explore diverse tech domains at Jyothy Institute of Technology.">
-  <meta name="keywords" content="ACM JIT, Jyothy Institute of Technology, Student Chapter, ISE ACM, Computer Science, Tech Community">
-  <link rel="canonical" href="https://acmjyothy.onrender.com/index.html" />
+  <meta name="description"
+    content="ACM Student Chapter at JIT. Join our community for events, hands-on projects, UI/UX design, and explore diverse tech domains at Jyothy Institute of Technology.">
+  <meta name="keywords"
+    content="ACM JIT, Jyothy Institute of Technology, Student Chapter, ISE ACM, Computer Science, Tech Community">
+  <link rel="canonical" href="https://jyothyacm.vercel.app/index.html" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "ACM JIT",
-    "url": "https://acmjyothy.onrender.com/",
-    "logo": "https://acmjyothy.onrender.com/assets/Logo.png",
+    "url": "https://jyothyacm.vercel.app/",
+    "logo": "https://jyothyacm.vercel.app/assets/Logo.png",
     "description": "ACM Student Chapter at Jyothy Institute of Technology, ISE Department."
   }
   </script>
   <link rel="icon" href="assets/Logo.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="./CSS/global.css">
   <link rel="stylesheet" href="./CSS/theme.css">
   <link rel="stylesheet" href="./CSS/stars.css">
@@ -169,7 +173,8 @@
                     <div class="milestone-label">Design</div>
                   </div>
 
-                  <div class="milestone milestone--in-progress milestone--label-top" data-delay="3" style="top: 60.8%; left: 62.0%;">
+                  <div class="milestone milestone--in-progress milestone--label-top" data-delay="3"
+                    style="top: 60.8%; left: 62.0%;">
                     <div class="milestone-dot-wrap">
                       <div class="milestone-dot"></div>
                       <div class="milestone-dot-ring"></div>
@@ -177,7 +182,8 @@
                     <div class="milestone-label">Development</div>
                   </div>
 
-                  <div class="milestone milestone--pending milestone--label-bottom" data-delay="4" style="top: 64.73%; left: 93.25%;">
+                  <div class="milestone milestone--pending milestone--label-bottom" data-delay="4"
+                    style="top: 64.73%; left: 93.25%;">
                     <div class="milestone-dot-wrap">
                       <div class="milestone-dot"></div>
                       <div class="milestone-dot-ring"></div>
@@ -526,7 +532,7 @@
       let next = fallback;
       try {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        const API_BASE_URL = isLocal ? "http://localhost:5000/api" : "https://acmjyothy-backend.onrender.com/api";
+        const API_BASE_URL = isLocal ? "http://localhost:5000/api" : "https://acm-backend-dwu8.onrender.com/api";
         const res = await fetch(`${API_BASE_URL}/events`);
         const data = await res.json();
         if (data.success && Array.isArray(data.upcoming) && data.upcoming.length > 0) {

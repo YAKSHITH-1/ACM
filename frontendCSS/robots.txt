@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://acmjyothy.onrender.com/sitemap.xml
+Sitemap: https://jyothyacm.vercel.app/sitemap.xml
