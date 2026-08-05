@@ -162,7 +162,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- CONFIGURATION ---
   // When deployed, change the fallback URL to your production backend URL
-  const PROD_BACKEND_URL = "https://acmjyothy-backend.onrender.com/api";
+  const PROD_BACKEND_URL = "https://acm-backend-dwu8.onrender.com";
   const isLocal = window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1" ||
     window.location.protocol === "file:";
