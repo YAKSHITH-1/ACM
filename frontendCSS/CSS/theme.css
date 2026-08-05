@@ -396,3 +396,221 @@ p, .hero-desc, .section-subtitle, .domain-desc, .feature-text, .cta-desc, .page-
 .footer-acm-cta a:hover {
   color: var(--v-cta) !important;
 }
+
+/* ══════════════════════════════════════
+   LIGHT THEME ENHANCEMENTS & CONTRAST FIXES
+   ══════════════════════════════════════ */
+
+/* Float Card contrast fix in light mode */
+body.light-theme .hero-card-float-1 {
+  color: #0f172a !important;
+}
+body.light-theme .hero-card-float-1 .float-card-label {
+  color: #334155 !important;
+}
+
+/* Section label contrast fix on light mint background */
+body.light-theme .section-label {
+  color: #b45309 !important; /* High contrast dark amber gold */
+}
+
+/* Card hover background & text contrast fix for light theme */
+body.light-theme .domain-card:hover,
+body.light-theme .feature-card:hover,
+body.light-theme .stat-item:hover,
+body.light-theme .card:hover,
+body.light-theme .event-card:hover,
+body.light-theme .announcement-card:hover,
+body.light-theme .timeline-item:hover,
+body.light-theme .member-card:hover,
+body.light-theme .hub-card:hover {
+  background: var(--v-primary) !important; /* Dark emerald background on hover so white text is crisp */
+}
+
+/* Stats Bar inside Light Theme */
+body.light-theme .stats-bar .stat-text,
+body.light-theme .stats-bar .stat-label {
+  color: #ffffff !important;
+  opacity: 0.9 !important;
+}
+body.light-theme .stats-bar .stat-number,
+body.light-theme .stats-bar .stat-value {
+  color: #fef08a !important;
+}
+
+/* Category Badges in Light Theme */
+body.light-theme .item-badge.cyan,
+body.light-theme .badge-cyan {
+  background: rgba(14, 116, 144, 0.12) !important;
+  color: #0e7490 !important;
+}
+body.light-theme .item-badge.violet,
+body.light-theme .badge-violet {
+  background: rgba(109, 40, 217, 0.12) !important;
+  color: #6d28d9 !important;
+}
+body.light-theme .item-badge.emerald,
+body.light-theme .badge-emerald,
+body.light-theme .badge-active,
+body.light-theme .badge-live {
+  background: rgba(4, 120, 87, 0.12) !important;
+  color: #047857 !important;
+}
+body.light-theme .badge-amber {
+  background: rgba(180, 83, 9, 0.12) !important;
+  color: #b45309 !important;
+}
+body.light-theme .badge-rose {
+  background: rgba(190, 18, 60, 0.12) !important;
+  color: #be123c !important;
+}
+
+/* Buttons in Light Theme */
+body.light-theme .btn-ghost {
+  background: var(--v-card-bg) !important;
+  color: var(--v-text) !important;
+  border: var(--block-border) !important;
+  box-shadow: var(--block-shadow) !important;
+}
+body.light-theme .btn-ghost:hover {
+  background: var(--v-primary) !important;
+  color: var(--v-white) !important;
+}
+body.light-theme .btn-reset,
+body.light-theme .btn-danger,
+body.light-theme [data-delete-event],
+body.light-theme .btn-delete {
+  background: rgba(244, 63, 94, 0.12) !important;
+  color: #be123c !important;
+  border-color: rgba(190, 18, 60, 0.4) !important;
+}
+body.light-theme .btn-reset:hover,
+body.light-theme .btn-danger:hover,
+body.light-theme [data-delete-event]:hover,
+body.light-theme .btn-delete:hover {
+  background: rgba(244, 63, 94, 0.22) !important;
+  border-color: #be123c !important;
+}
+body.light-theme .btn-refresh {
+  background: rgba(14, 116, 144, 0.12) !important;
+  color: #0e7490 !important;
+  border-color: rgba(14, 116, 144, 0.4) !important;
+}
+
+/* Hub Cards Links & Icons in Light Theme */
+body.light-theme .hub-link.cyan,
+body.light-theme .hub-icon.cyan {
+  color: #0e7490 !important;
+}
+body.light-theme .hub-link.violet,
+body.light-theme .hub-icon.violet {
+  color: #6d28d9 !important;
+}
+body.light-theme .hub-link.emerald,
+body.light-theme .hub-icon.emerald {
+  color: #047857 !important;
+}
+
+/* Registration Cards & Forms & Modals in Light Theme */
+body.light-theme .reg-detail-label {
+  color: var(--v-text) !important;
+  opacity: 0.7 !important;
+}
+body.light-theme .reg-detail-value {
+  color: var(--v-text) !important;
+}
+body.light-theme .team-info-title {
+  color: #6d28d9 !important;
+}
+body.light-theme .reg-notes {
+  color: var(--v-text) !important;
+  opacity: 0.75 !important;
+}
+body.light-theme .filter-input,
+body.light-theme .filter-select {
+  background: var(--v-card-bg) !important;
+  color: var(--v-text) !important;
+  border-color: var(--v-text) !important;
+}
+body.light-theme .modal-header .modal-event-name {
+  color: #0e7490 !important;
+}
+body.light-theme .modal-form label {
+  color: var(--v-text) !important;
+}
+body.light-theme .modal-close {
+  color: var(--v-text) !important;
+  border-color: var(--v-text) !important;
+  background: rgba(6, 78, 59, 0.1) !important;
+}
+body.light-theme .btn-modal-cancel {
+  color: var(--v-text) !important;
+  border-color: var(--v-text) !important;
+  background: rgba(6, 78, 59, 0.1) !important;
+}
+body.light-theme select option {
+  background-color: #ffffff !important;
+  color: #064E3B !important;
+}
+body.light-theme input::placeholder,
+body.light-theme textarea::placeholder,
+body.light-theme select::placeholder {
+  color: rgba(6, 78, 59, 0.6) !important;
+  opacity: 1 !important;
+}
+
+/* Space Cards (Announcements) in Light Theme */
+body.light-theme .space-card {
+  background: var(--v-card-bg) !important;
+  border: var(--block-border) !important;
+  box-shadow: var(--block-shadow) !important;
+  color: var(--v-text) !important;
+}
+body.light-theme .space-card:hover {
+  background: var(--v-primary) !important;
+  box-shadow: var(--block-shadow-hover) !important;
+}
+body.light-theme .space-card:hover * {
+  color: var(--v-white) !important;
+}
+
+/* Domain & Feature Cards Accent Icons & Stat Colors in Light Theme */
+body.light-theme .domain-card:nth-child(1) .domain-icon,
+body.light-theme .features-grid .feature-card:nth-child(1) .feature-emoji,
+body.light-theme .features-grid .feature-card:nth-child(5) .feature-emoji {
+  color: #0e7490 !important;
+  background: rgba(14, 116, 144, 0.12) !important;
+}
+body.light-theme .domain-card:nth-child(2) .domain-icon,
+body.light-theme .features-grid .feature-card:nth-child(2) .feature-emoji,
+body.light-theme .features-grid .feature-card:nth-child(6) .feature-emoji {
+  color: #4338ca !important;
+  background: rgba(67, 56, 202, 0.12) !important;
+}
+body.light-theme .domain-card:nth-child(3) .domain-icon,
+body.light-theme .features-grid .feature-card:nth-child(3) .feature-emoji {
+  color: #b45309 !important;
+  background: rgba(180, 83, 9, 0.12) !important;
+}
+body.light-theme .domain-card:nth-child(4) .domain-icon,
+body.light-theme .features-grid .feature-card:nth-child(4) .feature-emoji {
+  color: #be123c !important;
+  background: rgba(190, 18, 60, 0.12) !important;
+}
+body.light-theme .stat-number.cyan {
+  color: #0e7490 !important;
+}
+body.light-theme .stat-number.violet {
+  color: #5b21b6 !important;
+}
+body.light-theme .stat-number.emerald {
+  color: #b45309 !important;
+}
+body.light-theme .stat-number.amber {
+  color: #be123c !important;
+}
+body.light-theme .stat-text {
+  color: var(--v-text) !important;
+  opacity: 0.85 !important;
+}
+
