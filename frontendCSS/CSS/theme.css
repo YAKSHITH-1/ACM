@@ -14,8 +14,8 @@
   --v-black: #0B0F0D;
   --v-card-bg: #111A16;
   
-  --font-heading: 'Outfit', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Caesura', 'Space Grotesk', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-body: 'Peristiva', 'Inter', system-ui, -apple-system, sans-serif;
   
   --block-border: 2px solid var(--v-text);
   --block-shadow: 6px 6px 0px var(--v-text);
@@ -103,13 +103,13 @@ h1, h2, h3, h4, h5, h6, .hero-eyebrow, .section-label, .btn {
 }
 .nav-logo-text {
   color: var(--v-text) !important;
-  font-family: 'Space Grotesk', sans-serif !important;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
   font-weight: 700 !important;
 }
 .nav-link {
   color: var(--v-text) !important;
   font-weight: 600 !important;
-  font-family: 'Space Grotesk', sans-serif !important;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.5rem 1rem !important;
@@ -238,6 +238,9 @@ p, .hero-desc, .section-subtitle, .domain-desc, .feature-text, .cta-desc, .page-
 
 .hero-heading .highlight {
   color: var(--v-white) !important;
+  -webkit-text-fill-color: var(--v-white) !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
   position: relative;
   display: inline-block;
   padding: 0 10px;
@@ -342,13 +345,19 @@ p, .hero-desc, .section-subtitle, .domain-desc, .feature-text, .cta-desc, .page-
 }
 
 .section-label {
-  color: var(--v-cta) !important;
-  background: var(--v-card-bg);
-  padding: 4px 12px;
-  border: 2px solid var(--v-text);
-  border-radius: 20px;
+  color: var(--v-primary) !important;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 0.35rem 0.9rem;
+  border: none;
+  border-radius: 100px;
   display: inline-block;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
+
+.section-label::before {
+  content: none;
 }
 
 .domain-icon {
@@ -409,9 +418,10 @@ body.light-theme .hero-card-float-1 .float-card-label {
   color: #334155 !important;
 }
 
-/* Section label contrast fix on light mint background */
+/* Section label — soft pill in light theme */
 body.light-theme .section-label {
-  color: #b45309 !important; /* High contrast dark amber gold */
+  color: #047857 !important;
+  background: rgba(4, 120, 87, 0.08);
 }
 
 /* Card hover background & text contrast fix for light theme */

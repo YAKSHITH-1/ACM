@@ -556,7 +556,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <article style="border-radius:1rem;border:1px solid rgba(255,255,255,0.1);background:rgba(2,6,23,0.6);padding:1.25rem;">
           <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1rem;">
             <div>
-              <p style="font-size:0.75rem;font-weight:900;text-transform:uppercase;letter-spacing:0.2em;color:${badgeColor};">${escapeHtml(ann.badge)}</p>
+              <p style="font-family:var(--font-heading,'Inter',sans-serif);font-size:0.75rem;font-weight:900;text-transform:uppercase;letter-spacing:0.2em;color:${badgeColor};">${escapeHtml(ann.badge)}</p>
               <h3 style="margin-top:0.5rem;font-size:1.25rem;font-weight:900;color:#fff;">${escapeHtml(ann.title)}</h3>
               <p style="margin-top:0.25rem;font-size:0.875rem;color:#94a3b8;">${escapeHtml(ann.time)}</p>
               <p style="margin-top:0.75rem;font-size:0.875rem;line-height:1.75;color:#cbd5e1;">${escapeHtml(ann.body)}</p>
@@ -1597,7 +1597,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
               // Inject modal markup
               const modalHTML = `
-              <div id="profile-info-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;justify-content:flex-end;z-index:9999;opacity:0;transition:opacity 0.3s ease;font-family:'Inter',sans-serif;">
+              <div id="profile-info-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;justify-content:flex-end;z-index:9999;opacity:0;transition:opacity 0.3s ease;font-family:var(--font-body,'Inter',sans-serif);">
                 <div id="profile-modal-body" style="background:rgba(10,15,30,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-left:1px solid rgba(255,255,255,0.1);max-width:400px;width:100%;height:100%;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(0,0,0,0.5);transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);color:#f1f5f9;position:relative;">
                   
                   <!-- Header -->
@@ -1628,7 +1628,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                   <!-- Body / Registered Events -->
                   <div style="padding:1.5rem;flex:1;overflow-y:auto;" id="profile-registered-events-section">
-                    <h4 style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;font-family:'Inter',sans-serif;">
+                    <h4 style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;font-family:var(--font-heading,'Inter',sans-serif);">
                       <span>🪽</span> Registered Events
                     </h4>
                     
@@ -1659,7 +1659,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                       </button>
-                      <span id="theme-toggle-label" style="font-size:0.8rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;font-family:'Inter',sans-serif;">Dark Mode</span>
+                      <span id="theme-toggle-label" style="font-size:0.8rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;font-family:var(--font-heading,'Inter',sans-serif);">Dark Mode</span>
                     </div>
 
                     <button id="profile-logout-btn" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);color:var(--rose-300);font-weight:700;padding:0.5rem 1rem;border-radius:0.75rem;font-size:0.875rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(244,63,94,0.2)'" onmouseout="this.style.background='rgba(244,63,94,0.1)'">
@@ -1848,8 +1848,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:1rem;padding:1.25rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(34,211,238,0.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
                     <div style="display:flex;justify-content:space-between;align-items:start;gap:1rem;">
                       <div style="flex:1;text-align:left;">
-                        <h5 style="font-size:1.05rem;font-weight:800;color:#fff;margin:0 0 0.25rem 0;font-family:'Inter',sans-serif;">${reg.eventTitle}</h5>
-                        <div style="font-size:0.8rem;color:#cbd5e1;display:flex;flex-direction:column;gap:0.25rem;margin-top:0.5rem;font-family:'Inter',sans-serif;">
+                        <h5 style="font-size:1.05rem;font-weight:800;color:#fff;margin:0 0 0.25rem 0;font-family:var(--font-heading,'Inter',sans-serif);">${reg.eventTitle}</h5>
+                        <div style="font-size:0.8rem;color:#cbd5e1;display:flex;flex-direction:column;gap:0.25rem;margin-top:0.5rem;font-family:var(--font-body,'Inter',sans-serif);">
                           <div><strong>USN:</strong> ${reg.usn}</div>
                           <div><strong>College:</strong> ${reg.collegeName}</div>
                           ${reg.teamSize > 1 ? `
@@ -1862,7 +1862,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           ` : ''}
                         </div>
                       </div>
-                      <span style="font-size:0.7rem;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:rgba(255,255,255,0.05);padding:0.25rem 0.5rem;border-radius:0.5rem;font-family:'Inter',sans-serif;">
+                      <span style="font-size:0.7rem;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:rgba(255,255,255,0.05);padding:0.25rem 0.5rem;border-radius:0.5rem;font-family:var(--font-heading,'Inter',sans-serif);">
                         Registered
                       </span>
                     </div>
@@ -1874,7 +1874,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   console.error(err);
                   const loader = document.getElementById("my-events-loader");
                   if (loader) {
-                    loader.innerHTML = `<span style="color:var(--rose-300);font-family:'Inter',sans-serif;">⚠️ Error loading your events. Please try again.</span>`;
+                    loader.innerHTML = `<span style="color:var(--rose-300);font-family:var(--font-body,'Inter',sans-serif);">⚠️ Error loading your events. Please try again.</span>`;
                   }
                 });
             });

@@ -94,7 +94,7 @@
 
 .marquee-card-overlay p {
   color: #50e3c2;
-  font-family: 'Space Grotesk', 'Poppins', sans-serif;
+  font-family: var(--font-body, 'Inter', 'Poppins', sans-serif);
   font-size: 1.25rem;
   font-weight: 700;
   text-align: center;

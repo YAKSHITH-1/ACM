@@ -1,0 +1,105 @@
+/* ══════════════════════════════════════════════════════════════════
+   ACM JIT — Global Typography System
+   ──────────────────────────────────────────────────────────────────
+   HEADINGS · TITLES · NAV · BUTTONS · HIGHLIGHTS  →  'Caesura'
+       Bold · ALL CAPS · premium letter-spacing
+   BODY · PARAGRAPHS · FORMS · CARDS · SUPPORTING  →  'Peristiva'
+       Highly readable · balanced · neutral tracking
+
+   The @font-face rules below self-host 'Caesura' and 'Peristiva' from
+   /assets/fonts/. Drop the real .woff2/.woff files in there and they
+   will activate automatically (each family sits first in every stack).
+
+   Until those files are provided, premium Google-Fonts stand-ins are
+   used instead:
+     · Caesura   → 'Space Grotesk'   (bold, modern display grotesk)
+     · Peristiva → 'Inter'           (highly readable UI sans)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 0. Font stack variables (also defined in theme.css) ───────── */
+:root {
+  --font-heading: 'Caesura', 'Space Grotesk', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-body: 'Peristiva', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── 1. @font-face — self-hosted scaffold (assets/fonts/) ───────── */
+@font-face {
+  font-family: 'Caesura';
+  src: url('../assets/fonts/Caesura-Black.woff2') format('woff2'),
+       url('../assets/fonts/Caesura-Black.woff') format('woff');
+  font-style: normal;
+  font-weight: 700 900; /* single Black weight covers Bold → Black */
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peristiva';
+  src: url('../assets/fonts/Peristiva-Regular.woff2') format('woff2'),
+       url('../assets/fonts/Peristiva-Regular.woff') format('woff');
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peristiva';
+  src: url('../assets/fonts/Peristiva-SemiBold.woff2') format('woff2'),
+       url('../assets/fonts/Peristiva-SemiBold.woff') format('woff');
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+}
+
+/* ── 2. Headings, titles, nav labels, buttons → CAESURA ─────────── */
+h1, h2, h3, h4, h5, h6,
+.hero-heading, .hero-eyebrow, .hero-3d-label h3,
+.section-title, .section-label, .section-head,
+.page-title, .panel-title,
+.curtain-title, .card-title, .event-title, .event-card-title,
+.announcement-title, .ann-title, .modal-title, .modal-event-name,
+.reg-card-name, .reg-card-event, .team-name, .team-info-title,
+.domain-name, .feature-title, .cta-title, .footer-acm-cta h2,
+.auth-title, .nav-logo-text, .nav-link,
+.stat-number, .stat-value, .stat-label,
+.float-card-label, .float-card-value,
+.milestone-label, .milestone--label-top, .milestone--label-bottom,
+.roadmap-badge, .badge-live, .orbital-card-title, .orbital-connections-title,
+button, [class*="btn"], [role="button"],
+input[type="submit"], input[type="button"] {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Wide-tracked kickers keep their intentionally spacious tracking */
+.label, .curtain-hint, .auth-kicker {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+/* ── 3. Body & supporting text → PERISTIVA ──────────────────────── */
+/* (Note: the bare `p` tag is intentionally NOT forced here so that any
+   heading-styled <p> (e.g. announcement badges) keeps its heading font.
+   Plain paragraphs inherit Peristiva from the body rule in theme.css.) */
+body, li, blockquote, small, figcaption, address, caption, th, td, dt, dd,
+input, textarea, select, label,
+.page-subtitle, .section-subtitle, .hero-desc, .cta-desc, .curtain-desc,
+.auth-desc, .auth-panel-quote, .auth-typewriter-text, .auth-panel-cite, .auth-links,
+.form-label, .auth-label, .reg-detail-label,
+.form-input, .form-select, .form-textarea, .auth-input,
+.filter-input, .filter-select,
+.reg-card-date, .reg-detail-value, .reg-notes,
+.stat-text, .member-bio, .team-role, .team-bio, .float-card-sub, .event-desc,
+.empty-state, .empty-msg, .item-body, .hub-desc, .marquee-card-overlay p,
+.modal-body, .modal-text {
+  font-family: var(--font-body) !important;
+}
+
+/* ── 4. Mobile readability: slightly tighter tracking for big caps ─ */
+@media (max-width: 640px) {
+  .hero-heading, .section-title, .page-title, .cta-title, .curtain-title, .auth-title {
+    letter-spacing: 0.04em !important;
+  }
+}
