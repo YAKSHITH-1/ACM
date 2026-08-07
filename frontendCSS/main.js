@@ -1629,7 +1629,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <!-- Body / Registered Events -->
                   <div style="padding:1.5rem;flex:1;overflow-y:auto;" id="profile-registered-events-section">
                     <h4 style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;font-family:var(--font-heading,'Inter',sans-serif);">
-                      <span>🪽</span> Registered Events
+                      <span></span> Registered Events
                     </h4>
                     
                     <div id="my-events-loader" style="text-align:center;padding:2rem 0;color:#94a3b8;">
@@ -1952,14 +1952,63 @@ document.addEventListener("DOMContentLoaded", () => {
     { number: '∞', label: 'Ideas Welcome' }
   ];
 
-  grid.innerHTML = stats.map(stat => `
-    <div class="stat-card">
-      <div class="stat-card-overlay"></div>
-      <div class="stat-card-content">
-        <div class="stat-number">${stat.number}</div>
-        <div class="stat-label">${stat.label}</div>
+  const colors = [
+    'rgba(103, 232, 249, 0.8)',
+    'rgba(110, 231, 183, 0.8)',
+    'rgba(167, 139, 250, 0.8)', // Purple
+    'rgba(251, 113, 133, 0.8)'  // Rose
+  ];
+
+  grid.innerHTML = stats.map((stat, i) => `
+    <div class="glass-card-wrapper">
+      <div class="glass-card" style="top: calc(-5vh + ${i * 25}px);">
+        <div class="glass-card-border" style="background: conic-gradient(from 0deg, transparent 0deg, ${colors[i]} 60deg, ${colors[i].replace('0.8', '0.6')} 120deg, transparent 180deg, ${colors[i].replace('0.8', '0.4')} 240deg, transparent 360deg);"></div>
+        <div class="glass-card-body">
+          <div class="glass-card-reflection"></div>
+          <div class="glass-card-shine"></div>
+          <div class="glass-card-side-reflection"></div>
+          <div class="glass-card-texture"></div>
+          <div class="glass-card-number">0${i + 1}</div>
+          
+          <div class="glass-card-content" style="text-align: center; justify-content: center; align-items: center; display: flex; flex-direction: column;">
+            <h3 class="glass-card-title" style="font-size: 3rem; margin-bottom: 0.5rem; text-transform: uppercase;">${stat.number}</h3>
+            <p class="glass-card-desc" style="font-size: 1.25rem;">${stat.label}</p>
+          </div>
+        </div>
       </div>
     </div>
   `).join('');
+
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    const cards = gsap.utils.toArray(grid.querySelectorAll(".glass-card"));
+    const totalCards = cards.length;
+
+    cards.forEach((card, index) => {
+        const targetScale = 1 - (totalCards - index) * 0.05;
+
+        gsap.set(card, {
+            scale: 1,
+            transformOrigin: "center top"
+        });
+
+        const wrapper = card.parentElement;
+
+        ScrollTrigger.create({
+            trigger: wrapper,
+            start: "top center",
+            end: "bottom center",
+            scrub: 1,
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const scale = gsap.utils.interpolate(1, targetScale, progress);
+
+                gsap.set(card, {
+                    scale: Math.max(scale, targetScale),
+                    transformOrigin: "center top"
+                });
+            }
+        });
+    });
+  }
 })();
 
