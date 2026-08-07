@@ -205,8 +205,8 @@
       e.target === container ||
       e.target.classList.contains("orbital-orbit-area") ||
       e.target.classList.contains("orbital-ring") ||
-      e.target.classList.contains("orbital-nucleus") ||
-      e.target.classList.contains("orbital-nucleus-inner")
+      e.target.classList.contains("orbital-planet") || e.target.classList.contains("orbital-planet-body") ||
+      e.target.classList.contains("orbital-planet-terminator") || e.target.classList.contains("orbital-planet-highlight") || e.target.classList.contains("orbital-planet-glow") || e.target.classList.contains("orbital-planet-ring") || e.target.classList.contains("orbital-planet-orbit") || e.target.classList.contains("orbital-planet-moon")
     ) {
       activeNodeId = null;
       autoRotate = true;
