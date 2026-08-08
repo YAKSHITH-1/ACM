@@ -40,20 +40,20 @@ const userSchema = new mongoose.Schema(
       default: false
     },
 
-   verificationCode: {
+    verificationCode: {
       type: String,
       maxlength: 4,
       minlength: 4
       // Verification code is generated as a 4-digit number (1000-9999)
     },
 
-  verificationCodeExpire: Date,
+    verificationCodeExpire: Date,
 
     resetPasswordToken: {
       type: String,
-      maxlength: 64,
-      minlength: 64
-      // Stores SHA256 hash of reset token (64 hex characters)
+      maxlength: 4,
+      minlength: 4
+      // Stores the 4‑digit reset code sent via email
     },
 
     resetPasswordExpire: Date
@@ -62,5 +62,9 @@ const userSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+// Indexes for query performance
+userSchema.index({ verificationCode: 1 });
+userSchema.index({ resetPasswordToken: 1 });
 
 export default mongoose.model("User", userSchema);

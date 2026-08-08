@@ -20,17 +20,19 @@ const sendEmail = async (email, subject, message) => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("━━━ BREVO EMAIL FAILED ━━━");
+      console.error("�━�━�━ BREVO EMAIL FAILED � ━�━�━");
       console.error(JSON.stringify(data, null, 2));
-      throw new Error(data.message || 'Brevo API error');
+      // Generic error to avoid leaking internal API details
+      throw new Error('Failed to send email');
     }
 
     return data;
   } catch (err) {
-    console.error("━━━ EMAIL SEND EXCEPTION ━━━");
+    console.error("�━�━�━ EMAIL SEND EXCEPTION � ━�━�━");
     console.error(err);
-    throw err;
+    // Generic error for any unexpected errors
+    throw new Error('Failed to send email');
   }
 };
 
-export default sendEmail;
+export default sendEmail;

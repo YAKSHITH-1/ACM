@@ -1,4 +1,6 @@
 import express from "express";
+import { apiLimiter, authUserLimiter } from "../middlewares/rateLimiter.js";
+import validate from "../middlewares/validate.middleware.js";
 
 import {
   registerForEvent,
@@ -18,18 +20,47 @@ import {
   authorize
 } from "../middlewares/auth.middleware.js";
 
+import {
+  createEventValidator,
+  registerForEventValidator,
+  getRegistrationsValidator,
+  deleteRegistrationValidator,
+  deleteEventValidator
+} from "../validators/event.validator.js";
+
 const router = express.Router();
 
-// Event CRUD
-router.get("/", getEvents);
-router.post("/", protect, authorize("admin"), createEvent);
-router.delete("/:id", protect, authorize("admin"), deleteEvent);
+// Public endpoint: get events (moderate limiting)
+router.get("/", apiLimiter, getEvents);
+
+// Event CRUD (protected, looser limits for authenticated users)
+router.post(
+  "/",
+  protect,
+  authorize("admin"),
+  authUserLimiter,
+  createEventValidator,
+  validate,
+  createEvent
+);
+router.delete(
+  "/:id",
+  protect,
+  authorize("admin"),
+  authUserLimiter,
+  deleteEventValidator,
+  validate,
+  deleteEvent
+);
 
 
 // User registers for an event (must be logged in)
 router.post(
   "/register",
   protect,
+  authUserLimiter,
+  registerForEventValidator,
+  validate,
   registerForEvent
 );
 
@@ -37,6 +68,7 @@ router.post(
 router.get(
   "/my-registrations",
   protect,
+  authUserLimiter,
   getMyRegistrations
 );
 
@@ -45,6 +77,9 @@ router.get(
   "/registrations",
   protect,
   authorize("admin"),
+  authUserLimiter,
+  getRegistrationsValidator,
+  validate,
   getRegistrations
 );
 
@@ -53,6 +88,9 @@ router.delete(
   "/registrations/:id",
   protect,
   authorize("admin"),
+  authUserLimiter,
+  deleteRegistrationValidator,
+  validate,
   deleteRegistration
 );
 

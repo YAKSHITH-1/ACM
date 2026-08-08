@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "echo 'Frontend is served as static files; no build step required.'",
+    "start": "echo 'To run the frontend, serve the static files via a web server (e.g., the backend).'"
+  },
   "devDependencies": {
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

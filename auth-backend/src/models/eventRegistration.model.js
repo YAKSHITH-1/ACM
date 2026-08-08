@@ -106,6 +106,9 @@ eventRegistrationSchema.index(
 eventRegistrationSchema.index({ eventId: 1 });
 eventRegistrationSchema.index({ userId: 1 });
 eventRegistrationSchema.index({ email: 1 });
+// Compound indexes for frequent queries
+eventRegistrationSchema.index({ eventId: 1, userId: 1 });
+eventRegistrationSchema.index({ eventId: 1, email: 1 });
 
 export default mongoose.model(
   "EventRegistration",

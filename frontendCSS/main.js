@@ -1531,21 +1531,11 @@ document.addEventListener("DOMContentLoaded", () => {
       // CHECK LOGIN STATUS & VALIDATE WITH BACKEND
       const token = localStorage.getItem("token");
       const localUserStr = localStorage.getItem("user");
-
-
-      const hideAuthLinks = () => {
-        menu.querySelectorAll("a").forEach(link => {
-          const href = link.getAttribute("href");
-          if (href?.includes("register") || href?.includes("join-us")) link.style.display = "none";
-        });
-      };
-
       if (!token) {
         // not logged in
         return;
       }
 
-      hideAuthLinks();
 
       // Validate token by fetching profile from backend
       fetch(`${API_BASE_URL}/auth/profile`, {
@@ -1573,6 +1563,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Update local user storage with fresh profile (store only the user object)
           try { localStorage.setItem('user', JSON.stringify(profileData)); } catch { }
+          // Hide auth links (register / join-us) for authenticated user
+          menu.querySelectorAll("a").forEach(link => {
+            const href = link.getAttribute("href");
+            if (href?.includes("register") || href?.includes("join-us")) link.style.display = "none";
+          });
 
           // Add profile avatar exactly after 'Know Us' button
           const nameParts = (profileData.fullName || profileData.name || "User").split(" ");
@@ -1984,30 +1979,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalCards = cards.length;
 
     cards.forEach((card, index) => {
-        const targetScale = 1 - (totalCards - index) * 0.05;
+      const targetScale = 1 - (totalCards - index) * 0.05;
 
-        gsap.set(card, {
-            scale: 1,
-            transformOrigin: "center top"
-        });
+      gsap.set(card, {
+        scale: 1,
+        transformOrigin: "center top"
+      });
 
-        const wrapper = card.parentElement;
+      const wrapper = card.parentElement;
 
-        ScrollTrigger.create({
-            trigger: wrapper,
-            start: "top center",
-            end: "bottom center",
-            scrub: 1,
-            onUpdate: (self) => {
-                const progress = self.progress;
-                const scale = gsap.utils.interpolate(1, targetScale, progress);
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: "top center",
+        end: "bottom center",
+        scrub: 3.0,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          const scale = gsap.utils.interpolate(1, targetScale, progress);
 
-                gsap.set(card, {
-                    scale: Math.max(scale, targetScale),
-                    transformOrigin: "center top"
-                });
-            }
-        });
+          gsap.set(card, {
+            scale: Math.max(scale, targetScale),
+            transformOrigin: "center top",
+            z: 0,
+            force3D: true
+          });
+        }
+      });
     });
   }
 })();

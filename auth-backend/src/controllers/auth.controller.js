@@ -33,7 +33,7 @@ const buildVerificationEmail = (verificationCode) => `
         padding: 20px;
         text-align: center;
       ">
-        <img 
+        <img
           src="https://via.placeholder.com/150/111827/FFFFFF?text=ACM+JIT"
           alt="Logo"
           width="80"
@@ -234,18 +234,12 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     });
   }
 
-  const rawToken = crypto.randomBytes(32).toString("hex");
+  // Generate a 4‑digit numeric code
+  const code = Math.floor(1000 + Math.random() * 9000).toString();
 
-  // Hash the token before storing in DB
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(rawToken)
-    .digest("hex");
-
-  user.resetPasswordToken = hashedToken;
-
-  user.resetPasswordExpire =
-    Date.now() + 60 * 60 * 1000
+  // Store the code directly (plain text) – it is short enough for email
+  user.resetPasswordToken = code;
+  user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
 
   await user.save();
 
@@ -256,10 +250,10 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     <h2>Password Reset</h2>
 
     <p>
-      Use the token below to reset your password:
+      Use the 4‑digit code below to reset your password:
     </p>
 
-    <h3>${rawToken}</h3>
+    <h3>${code}</h3>
 
     <p>
       This token expires in 1 hour.
@@ -267,8 +261,6 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   `
 
   );
-
-
 
   res.status(200).json({
     success: true,
@@ -280,66 +272,57 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
 // VERIFY RESET TOKEN
 export const verifyResetToken = asyncHandler(async (req, res) => {
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
+  const { token } = req.params;
 
   const user = await User.findOne({
-    resetPasswordToken: hashedToken
+    resetPasswordToken: token,
   });
 
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: "Token not found or invalid"
+      message: "Invalid or expired token",
     });
   }
 
   if (user.resetPasswordExpire < new Date()) {
     return res.status(400).json({
       success: false,
-      message: "Token expired"
+      message: "Token expired",
     });
   }
 
   res.status(200).json({
     success: true,
-    message: "Token is valid"
+    message: "Token is valid",
   });
 });
 
+
 // RESET PASSWORD
 export const resetPassword = asyncHandler(async (req, res) => {
-
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
+  const { token } = req.params;
+  const { password } = req.body;
 
   const user = await User.findOne({
-    resetPasswordToken: hashedToken
+    resetPasswordToken: token,
   });
 
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: "Token not found"
+      message: "Invalid or expired token",
     });
   }
-
 
   if (user.resetPasswordExpire < new Date()) {
     return res.status(400).json({
       success: false,
-      message: "Token expired"
+      message: "Token expired",
     });
   }
-  user.password = await bcrypt.hash(
-    req.body.password,
-    10
-  );
 
+  user.password = await bcrypt.hash(password, 10);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
 
@@ -347,9 +330,8 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Password reset successful"
+    message: "Password reset successful",
   });
-
 });
 
 
@@ -456,4 +438,5 @@ export const updateProfileName = asyncHandler(async (req, res) => {
     message: "Name updated successfully",
     user
   });
+
 });
