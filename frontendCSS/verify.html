@@ -133,12 +133,174 @@
     .auth-links a:hover {
       color: #fff;
     }
+      /* ── OTP verification (reel-inspired premium OTP UI) ── */
+    .otp-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .otp-group {
+      position: relative;
+      display: flex;
+      gap: 0.7rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .otp-box {
+      width: 3.9rem;
+      height: 4.2rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(2, 6, 23, 0.7);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 1.9rem;
+      font-weight: 800;
+      font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
+      text-align: center;
+      caret-color: var(--cyan-300);
+      outline: none;
+      -moz-appearance: textfield;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+    }
+
+    .otp-box::-webkit-outer-spin-button,
+    .otp-box::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .otp-box:hover {
+      border-color: rgba(103, 232, 249, 0.45);
+    }
+
+    .otp-box:focus {
+      background: #020617;
+      border-color: var(--cyan-300);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow:
+        0 0 0 4px rgba(34, 211, 238, 0.14),
+        0 18px 30px -12px rgba(8, 51, 68, 0.75),
+        0 0 20px rgba(34, 211, 238, 0.35);
+    }
+
+    .otp-box.pop {
+      animation: otp-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes otp-pop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.14); }
+      100% { transform: scale(1); }
+    }
+
+    .otp-hint {
+      font-size: 0.8rem;
+      color: var(--slate-300);
+      opacity: 0.85;
+    }
+
+    /* Success state — played after the server confirms the code */
+    .otp-success {
+      position: absolute;
+      inset: -0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      background: radial-gradient(circle at center, rgba(2, 6, 23, 0.96) 40%, rgba(2, 6, 23, 0.9));
+      border: 1px solid rgba(103, 232, 249, 0.25);
+      border-radius: 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.85);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .otp-group.is-success .otp-success { opacity: 1; transform: scale(1); }
+    .otp-group.is-success .otp-box { animation: otp-exit 0.3s ease forwards; }
+
+    @keyframes otp-exit {
+      to { opacity: 0; transform: scale(0.7); }
+    }
+
+    .otp-check { width: 3.4rem; height: 3.4rem; }
+
+    .otp-check circle {
+      fill: none;
+      stroke: var(--cyan-300);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 151;
+      stroke-dashoffset: 151;
+      filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.65));
+      animation: otp-draw 0.55s ease-out forwards;
+    }
+
+    .otp-check path {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 4.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: otp-draw 0.4s ease-out 0.4s forwards;
+    }
+
+    @keyframes otp-draw { to { stroke-dashoffset: 0; } }
+
+    .otp-success-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6rem;
+      height: 6rem;
+      margin: -3rem 0 0 -3rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.28), transparent 70%);
+      animation: otp-glow 1.5s ease-out infinite;
+    }
+
+    @keyframes otp-glow {
+      from { transform: scale(0.5); opacity: 1; }
+      to { transform: scale(1.5); opacity: 0; }
+    }
+
+    .otp-ok {
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--cyan-200);
+      opacity: 0;
+      animation: otp-fade-up 0.4s ease 0.55s forwards;
+    }
+
+    @keyframes otp-fade-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 420px) {
+      .otp-box { width: 3.3rem; height: 3.7rem; font-size: 1.6rem; }
+      .otp-group { gap: 0.5rem; }
+    }
   </style>
   <link rel="stylesheet" href="./CSS/typography.css">
   <link rel="icon" href="acm-favicon.svg" type="image/svg+xml">
 </head>
 
 <body>
+  <script>
+    // Redirect to register if no email query parameter (prevent direct access)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('email')) {
+      window.location.href = 'register.html';
+    }
+  </script>
   <div class="bg-overlay"></div>
   <div id="global-navbar"></div>
 
@@ -155,11 +317,29 @@
           <input name="email" type="email" placeholder="name@jyothyit.ac.in" class="form-input" autocomplete="email"
             required>
         </label>
-        <label>
-          <span class="form-label">Verification Code</span>
-          <input name="verificationCode" type="text" placeholder="Enter verification code" class="form-input violet"
-            autocomplete="one-time-code" required>
-        </label>
+        <div class="otp-field">
+          <span class="form-label" id="otp-label">Verification Code</span>
+          <div class="otp-group" id="otp-group" role="group" aria-labelledby="otp-label">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box"
+              autocomplete="one-time-code" aria-label="Digit 1 of 4" required>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box"
+              autocomplete="one-time-code" aria-label="Digit 2 of 4" required>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box"
+              autocomplete="one-time-code" aria-label="Digit 3 of 4" required>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box"
+              autocomplete="one-time-code" aria-label="Digit 4 of 4" required>
+            <div class="otp-success" aria-hidden="true">
+              <span class="otp-success-glow"></span>
+              <svg class="otp-check" viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="24"></circle>
+                <path d="M14 27l8 8 16-16"></path>
+              </svg>
+              <span class="otp-ok">Verified</span>
+            </div>
+          </div>
+          <input type="hidden" name="verificationCode" id="otp-value" autocomplete="one-time-code">
+          <p class="otp-hint">Enter the 4-digit code from your email.</p>
+        </div>
         <button type="submit" class="btn-submit">Confirm Activation</button>
       </form>
 
@@ -218,6 +398,70 @@
   </div>
   <script src="JS/voronoi-bg.js"></script>
   <script src="main.js"></script>
+  <script>
+    // OTP micro-interactions (reel-inspired, kept minimal)
+    (function () {
+      var form = document.getElementById("verify-form");
+      var group = document.getElementById("otp-group");
+      if (!form || !group) return;
+      var boxes = Array.prototype.slice.call(group.querySelectorAll(".otp-box"));
+      var hidden = document.getElementById("otp-value");
+      function sync() { hidden.value = boxes.map(function (b) { return b.value; }).join(""); }
+
+      boxes.forEach(function (box, i) {
+        box.addEventListener("input", function () {
+          box.value = box.value.replace(/\D/g, "").slice(0, 1);
+          if (box.value) {
+            box.classList.remove("pop");
+            void box.offsetWidth; // restart the pop animation
+            box.classList.add("pop");
+            if (i < boxes.length - 1) boxes[i + 1].focus();
+          }
+          sync();
+        });
+        box.addEventListener("animationend", function () { box.classList.remove("pop"); });
+        box.addEventListener("keydown", function (e) {
+          if (e.key === "Backspace" && !box.value && i > 0) {
+            e.preventDefault();
+            boxes[i - 1].focus();
+            boxes[i - 1].value = "";
+            sync();
+          } else if (e.key === "ArrowLeft" && i > 0) {
+            e.preventDefault();
+            boxes[i - 1].focus();
+          } else if (e.key === "ArrowRight" && i < boxes.length - 1) {
+            e.preventDefault();
+            boxes[i + 1].focus();
+          }
+        });
+      });
+
+      group.addEventListener("paste", function (e) {
+        e.preventDefault();
+        var digits = (e.clipboardData.getData("text").match(/\d/g) || []).slice(0, boxes.length);
+        if (!digits.length) return;
+        var start = Math.max(boxes.indexOf(document.activeElement), 0);
+        digits.forEach(function (d, k) {
+          if (start + k < boxes.length) boxes[start + k].value = d;
+        });
+        sync();
+        boxes[Math.min(start + digits.length, boxes.length - 1)].focus();
+      });
+
+      // Success check animation — plays when main.js resets the form after a verified email
+      form.addEventListener("reset", function () {
+        boxes.forEach(function (b) {
+          b.value = "";
+          b.classList.remove("pop");
+        });
+        sync();
+        group.classList.add("is-success");
+        setTimeout(function () { group.classList.remove("is-success"); }, 3500);
+      });
+
+      boxes[0].focus();
+    })();
+  </script>
 </body>
 
 </html>

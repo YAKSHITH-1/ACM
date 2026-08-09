@@ -366,6 +366,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const type = typeInput.value;
       const rawDate = document.getElementById("event-date").value;
+      const newEvent = {
+        title: document.getElementById("event-title").value.trim(),
+        date: rawDate,
+        description: document.getElementById("event-description").value.trim(),
+        type: type
+      };
       // Format the date for display (e.g., "June 15, 2026")
       let displayDate = rawDate;
       if (rawDate) {
@@ -374,13 +380,6 @@ document.addEventListener("DOMContentLoaded", () => {
           displayDate = d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
         } catch { /* keep raw value */ }
       }
-
-      const newEvent = {
-        title: document.getElementById("event-title").value.trim(),
-        date: displayDate,
-        description: document.getElementById("event-description").value.trim(),
-        type: type
-      };
 
       if (type === "upcoming") {
         const tsInput = document.getElementById("event-team-size");
