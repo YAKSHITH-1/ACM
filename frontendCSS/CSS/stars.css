@@ -16,11 +16,11 @@
 }
 
 /* ══════════════════════════════════════
-   Voronoi WebGL Background Canvas
-   Light-theme only — replaces gradient mesh
+   Animated Dots / Light Theme Background Canvas
+   Light-theme only — soft, elegant falling dots
    ══════════════════════════════════════ */
 
-#voronoi-canvas {
+#animated-dots-canvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -29,15 +29,26 @@
   pointer-events: none;
   z-index: -1;
   display: none; /* hidden in dark mode (default) */
+  background: linear-gradient(180deg, #e4e9f0 0%, #edf2f7 45%, #dfe6ee 100%);
 }
 
-/* Light theme: show voronoi, hide stars */
-.light-theme #voronoi-canvas,
-body.light-theme #voronoi-canvas {
+/* Light theme: show animated dots canvas, hide dark stars */
+.light-theme #animated-dots-canvas,
+body.light-theme #animated-dots-canvas {
   display: block;
+}
+
+html.light-theme {
+  background-color: #e4e9f0 !important;
+}
+
+body.light-theme {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .light-theme #stars-canvas,
 body.light-theme #stars-canvas {
   display: none !important;
 }
+

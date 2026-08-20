@@ -30,7 +30,7 @@ body.light-theme, .light-theme:root {
   --v-primary: #047857;
   --v-secondary: #34D399;
   --v-cta: #F59E0B;
-  --v-bg: transparent; /* transparent so voronoi WebGL canvas shows through */
+  --v-bg: transparent; /* transparent so light theme background canvas shows through */
   --v-text: #064E3B;
   --v-white: #ffffff;
   --v-black: #0f172a;
