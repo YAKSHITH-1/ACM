@@ -42,7 +42,7 @@
     spacing: 1.5,          // Spacing between columns
     speedMin: 0.6,         // Drip animation speed
     speedMax: 2.0,
-    baseOpacity: 0.72,     // Rich, visible paint opacity
+    baseOpacity: 0.46,     // Increased transparency (soft translucent paint canopy)
   };
 
   function isLightTheme() {
@@ -110,11 +110,11 @@
       ctx.save();
       ctx.globalAlpha = this.alpha;
 
-      // Rich gradient with vertical depth
+      // Soft translucent gradient with vertical depth
       const grad = ctx.createLinearGradient(this.x, 0, this.x, tipY);
-      grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.98)`);
-      grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, 0.90)`);
-      grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.80)`);
+      grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.88)`);
+      grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, 0.72)`);
+      grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.52)`);
       ctx.fillStyle = grad;
 
       // Draw solid hanging vertical stripe from top to tipY with rounded bottom cap

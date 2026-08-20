@@ -36,7 +36,7 @@ export const AnimatedDots: React.FC<AnimatedDotsProps> = ({
   dotSpacing = 1.5,
   speedRange = [0.6, 2.0],
   backgroundColor = "transparent",
-  opacity = 0.72,
+  opacity = 0.46,
   fullScreen = true,
   className = "",
   colors = RICH_PALETTE,
@@ -134,9 +134,9 @@ export const AnimatedDots: React.FC<AnimatedDotsProps> = ({
         renderCtx.globalAlpha = this.alpha;
 
         const grad = renderCtx.createLinearGradient(this.x, 0, this.x, tipY);
-        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.98)`);
-        grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, 0.90)`);
-        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.80)`);
+        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.88)`);
+        grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, 0.72)`);
+        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.52)`);
         renderCtx.fillStyle = grad;
 
         renderCtx.beginPath();
