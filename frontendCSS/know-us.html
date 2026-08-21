@@ -39,7 +39,8 @@
     <header class="page-header">
       <p class="label">Know Us</p>
       <h1 class="page-title">Meet the humans behind ACM JIT.</h1>
-      <p class="page-subtitle">Our chapter is led by dedicated student officers and faculty mentors shaping the chapter with care, innovation, and technical leadership.</p>
+      <p class="page-subtitle">Our chapter is led by dedicated student officers and faculty mentors shaping the chapter
+        with care, innovation, and technical leadership.</p>
     </header>
 
     <!-- ═══ INTERACTIVE FIGMA SHOWCASE STAGE ═══ -->
@@ -48,7 +49,8 @@
 
         <!-- Top-Right Curved Undo / Back Button -->
         <button class="ts-back-btn" id="ts-back-btn" title="Back to All Officers" aria-label="Back to All Officers">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
             <polyline points="9 14 4 9 9 4"></polyline>
             <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
           </svg>
@@ -128,12 +130,13 @@
           id: 'samhita',
           name: 'Ms Samhita Bharadwaj',
           displayName: 'Samhita',
+          image: '',
           location: 'Bengaluru',
           role: 'Chair',
           themeClass: 'theme-orange',
           dossierClass: 'dossier-orange',
           dotColor: '#f97316',
-          stickers: ['👑', '🎯', '🚀', '⭐'],
+          sticker: './assets/Stickers/chairperson.png',
           quote: '“Leading our chapter to empower student builders, researchers, and innovators.”',
           bio: 'Chairperson of the ACM JIT Student Chapter. Guiding strategic vision, high-impact technical initiatives, national hackathon delegations, and department collaborations.',
           skills: ['Chapter Leadership', 'Strategic Vision', 'Tech Community', 'Public Relations'],
@@ -160,7 +163,7 @@
           themeClass: 'theme-purple',
           dossierClass: 'dossier-purple',
           dotColor: '#a855f7',
-          stickers: ['✨', '💡', '🌟', '🤝'],
+          sticker: './assets/Stickers/Vicechairperson.png',
           quote: '“Fostering collaboration, inclusivity, and technical growth across all semesters.”',
           bio: 'Vice Chairperson coordinating chapter operations, peer mentorship programs, speaker sessions, and inter-college tech events.',
           skills: ['Team Operations', 'Event Curation', 'Community Outreach', 'Strategy'],
@@ -188,12 +191,13 @@
           id: 'shrikar',
           name: 'Shrikar Maddanna Joshi',
           displayName: 'Shrikar',
+          image: './assets/team/shrikar.png',
           location: 'Bengaluru',
           role: 'Secretary',
           themeClass: 'theme-cyan',
           dossierClass: 'dossier-cyan',
           dotColor: '#06b6d4',
-          stickers: ['💻', '☕', '📝', '⚡'],
+          sticker: './assets/Stickers/secretary.png',
           quote: '“Documenting our chapter milestones and engineering fluid web interfaces.”',
           bio: 'Secretary managing official chapter proceedings, record-keeping, technical communications, and frontend interface design.',
           skills: ['Frontend Engineering', 'UI/UX', 'Community Operations', 'Documentation'],
@@ -224,7 +228,7 @@
           themeClass: 'theme-yellow',
           dossierClass: 'dossier-yellow',
           dotColor: '#facc15',
-          stickers: ['⚡', '💻', '🚀', '👑'],
+          sticker: './assets/Stickers/webmaster.png',
           quote: '“Architecting robust web systems, cloud pipelines, and campus platforms.”',
           bio: 'Web Master leading core full-stack engineering, web infrastructure, UI components, authentication platforms, and open-source tooling for the ACM JIT chapter.',
           skills: ['Full Stack', 'Node.js', 'System Architecture', 'TypeScript', 'DevOps', 'UI/UX'],
@@ -254,7 +258,7 @@
           themeClass: 'theme-green',
           dossierClass: 'dossier-green',
           dotColor: '#84cc16',
-          stickers: ['📊', '💰', '📈', '🎯'],
+          sticker: './assets/Stickers/treasurer.png',
           quote: '“Managing chapter resources and budgets to power high-impact initiatives.”',
           bio: 'Treasurer overseeing financial planning, sponsorships, annual budgeting, and resource allocation for workshops and hackathons.',
           skills: ['Financial Planning', 'Budget Management', 'Resource Allocation', 'Operations'],
@@ -284,7 +288,7 @@
           themeClass: 'theme-pink',
           dossierClass: 'dossier-pink',
           dotColor: '#f43f5e',
-          stickers: ['🌸', '🤝', '💫', '💖'],
+          sticker: './assets/Stickers/membershipchair.png',
           quote: '“Welcoming new minds and building a thriving network of passionate creators.”',
           bio: 'Membership Chair leading student onboarding, membership drives, peer engagement, and community growth for the chapter.',
           skills: ['Community Engagement', 'Student Mentorship', 'Network Building', 'Public Relations'],
@@ -313,7 +317,7 @@
           themeClass: 'theme-blue',
           dossierClass: 'dossier-blue',
           dotColor: '#3b82f6',
-          stickers: ['🎓', '📚', '🏛️', '🌟'],
+          sticker: './assets/Stickers/facultysponsor.png',
           quote: '“Guiding student innovation, academic research, and technical excellence.”',
           bio: 'Faculty Sponsor mentoring the student officer committee, promoting technical conferences, hackathon excellence, and department research initiatives.',
           skills: ['Faculty Mentorship', 'Academic Excellence', 'Research Guidance', 'Curriculum Innovation'],
@@ -352,6 +356,18 @@
 
       let currentMemberId = null;
 
+      // ── Helper: Render Avatar Image or Vector SVG Fallback ──
+      function renderAvatarHtml(member) {
+        const svgContent = member.avatarSvg ? member.avatarSvg.replace('<svg ', '<svg class="ts-avatar-svg" ') : '';
+        if (member.image) {
+          return `
+            <img src="${member.image}" alt="${member.name}" class="ts-avatar-img" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';" />
+            <div class="ts-avatar-fallback" style="display:none;">${svgContent}</div>
+          `;
+        }
+        return svgContent;
+      }
+
       // ── Render 7-Card Deck ──
       function renderDeck() {
         cardsRow.innerHTML = '';
@@ -360,23 +376,16 @@
           card.className = `ts-card ${m.themeClass}`;
           card.dataset.id = m.id;
 
-          // Floating Micro-Stickers
-          const s1 = document.createElement('span');
-          s1.className = 'ts-sticker ts-stk-tl';
-          s1.textContent = m.stickers[0] || '⭐';
+          // Floating Role Sticker Badge
+          const stickerBadge = document.createElement('div');
+          stickerBadge.className = 'ts-sticker ts-stk-tr';
+          stickerBadge.setAttribute('title', `${m.role} Sticker`);
+          stickerBadge.innerHTML = `<img src="${m.sticker}" alt="${m.role} Sticker" class="ts-sticker-img" />`;
 
-          const s2 = document.createElement('span');
-          s2.className = 'ts-sticker ts-stk-tr';
-          s2.textContent = m.stickers[1] || '✨';
-
-          const s3 = document.createElement('span');
-          s3.className = 'ts-sticker ts-stk-br';
-          s3.textContent = m.stickers[2] || '🚀';
-
-          // Avatar Wrap
+          // Avatar / Photo Wrap
           const avatarWrap = document.createElement('div');
           avatarWrap.className = 'ts-avatar-wrap';
-          avatarWrap.innerHTML = m.avatarSvg.replace('<svg ', '<svg class="ts-avatar-svg" ');
+          avatarWrap.innerHTML = renderAvatarHtml(m);
 
           // Info (Signature name + Role)
           const info = document.createElement('div');
@@ -386,9 +395,7 @@
             <div class="ts-location">${m.role}</div>
           `;
 
-          card.appendChild(s1);
-          card.appendChild(s2);
-          card.appendChild(s3);
+          card.appendChild(stickerBadge);
           card.appendChild(avatarWrap);
           card.appendChild(info);
 
@@ -427,11 +434,14 @@
         backBtn.classList.add('is-visible');
         spotlightWrap.classList.remove('is-hidden');
 
-        // Render Left Spotlight Card
+        // Render Left Spotlight Card with Role Sticker Badge
         spotlightCardSlot.innerHTML = `
           <div class="ts-spotlight-card ${member.themeClass}">
+            <div class="ts-sticker ts-stk-tr" title="${member.role} Sticker">
+              <img src="${member.sticker}" alt="${member.role} Sticker" class="ts-sticker-img" />
+            </div>
             <div class="ts-avatar-wrap">
-              ${member.avatarSvg.replace('<svg ', '<svg class="ts-avatar-svg" ')}
+              ${renderAvatarHtml(member)}
             </div>
             <div class="ts-info">
               <div class="ts-name">${member.name}</div>
@@ -442,7 +452,7 @@
 
         // Render Right Detail Dossier
         const skillsHtml = member.skills.map(s => `<span class="ts-skill-pill">${s}</span>`).join('');
-        
+
         let socialsHtml = '';
         if (member.socials.github) {
           socialsHtml += `<a href="${member.socials.github}" target="_blank" rel="noopener noreferrer" class="ts-action-btn">${ICONS.github} GitHub</a>`;
@@ -454,6 +464,7 @@
         spotlightDossier.className = `ts-spotlight-dossier ${member.dossierClass}`;
         spotlightDossier.innerHTML = `
           <div class="ts-dossier-role">
+            <span class="ts-dossier-role-sticker"><img src="${member.sticker}" alt="${member.role}"></span>
             <span>●</span> ${member.role} · ACM JIT
           </div>
           <h3 class="ts-dossier-quote">${member.quote}</h3>

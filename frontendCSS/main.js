@@ -188,17 +188,83 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove("light-theme");
   }
 
+  const DEFAULT_EVENTS = {
+    upcoming: [
+      {
+        _id: "evt-hack-2026",
+        title: "HackMatrix '26: Chapter Hackathon",
+        date: "September 15, 2026",
+        description: "24-hour national hackathon challenging student engineers to build high-impact AI, Cloud, and Web3 solutions with industry mentorship.",
+        status: "Registration Open",
+        teamSize: 4
+      },
+      {
+        _id: "evt-web-craft",
+        title: "Modern Web Architecture & Systems Lab",
+        date: "September 28, 2026",
+        description: "Hands-on masterclass in building fluid interfaces, animations, modern component architectures, and scalable full-stack pipelines.",
+        status: "Fast Filling",
+        teamSize: 2
+      },
+      {
+        _id: "evt-ai-summit",
+        title: "Agentic AI & Neural Systems Summit",
+        date: "October 10, 2026",
+        description: "Keynote sessions and live technical demonstrations by AI researchers, showcasing autonomous agents, LLM pipelines, and computer vision.",
+        status: "Registration Open",
+        teamSize: 1
+      },
+      {
+        _id: "evt-code-quest",
+        title: "AlgoQuest: Chapter Competitive Coding",
+        date: "October 24, 2026",
+        description: "Timed competitive algorithmic challenge testing problem-solving, dynamic programming, and data structures with live leaderboard ranking.",
+        status: "Closing Soon",
+        teamSize: 1
+      }
+    ],
+    past: [
+      {
+        title: "Inaugural Chapter Keynote & Induction",
+        description: "Official launch of the ACM JIT Chapter with inaugural address by chapter mentors and senior leadership."
+      },
+      {
+        title: "Full Stack Workshop & Cloud Bootcamp",
+        description: "3-day technical bootcamp on Node.js, TypeScript, Docker containers, and cloud deployment."
+      },
+      {
+        title: "DevSprint '25 Inter-College Hack",
+        description: "Over 200 participants collaborated on real-world engineering challenges across 4 tracks."
+      }
+    ]
+  };
+
   const fetchEvents = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/events`);
-      const data = await res.json();
-      if (data.success) {
-        return { upcoming: data.upcoming || [], past: data.past || [] };
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && (data.upcoming?.length || data.past?.length)) {
+          return { upcoming: data.upcoming || [], past: data.past || [] };
+        }
       }
     } catch (err) {
-      console.error("Error fetching events from backend:", err);
+      console.warn("Local backend not reachable, checking fallback / production backend...", err);
+      try {
+        if (API_BASE_URL !== PROD_BACKEND_URL) {
+          const resProd = await fetch(`${PROD_BACKEND_URL}/events`);
+          if (resProd.ok) {
+            const dataProd = await resProd.json();
+            if (dataProd.success && (dataProd.upcoming?.length || dataProd.past?.length)) {
+              return { upcoming: dataProd.upcoming || [], past: dataProd.past || [] };
+            }
+          }
+        }
+      } catch (errProd) {
+        console.warn("Prod fallback fetch failed, using default events:", errProd);
+      }
     }
-    return { upcoming: [], past: [] };
+    return DEFAULT_EVENTS;
   };
 
   const escapeHtml = (value) =>
@@ -219,11 +285,59 @@ document.addEventListener("DOMContentLoaded", () => {
     return "background:rgba(244,63,94,0.1);color:#fda4af;";
   };
 
-  /* Accent colours for cycling */
-  const accentColors = [
-    { border: "rgba(103,232,249,0.2)", hoverBorder: "rgba(103,232,249,0.6)", date: "#67e8f9", dot: "#67e8f9" },
-    { border: "rgba(196,181,253,0.2)", hoverBorder: "rgba(196,181,253,0.6)", date: "#c4b5fd", dot: "#c4b5fd" },
-    { border: "rgba(110,231,183,0.2)", hoverBorder: "rgba(110,231,183,0.6)", date: "#6ee7b7", dot: "#6ee7b7" }
+  const formatDisplayDate = (dStr) => {
+    if (!dStr) return "TBA";
+    try {
+      const d = new Date(dStr);
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      }
+    } catch {}
+    return dStr;
+  };
+
+  /* ── Unique Vibrant Event Color Themes (Distinct from Know Us) ── */
+  const EVENT_THEMES = [
+    {
+      themeClass: "theme-indigo",
+      category: "Workshop & Lab",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>` // Lightning ⚡
+    },
+    {
+      themeClass: "theme-coral",
+      category: "Hackathon & Challenge",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 4h12v7a6 6 0 0 1-12 0V4Z"/></svg>` // Trophy 🏆
+    },
+    {
+      themeClass: "theme-emerald",
+      category: "Tech Talk & Keynote",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>` // Code 💻
+    },
+    {
+      themeClass: "theme-sky",
+      category: "Code Sprint & Demo",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>` // Rocket 🚀
+    },
+    {
+      themeClass: "theme-fuchsia",
+      category: "Bootcamp & Track",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>` // Target 🎯
+    },
+    {
+      themeClass: "theme-lime",
+      category: "Innovation & Pitch",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>` // Star ⭐
+    },
+    {
+      themeClass: "theme-amber",
+      category: "Chapter Summit",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>` // Badge ✨
+    },
+    {
+      themeClass: "theme-teal",
+      category: "Open Source & Lab",
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>` // Grid ⚡
+    }
   ];
 
   const renderPublicEvents = async () => {
@@ -236,50 +350,57 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ── Upcoming ── */
     if (events.upcoming.length) {
       upcomingList.innerHTML = events.upcoming.map((event, i) => {
-        const ac = accentColors[i % accentColors.length];
+        const theme = EVENT_THEMES[i % EVENT_THEMES.length];
         const st = (event.status || "").toLowerCase();
         const isOpen = st.includes("open") && !st.includes("closed");
-        const isClosed = st.includes("closed");
+        const displayDate = formatDisplayDate(event.date);
+        const buttonDataAttrs = isOpen
+          ? `data-reg-event-id="${escapeHtml(event._id || "")}" data-reg-event-title="${escapeHtml(event.title || "")}" data-reg-event-team-size="${escapeHtml(String(event.teamSize || 1))}"`
+          : "";
 
         return `
-          <article style="
-            border-radius:1.5rem;border:1px solid ${ac.border};
-            background:rgba(255,255,255,0.06);padding:1.5rem;
-            backdrop-filter:blur(12px);
-            transition:transform 0.3s ease,border-color 0.3s ease;
-          "
-          onmouseenter="this.style.transform='translateY(-4px)';this.style.borderColor='${ac.hoverBorder}'"
-          onmouseleave="this.style.transform='';this.style.borderColor='${ac.border}'">
-            <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1rem;">
-              <div>
-                <p style="font-size:0.875rem;font-weight:900;color:${ac.date};">${escapeHtml(event.date)}</p>
-                <h3 style="margin-top:0.5rem;font-size:1.5rem;font-weight:900;color:#fff;">${escapeHtml(event.title)}</h3>
+          <article class="upcoming-neo-card ${theme.themeClass}">
+            <div class="upcoming-neo-header">
+              <div class="upcoming-neo-date">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>${escapeHtml(displayDate)}</span>
               </div>
-              <span style="border-radius:9999px;padding:0.25rem 0.75rem;font-size:0.75rem;font-weight:900;white-space:nowrap;${statusStyle(event.status)}">${escapeHtml(event.status)}</span>
+              <span class="upcoming-neo-status">${escapeHtml(event.status || "Upcoming")}</span>
             </div>
-            <p style="margin-top:1rem;line-height:1.75;color:#cbd5e1;">${escapeHtml(event.description)}</p>
+            <div>
+              <div style="font-family:'Caveat',cursive;font-size:1.25rem;font-weight:700;color:#0B0F0D;margin-bottom:0.15rem;">${theme.category}</div>
+              <h3 class="upcoming-neo-title">${escapeHtml(event.title)}</h3>
+              <p class="upcoming-neo-desc" style="margin-top:0.4rem;">${escapeHtml(event.description)}</p>
+            </div>
+            <div class="upcoming-neo-footer">
+              <span style="font-size:0.78rem;font-weight:800;color:#0B0F0D;background:rgba(255,255,255,0.7);padding:0.25rem 0.6rem;border-radius:8px;border:1.5px solid #0B0F0D;box-shadow:1.5px 1.5px 0px #0B0F0D;">
+                👥 Team: ${escapeHtml(String(event.teamSize || 1))} Max
+              </span>
+              ${isOpen ? `<button type="button" class="upcoming-neo-btn btn-register-event" ${buttonDataAttrs}>Reserve Spot →</button>` : ''}
+            </div>
           </article>`;
       }).join("");
     } else {
       upcomingList.innerHTML =
-        '<p style="border-radius:1.5rem;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);padding:1.5rem;color:#cbd5e1;">No upcoming events added yet.</p>';
+        '<p style="border-radius:20px;border:2.5px solid #0B0F0D;box-shadow:4px 4px 0px #0B0F0D;background:#ffffff;padding:1.5rem;color:#0B0F0D;font-weight:700;">No upcoming dynamic events currently scheduled.</p>';
     }
 
     /* ── Past ── */
     if (events.past.length) {
       pastList.innerHTML = events.past.map((event, i) => {
-        const ac = accentColors[i % accentColors.length];
+        const emojis = ["🏆", "⚡", "💻", "🚀", "🎯", "⭐", "🎉"];
+        const emoji = emojis[i % emojis.length];
         return `
-          <div style="display:flex;gap:1rem;">
-            <span style="display:block;margin-top:0.25rem;height:0.75rem;width:0.75rem;flex-shrink:0;border-radius:9999px;background:${ac.dot};"></span>
-            <div>
-              <h3 style="font-weight:900;color:#fff;">${escapeHtml(event.title)}</h3>
-              <p style="margin-top:0.25rem;font-size:0.875rem;line-height:1.75;color:#94a3b8;">${escapeHtml(event.description)}</p>
+          <div class="past-neo-card">
+            <div class="past-neo-dot" style="background:#ffffff;">${emoji}</div>
+            <div class="past-neo-info">
+              <h3>${escapeHtml(event.title)}</h3>
+              <p>${escapeHtml(event.description)}</p>
             </div>
           </div>`;
       }).join("");
     } else {
-      pastList.innerHTML = '<p style="font-size:0.875rem;color:#94a3b8;">No past events added yet.</p>';
+      pastList.innerHTML = '<p style="font-size:0.9rem;color:#64748b;font-weight:600;">No past events recorded yet.</p>';
     }
   };
 
@@ -1269,67 +1390,83 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ══════════════════════════════════════
-     Event Countdown Cards (Vanilla JS)
-     Adapted from the React EventCountdownCard component
+     Event Countdown Cards (Know-Us Neo-Brutalist Design)
+     Adapted with vibrant rotating themes, stickers & brutalist countdown units
   ══════════════════════════════════════ */
 
   /**
-   * Creates one countdown card HTML string.
+   * Creates one countdown card HTML string in the Know Us neo-brutalist style.
    * @param {Object} event - event object from API  { _id, title, date, description, status, teamSize, ... }
-   * @param {number} index - index for stagger delay
+   * @param {number} index - index for stagger delay & theme selection
    * @returns {string} HTML string for a single countdown card
    */
   const createCountdownCardHTML = (event, index) => {
     const eventId = escapeHtml(event._id || "");
     const title = escapeHtml(event.title || "Upcoming Event");
-    const dateStr = escapeHtml(event.date || "");
-    const attendees = event.attendees || Math.floor(Math.random() * 40 + 15); // fallback random 15-55
+    const rawDateStr = event.date || "";
+    const dateStr = escapeHtml(formatDisplayDate(rawDateStr));
+    const attendees = event.attendees || Math.floor(Math.random() * 40 + 15);
     const st = (event.status || "").toLowerCase();
     const isOpen = st.includes("open") && !st.includes("closed");
+    const theme = EVENT_THEMES[index % EVENT_THEMES.length];
 
-    // Use an Unsplash stock image based on event index for variety
+    // Curated high-res tech/hackathon imagery
     const stockImages = [
       "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop",
       "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop",
       "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&h=600&fit=crop"
+      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop"
     ];
     const image = stockImages[index % stockImages.length];
 
-    const buttonText = "Reserve Your Spot";
+    const buttonText = isOpen ? "Reserve Your Spot" : "View Details";
     const buttonDataAttrs = isOpen
       ? `data-reg-event-id="${eventId}" data-reg-event-title="${title}" data-reg-event-team-size="${escapeHtml(String(event.teamSize || 1))}"`
       : "";
 
     return `
-      <div class="countdown-card" data-countdown-card data-event-date="${escapeHtml(dateStr)}" style="animation-delay:${index * 0.08}s">
-        <!-- Image -->
+      <div class="countdown-card ${theme.themeClass}" data-countdown-card data-event-date="${escapeHtml(rawDateStr)}" style="animation-delay:${index * 0.08}s">
+        <!-- Floating Event Sticker Badge -->
+        <div class="event-sticker" title="${theme.category}">
+          ${theme.stickerSvg}
+        </div>
+
+        <!-- Image Wrap -->
         <div class="countdown-card__image-wrap">
           <img class="countdown-card__image" src="${image}" alt="${title}" loading="lazy" />
           <div class="countdown-card__image-gradient"></div>
-          <div class="countdown-card__urgency-badge" data-urgency-badge hidden>Starts Soon!</div>
+          <div class="countdown-card__urgency-badge" data-urgency-badge hidden>⏱ Starts Soon!</div>
+          ${event.status ? `<div class="countdown-card__status-badge">${escapeHtml(event.status)}</div>` : ''}
         </div>
 
         <!-- Content -->
         <div class="countdown-card__content">
           <!-- Title & Meta -->
           <div>
+            <div class="countdown-card__category">${theme.category}</div>
             <h3 class="countdown-card__title">${title}</h3>
             <div class="countdown-card__meta">
               <span class="countdown-card__meta-item">
-                <svg><use href="#icon-calendar"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 <span>${dateStr}</span>
               </span>
+              ${event.teamSize ? `
+              <span class="countdown-card__meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Team: ${escapeHtml(String(event.teamSize))} Max</span>
+              </span>` : ''}
             </div>
           </div>
 
           <!-- Countdown Timer -->
-          <div data-countdown-timer>
+          <div class="countdown-card__timer-wrap" data-countdown-timer>
             <div class="countdown-card__countdown-header">
-              <svg><use href="#icon-clock"/></svg>
-              <span>Event starts in:</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Starts In:</span>
             </div>
-            <div class="countdown-card__timer-grid" style="margin-top:0.75rem">
+            <div class="countdown-card__timer-grid">
               <div class="countdown-card__timer-unit">
                 <div class="countdown-card__timer-value" data-days>00</div>
                 <div class="countdown-card__timer-label">Days</div>
@@ -1352,14 +1489,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <!-- Event Started fallback (hidden by default) -->
           <div data-countdown-started style="display:none">
             <div class="countdown-card__started">
-              <div class="countdown-card__started-title">Event Started!</div>
-              <div class="countdown-card__started-desc">Join now to participate</div>
+              <div class="countdown-card__started-title">🚀 Event Live!</div>
+              <div class="countdown-card__started-desc">Check chapter stream or join now</div>
             </div>
           </div>
 
           <!-- Action Button -->
           <button type="button" class="countdown-card__btn btn-register-event" ${buttonDataAttrs}>
-            ${buttonText}
+            <span>${buttonText}</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </button>
         </div>
       </div>`;

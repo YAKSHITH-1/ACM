@@ -1,359 +1,1103 @@
-/* ══════════════════════════════════════
-   Event Countdown Card — Vanilla CSS
-   Adapted from the React EventCountdownCard component
-   ══════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   EVENT CARDS — KNOW US NEO-BRUTALIST VIBRANT STYLING
+   Adapted to match the Know-Us card design with event-specific components:
+   - Solid 2.5px borders & bold 5px offset drop shadows
+   - Playful rotating vibrant pop color themes (Orange, Purple, Cyan, Yellow, Green, Pink, Blue)
+   - Floating event-themed sticker badges with micro-tilt animations
+   - Retro brutalist timer blocks with high-contrast digits
+   - Punchy neo-brutalist buttons & status pills
+   - Light & Dark theme compatibility
+   ══════════════════════════════════════════════════════════════════ */
 
-/* ── Card Container ── */
-.countdown-card {
-  position: relative;
-  width: 100%;
-  max-width: 320px;
-  border-radius: 1rem;
-  border: 4px solid rgba(255, 255, 255, 0.08);
-  background: var(--v-card-bg, #111A16);
-  color: var(--v-text, #D1FAE5);
-  overflow: hidden;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.4s ease,
-    border-color 0.3s ease;
-
-  opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  filter: blur(8px);
-  animation: countdownCardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.countdown-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-@keyframes countdownCardEntrance {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-  }
-}
-
-/* Staggered entrance for multiple cards */
-.countdown-card:nth-child(2) {
-  animation-delay: 0.08s;
-}
-
-.countdown-card:nth-child(3) {
-  animation-delay: 0.16s;
-}
-
-.countdown-card:nth-child(4) {
-  animation-delay: 0.24s;
-}
-
-/* ── Image Section ── */
-.countdown-card__image-wrap {
-  position: relative;
-  overflow: hidden;
-  height: 12rem;
-}
-
-.countdown-card__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.countdown-card:hover .countdown-card__image {
-  transform: scale(1.1);
-}
-
-.countdown-card__image-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 60%, transparent);
-  pointer-events: none;
-}
-
-/* ── Urgency Badge ── */
-.countdown-card__urgency-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #ef4444;
-  color: #fff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  opacity: 0;
-  transform: scale(0.8);
-  animation: badgePop 0.4s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-}
-
-.countdown-card__urgency-badge[hidden] {
-  display: none;
-}
-
-@keyframes badgePop {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* ── Content Section ── */
-.countdown-card__content {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* ── Title & Meta ── */
-.countdown-card__title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--v-text, #D1FAE5);
-  margin: 0;
-  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  transition: opacity 0.3s ease;
-}
-
-.countdown-card:hover .countdown-card__title {
-  opacity: 1;
-}
-
-.countdown-card__meta {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.countdown-card__meta-item {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.85rem;
-  color: var(--v-text, #D1FAE5);
-  opacity: 0.7;
-}
-
-.countdown-card__meta-item svg {
-  width: 1rem;
-  height: 1rem;
-  flex-shrink: 0;
-}
-
-/* ── Countdown Display ── */
-.countdown-card__countdown-header {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--v-text, #D1FAE5);
-  opacity: 0.7;
-}
-
-.countdown-card__countdown-header svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.countdown-card__timer-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-}
-
-.countdown-card__timer-unit {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 0.75rem;
-  padding: 0.75rem 0.5rem;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.countdown-card:hover .countdown-card__timer-unit {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.countdown-card__timer-value {
-  font-size: 1.15rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--v-text, #D1FAE5);
-  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-}
-
-/* Seconds pulsing animation */
-.countdown-card__timer-unit--seconds .countdown-card__timer-value {
-  animation: secondsPulse 1s ease-in-out infinite;
-}
-
-@keyframes secondsPulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.15);
-    opacity: 0.7;
-  }
-}
-
-.countdown-card__timer-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--v-text, #D1FAE5);
-  opacity: 0.6;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.15rem;
-}
-
-/* ── Event Started State ── */
-.countdown-card__started {
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.countdown-card__started-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--v-primary, #10B981);
-  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-}
-
-.countdown-card__started-desc {
-  font-size: 0.85rem;
-  color: var(--v-text, #D1FAE5);
-  opacity: 0.7;
-  margin-top: 0.25rem;
-}
-
-/* ── Action Button ── */
-.countdown-card__btn {
-  width: 100%;
-  height: 2.75rem;
-  border: none;
-  border-radius: 0.625rem;
-  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--v-primary, #10B981), var(--v-secondary, #059669));
-  color: #fff;
-  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.3);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease;
-  letter-spacing: 0.02em;
-}
-
-.countdown-card__btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 12px 32px -4px rgba(16, 185, 129, 0.45);
-}
-
-.countdown-card__btn:active {
-  transform: scale(0.95);
-  box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.3);
-}
-
-/* ── Light Theme Overrides ── */
-body.light-theme .countdown-card {
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: var(--block-shadow, 6px 6px 0px var(--v-text));
-}
-
-body.light-theme .countdown-card:hover {
-  box-shadow: var(--block-shadow-hover, 2px 2px 0px var(--v-text));
-  transform: translate(4px, 4px);
-}
-
-body.light-theme .countdown-card__timer-unit {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.08);
-}
-
-body.light-theme .countdown-card__btn {
-  color: #fff;
-}
-
-/* ── Countdown Cards Container ── */
+/* ── Section & Grid Layout ── */
 .countdown-cards-section {
   margin-top: 2.5rem;
   margin-bottom: 3.5rem;
 }
 
 .countdown-cards-section .section-head {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .countdown-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.75rem;
+  align-items: stretch;
+}
+
+/* ── Neo-Brutalist Event Countdown Card ── */
+.countdown-card {
+  position: relative;
+  width: 100%;
+  border-radius: 22px;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 5px 5px 0px #0B0F0D;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  opacity: 0;
+  transform: translateY(30px) scale(0.96);
+  animation: countdownCardEntrance 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.countdown-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 8px 8px 0px #0B0F0D;
+  z-index: 5;
+}
+
+@keyframes countdownCardEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Staggered entrance */
+.countdown-card:nth-child(1) { animation-delay: 0.04s; }
+.countdown-card:nth-child(2) { animation-delay: 0.1s; }
+.countdown-card:nth-child(3) { animation-delay: 0.16s; }
+.countdown-card:nth-child(4) { animation-delay: 0.22s; }
+.countdown-card:nth-child(5) { animation-delay: 0.28s; }
+.countdown-card:nth-child(6) { animation-delay: 0.34s; }
+
+/* ── Unique Vibrant Event Color Themes (Distinct from Know Us) ── */
+.countdown-card.theme-indigo,  .upcoming-neo-card.theme-indigo  { background: #6366f1; color: #1e1b4b; }
+.countdown-card.theme-coral,   .upcoming-neo-card.theme-coral   { background: #ff5757; color: #450a0a; }
+.countdown-card.theme-emerald, .upcoming-neo-card.theme-emerald { background: #10b981; color: #022c22; }
+.countdown-card.theme-sky,     .upcoming-neo-card.theme-sky     { background: #0284c7; color: #082f49; }
+.countdown-card.theme-fuchsia, .upcoming-neo-card.theme-fuchsia { background: #d946ef; color: #4a044e; }
+.countdown-card.theme-lime,    .upcoming-neo-card.theme-lime    { background: #a3e635; color: #1a2e05; }
+.countdown-card.theme-amber,   .upcoming-neo-card.theme-amber   { background: #f59e0b; color: #451a03; }
+.countdown-card.theme-teal,    .upcoming-neo-card.theme-teal    { background: #14b8a6; color: #042f2e; }
+
+/* In Light Theme */
+body.light-theme .countdown-card.theme-indigo,  body.light-theme .upcoming-neo-card.theme-indigo  { background: #818cf8; color: #0f172a; }
+body.light-theme .countdown-card.theme-coral,   body.light-theme .upcoming-neo-card.theme-coral   { background: #ff7575; color: #0f172a; }
+body.light-theme .countdown-card.theme-emerald, body.light-theme .upcoming-neo-card.theme-emerald { background: #34d399; color: #0f172a; }
+body.light-theme .countdown-card.theme-sky,     body.light-theme .upcoming-neo-card.theme-sky     { background: #38bdf8; color: #0f172a; }
+body.light-theme .countdown-card.theme-fuchsia, body.light-theme .upcoming-neo-card.theme-fuchsia { background: #e879f9; color: #0f172a; }
+body.light-theme .countdown-card.theme-lime,    body.light-theme .upcoming-neo-card.theme-lime    { background: #bef264; color: #0f172a; }
+body.light-theme .countdown-card.theme-amber,   body.light-theme .upcoming-neo-card.theme-amber   { background: #fbbf24; color: #0f172a; }
+body.light-theme .countdown-card.theme-teal,    body.light-theme .upcoming-neo-card.theme-teal    { background: #2dd4bf; color: #0f172a; }
+
+/* ── Floating Event Sticker Badge ── */
+.event-sticker {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 3px 3px 0px #0B0F0D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  z-index: 10;
+  pointer-events: none;
+  transform: rotate(12deg);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.event-sticker svg, .event-sticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.countdown-card:hover .event-sticker {
+  transform: translate(4px, -6px) rotate(22deg) scale(1.15);
+  box-shadow: 4.5px 4.5px 0px #0B0F0D;
+}
+
+/* ── Image Wrap Section ── */
+.countdown-card__image-wrap {
+  position: relative;
+  width: 100%;
+  height: 11.5rem;
+  border-radius: 14px;
+  border: 2px solid #0B0F0D;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  overflow: hidden;
+  background: #0B0F0D;
+  flex-shrink: 0;
+}
+
+.countdown-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.countdown-card:hover .countdown-card__image {
+  transform: scale(1.08);
+}
+
+.countdown-card__image-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(11, 15, 13, 0.6) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── Urgency & Status Badges Floating in Image ── */
+.countdown-card__urgency-badge {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  background: #ef4444;
+  color: #ffffff;
+  border: 2px solid #0B0F0D;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+  animation: badgePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.countdown-card__urgency-badge[hidden] {
+  display: none;
+}
+
+.countdown-card__status-badge {
+  position: absolute;
+  bottom: 0.65rem;
+  right: 0.65rem;
+  background: #ffffff;
+  color: #0B0F0D;
+  border: 1.5px solid #0B0F0D;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+@keyframes badgePop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Card Content ── */
+.countdown-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.countdown-card__category {
+  font-family: 'Caveat', 'Patrick Hand', cursive, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0B0F0D;
+  line-height: 1;
+  margin: 0 0 0.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.countdown-card__title {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #0B0F0D !important;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Meta items ── */
+.countdown-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+
+.countdown-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid #0B0F0D;
+  border-radius: 8px;
+  padding: 0.2rem 0.55rem;
+  box-shadow: 1.5px 1.5px 0px #0B0F0D;
+}
+
+.countdown-card__meta-item svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  stroke: #0B0F0D;
+}
+
+/* ── Countdown Timer Box ── */
+.countdown-card__timer-wrap {
+  margin-top: 0.15rem;
+}
+
+.countdown-card__countdown-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+}
+
+.countdown-card__countdown-header svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  stroke: #0B0F0D;
+}
+
+.countdown-card__timer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+}
+
+.countdown-card__timer-unit {
+  background: #ffffff;
+  border: 2px solid #0B0F0D;
+  border-radius: 10px;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  padding: 0.5rem 0.2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.countdown-card:hover .countdown-card__timer-unit {
+  transform: translateY(-2px);
+  box-shadow: 2.5px 2.5px 0px #0B0F0D;
+}
+
+.countdown-card__timer-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #0B0F0D;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  line-height: 1;
+}
+
+.countdown-card__timer-unit--seconds .countdown-card__timer-value {
+  animation: secondsPulse 1s ease-in-out infinite;
+}
+
+@keyframes secondsPulse {
+  0%, 100% {
+    transform: scale(1);
+    color: #0B0F0D;
+  }
+  50% {
+    transform: scale(1.18);
+    color: #ef4444;
+  }
+}
+
+.countdown-card__timer-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+/* ── Event Started State ── */
+.countdown-card__started {
+  text-align: center;
+  padding: 0.6rem;
+  background: #ffffff;
+  border: 2px solid #0B0F0D;
+  border-radius: 10px;
+  box-shadow: 2px 2px 0px #0B0F0D;
+}
+
+.countdown-card__started-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+}
+
+.countdown-card__started-desc {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 0.15rem;
+}
+
+/* ── Neo-Brutalist Action Button ── */
+.countdown-card__btn {
+  width: 100%;
+  height: 2.85rem;
+  border: 2.5px solid #0B0F0D;
+  border-radius: 12px;
+  background: #0B0F0D;
+  color: #ffffff;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-weight: 800;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 3.5px 3.5px 0px #0B0F0D;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 0.25rem;
+}
+
+.countdown-card__btn:hover {
+  background: #ffffff;
+  color: #0B0F0D;
+  transform: translate(-2px, -2px);
+  box-shadow: 5.5px 5.5px 0px #0B0F0D;
+}
+
+.countdown-card__btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1.5px 1.5px 0px #0B0F0D;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   UPCOMING DYNAMIC EVENTS & PAST GLORIES (Know Us Neo-Brutalist Theme)
+   ══════════════════════════════════════════════════════════════════ */
+.upcoming-neo-card {
+  position: relative;
+  border-radius: 20px;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 4.5px 4.5px 0px #0B0F0D;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.upcoming-neo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 7px 7px 0px #0B0F0D;
+}
+
+.upcoming-neo-header {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-/* Responsive: stack on small screens */
-@media (max-width: 680px) {
-  .countdown-card {
-    max-width: 100%; /* Allow full width on mobile if desired */
-  }
+.upcoming-neo-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  color: #0B0F0D;
+  border: 1.5px solid #0B0F0D;
+  border-radius: 8px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 2px 2px 0px #0B0F0D;
+}
 
+.upcoming-neo-date svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.upcoming-neo-status {
+  background: #ffffff;
+  color: #0B0F0D;
+  border: 1.5px solid #0B0F0D;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  text-transform: uppercase;
+}
+
+.upcoming-neo-title {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0B0F0D !important;
+  margin: 0.35rem 0 0;
+  line-height: 1.2;
+}
+
+.upcoming-neo-desc {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #0B0F0D;
+  opacity: 0.92;
+  margin: 0;
+}
+
+.upcoming-neo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.upcoming-neo-btn {
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  border: 2px solid #0B0F0D;
+  background: #0B0F0D;
+  color: #ffffff;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 2.5px 2.5px 0px #0B0F0D;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.upcoming-neo-btn:hover {
+  background: #ffffff;
+  color: #0B0F0D;
+  transform: translate(-2px, -2px);
+  box-shadow: 4.5px 4.5px 0px #0B0F0D;
+}
+
+/* Past Glories Card */
+.past-wrap {
+  border-radius: 22px;
+  border: 2.5px solid #0B0F0D;
+  background: #ffffff;
+  box-shadow: 5px 5px 0px #0B0F0D;
+  padding: 1.5rem;
+}
+
+body:not(.light-theme) .past-wrap {
+  background: #111A16;
+  border-color: var(--v-text, #D1FAE5);
+  box-shadow: 5px 5px 0px var(--v-text, #064E3B);
+}
+
+.past-neo-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1.5px dashed rgba(11, 15, 13, 0.2);
+  align-items: flex-start;
+}
+
+body:not(.light-theme) .past-neo-card {
+  border-bottom-color: rgba(209, 250, 229, 0.15);
+}
+
+.past-neo-card:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.past-neo-card:first-child {
+  padding-top: 0;
+}
+
+.past-neo-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #0B0F0D;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.past-neo-info h3 {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  margin: 0;
+}
+
+body:not(.light-theme) .past-neo-info h3 {
+  color: #ffffff;
+}
+
+.past-neo-info p {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #475569;
+}
+
+body:not(.light-theme) .past-neo-info p {
+  color: #94a3b8;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EVENT REGISTRATION MODAL (Know Us Neo-Brutalist Dossier Design)
+   ══════════════════════════════════════════════════════════════════ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(11, 15, 13, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.modal-backdrop.open {
+  display: flex;
+  animation: modalBackdropFade 0.3s ease forwards;
+}
+
+@keyframes modalBackdropFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 26px;
+  border: 3px solid #0B0F0D !important;
+  background: #fffdfa !important;
+  color: #0B0F0D !important;
+  box-shadow: 8px 8px 0px #0B0F0D !important;
+  padding: 2.25rem 2.15rem !important;
+  position: relative;
+  animation: modalSlideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+body:not(.light-theme) .modal-card {
+  background: #111A16 !important;
+  color: #D1FAE5 !important;
+  border-color: #064E3B !important;
+  box-shadow: 8px 8px 0px #064E3B !important;
+}
+
+/* Floating Modal Sticker Badge */
+.modal-sticker {
+  position: absolute;
+  top: -12px;
+  right: 68px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fde047;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 3px 3px 0px #0B0F0D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transform: rotate(14deg);
+  z-index: 10;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.modal-sticker svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+body:not(.light-theme) .modal-sticker {
+  background: #10B981;
+  border-color: #064E3B;
+  box-shadow: 3px 3px 0px #064E3B;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2.5px dashed rgba(11, 15, 13, 0.2);
+  padding-bottom: 1.15rem;
+}
+
+body:not(.light-theme) .modal-header {
+  border-bottom-color: rgba(209, 250, 229, 0.15);
+}
+
+.modal-kicker {
+  font-family: 'Caveat', 'Patrick Hand', cursive, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0284c7;
+  margin-bottom: 0.15rem;
+  line-height: 1;
+}
+
+body:not(.light-theme) .modal-kicker {
+  color: #34d399;
+}
+
+.modal-header h2 {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
+  font-size: 1.65rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  color: #0B0F0D !important;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.15;
+}
+
+body:not(.light-theme) .modal-header h2 {
+  color: #D1FAE5 !important;
+}
+
+.modal-header .modal-event-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 9999px;
+  background: #fde047;
+  color: #0B0F0D;
+  border: 2px solid #0B0F0D;
+  box-shadow: 2.5px 2.5px 0px #0B0F0D;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+body:not(.light-theme) .modal-header .modal-event-name {
+  background: #10B981;
+  color: #0B0F0D;
+  border-color: #064E3B;
+  box-shadow: 2.5px 2.5px 0px #064E3B;
+}
+
+.modal-close {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  border: 2.5px solid #0B0F0D !important;
+  box-shadow: 3px 3px 0px #0B0F0D !important;
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  font-size: 1.5rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+body:not(.light-theme) .modal-close {
+  background: #1a2621 !important;
+  color: #D1FAE5 !important;
+  border-color: #064E3B !important;
+  box-shadow: 3px 3px 0px #064E3B !important;
+}
+
+.modal-close:hover {
+  background: #f43f5e !important;
+  color: #ffffff !important;
+  transform: rotate(90deg) scale(1.08);
+  box-shadow: 4.5px 4.5px 0px #0B0F0D !important;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.modal-form .field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.modal-form .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+@media (max-width: 520px) {
+  .modal-form .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modal-form label {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0B0F0D;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.modal-form label::before {
+  content: '●';
+  color: #0284c7;
+  font-size: 0.65rem;
+}
+
+body:not(.light-theme) .modal-form label {
+  color: #D1FAE5;
+}
+
+body:not(.light-theme) .modal-form label::before {
+  color: #34d399;
+}
+
+.modal-form input,
+.modal-form select,
+.modal-form textarea {
+  width: 100%;
+  border-radius: 14px;
+  border: 2.5px solid #0B0F0D !important;
+  background: #ffffff !important;
+  color: #0B0F0D !important;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  font-family: var(--font-body, 'Inter', sans-serif) !important;
+  font-weight: 600;
+  box-shadow: 3px 3px 0px #0B0F0D !important;
+  outline: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+body:not(.light-theme) .modal-form input,
+body:not(.light-theme) .modal-form select,
+body:not(.light-theme) .modal-form textarea {
+  background: #0c1410 !important;
+  color: #D1FAE5 !important;
+  border-color: #064E3B !important;
+  box-shadow: 3px 3px 0px #064E3B !important;
+}
+
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 5px 5px 0px #0B0F0D !important;
+  border-color: #0284c7 !important;
+}
+
+body:not(.light-theme) .modal-form input:focus,
+body:not(.light-theme) .modal-form select:focus,
+body:not(.light-theme) .modal-form textarea:focus {
+  box-shadow: 5px 5px 0px #10B981 !important;
+  border-color: #10B981 !important;
+}
+
+.modal-form textarea {
+  resize: none;
+}
+
+.team-members-section {
+  border-radius: 18px;
+  border: 2.5px dashed #0B0F0D;
+  background: #fef9c3;
+  box-shadow: 3px 3px 0px #0B0F0D;
+  padding: 1.25rem;
+}
+
+body:not(.light-theme) .team-members-section {
+  border-color: #064E3B;
+  background: rgba(6, 78, 59, 0.25);
+  box-shadow: 3px 3px 0px #064E3B;
+}
+
+.team-members-section h4 {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+body:not(.light-theme) .team-members-section h4 {
+  color: #fde047;
+}
+
+.team-member-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1.5px dashed rgba(11, 15, 13, 0.2);
+}
+
+body:not(.light-theme) .team-member-row {
+  border-bottom-color: rgba(209, 250, 229, 0.15);
+}
+
+.team-member-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.team-member-label {
+  grid-column: 1 / -1;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #0B0F0D;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+body:not(.light-theme) .team-member-label {
+  color: #D1FAE5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.btn-modal-submit {
+  flex: 1;
+  height: 3.35rem;
+  border-radius: 14px;
+  border: 2.5px solid #0B0F0D !important;
+  background: #06b6d4 !important;
+  color: #0B0F0D !important;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
+  font-weight: 800 !important;
+  font-size: 0.98rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em;
+  box-shadow: 4.5px 4.5px 0px #0B0F0D !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body:not(.light-theme) .btn-modal-submit {
+  background: #10B981 !important;
+  color: #0B0F0D !important;
+  border-color: #064E3B !important;
+  box-shadow: 4.5px 4.5px 0px #064E3B !important;
+}
+
+.btn-modal-submit:hover:not(:disabled) {
+  background: #22d3ee !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px #0B0F0D !important;
+}
+
+body:not(.light-theme) .btn-modal-submit:hover:not(:disabled) {
+  background: #34d399 !important;
+  box-shadow: 7px 7px 0px #064E3B !important;
+}
+
+.btn-modal-submit:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #0B0F0D !important;
+}
+
+.btn-modal-cancel {
+  height: 3.35rem;
+  padding: 0 1.5rem;
+  border-radius: 14px;
+  border: 2.5px solid #0B0F0D !important;
+  background: #ffffff !important;
+  color: #0B0F0D !important;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
+  font-weight: 800 !important;
+  font-size: 0.98rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em;
+  box-shadow: 4.5px 4.5px 0px #0B0F0D !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+body:not(.light-theme) .btn-modal-cancel {
+  background: #1a2621 !important;
+  color: #D1FAE5 !important;
+  border-color: #064E3B !important;
+  box-shadow: 4.5px 4.5px 0px #064E3B !important;
+}
+
+.btn-modal-cancel:hover {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px #0B0F0D !important;
+}
+
+body:not(.light-theme) .btn-modal-cancel:hover {
+  background: #24352e !important;
+  box-shadow: 7px 7px 0px #064E3B !important;
+}
+
+.btn-modal-cancel:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #0B0F0D !important;
+}
+
+/* ── Popup Alert (Neo-Brutalist) ── */
+#popup > div {
+  background: #fffdfa !important;
+  color: #0B0F0D !important;
+  border: 3px solid #0B0F0D !important;
+  border-radius: 22px !important;
+  box-shadow: 6px 6px 0px #0B0F0D !important;
+}
+
+body:not(.light-theme) #popup > div {
+  background: #111A16 !important;
+  color: #D1FAE5 !important;
+  border-color: #064E3B !important;
+  box-shadow: 6px 6px 0px #064E3B !important;
+}
+
+#popup-title {
+  color: #0B0F0D !important;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+}
+
+body:not(.light-theme) #popup-title {
+  color: #D1FAE5 !important;
+}
+
+#popup-message {
+  color: #334155 !important;
+  font-weight: 500 !important;
+  line-height: 1.6;
+}
+
+body:not(.light-theme) #popup-message {
+  color: #94a3b8 !important;
+}
+
+#popup-btn {
+  background: #06b6d4 !important;
+  color: #0B0F0D !important;
+  border: 2px solid #0B0F0D !important;
+  border-radius: 12px !important;
+  box-shadow: 3.5px 3.5px 0px #0B0F0D !important;
+  font-weight: 800 !important;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  padding: 0.65rem 1.75rem !important;
+}
+
+body:not(.light-theme) #popup-btn {
+  background: #10B981 !important;
+  color: #0B0F0D !important;
+  border-color: #064E3B !important;
+  box-shadow: 3.5px 3.5px 0px #064E3B !important;
+}
+
+#popup-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5.5px 5.5px 0px #0B0F0D !important;
+  background: #22d3ee !important;
+}
+
+/* ── Responsive adjustments ── */
+@media (max-width: 640px) {
   .countdown-cards-grid {
-    flex-direction: column;
-    align-items: center; /* Center the cards on mobile */
-  }
-}
-
-/* ── Reduced Motion ── */
-@media (prefers-reduced-motion: reduce) {
-  .countdown-card {
-    animation: none;
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
-
-  .countdown-card:hover {
-    transform: none;
-  }
-
-  .countdown-card:hover .countdown-card__image {
-    transform: none;
-  }
-
-  .countdown-card__urgency-badge {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-
-  .countdown-card__timer-unit--seconds .countdown-card__timer-value {
-    animation: none;
-  }
-
-  .countdown-card__btn:hover {
-    transform: none;
-  }
-
-  .countdown-card__btn:active {
-    transform: none;
+    grid-template-columns: 1fr;
   }
 }
