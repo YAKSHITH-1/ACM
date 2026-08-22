@@ -24,56 +24,24 @@
   <div id="global-navbar"></div>
 
   <main class="main-content">
-    <header class="page-header ann-page-header">
-      <p class="label">Bulletin</p>
-      <h1 class="page-title">Announcements</h1>
-      <p class="page-subtitle">Stay updated with the latest news, sprints, and core updates from our ACM chapter.</p>
-    </header>
+    <div class="announcements-wrapper">
+      <header class="page-header ann-page-header">
+        <p class="label">Chapter Bulletin</p>
+        <h1 class="page-title">Announcements</h1>
+      </header>
 
-    <div class="events-grid">
-      <div>
-        <div class="section-head" style="margin-bottom: 1.5rem;">
-          <h2 class="section-title">Live Feed</h2>
-          <span class="badge-live">Updating</span>
-        </div>
-        <div class="announcements-grid reveal" id="announcements-list">
-          <!-- Announcements will be injected here by JS -->
-        </div>
+      <!-- Filter Tabs -->
+      <div class="ann-filter-tabs" id="ann-filter-tabs">
+        <button class="ann-tab-btn is-active" data-cat="all">All Dispatches</button>
+        <button class="ann-tab-btn" data-cat="cyan">Hackathons</button>
+        <button class="ann-tab-btn" data-cat="violet">Core Updates</button>
+        <button class="ann-tab-btn" data-cat="emerald">Workshops</button>
+        <button class="ann-tab-btn" data-cat="rose">Urgent Alerts</button>
       </div>
 
-      <aside class="ann-side">
-        <h2 class="section-title ann-side-title">Categories</h2>
-        <div class="ann-side-card ann-categories">
-          <div class="ann-legend-item">
-            <span class="ann-legend-dot dot-cyan"></span>
-            <span class="ann-legend-label">Hackathons &amp; Sprints</span>
-          </div>
-          <div class="ann-legend-item">
-            <span class="ann-legend-dot dot-violet"></span>
-            <span class="ann-legend-label">Core Updates</span>
-          </div>
-          <div class="ann-legend-item">
-            <span class="ann-legend-dot dot-emerald"></span>
-            <span class="ann-legend-label">Workshops &amp; Labs</span>
-          </div>
-          <div class="ann-legend-item">
-            <span class="ann-legend-dot dot-rose"></span>
-            <span class="ann-legend-label">Urgent Alerts</span>
-          </div>
-        </div>
-
-        <h2 class="section-title ann-side-title ann-side-title--spaced">Activity Stats</h2>
-        <div class="ann-side-card ann-stats">
-          <div class="ann-stat-tile num-cyan">
-            <span class="ann-stat-number">24</span>
-            <span class="ann-stat-label">This Month</span>
-          </div>
-          <div class="ann-stat-tile num-violet">
-            <span class="ann-stat-number">156</span>
-            <span class="ann-stat-label">Total Posts</span>
-          </div>
-        </div>
-      </aside>
+      <div class="announcements-grid reveal" id="announcements-list">
+        <!-- Announcements will be injected here by JS -->
+      </div>
     </div>
   </main>
 

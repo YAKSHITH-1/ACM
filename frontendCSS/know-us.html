@@ -39,8 +39,7 @@
     <header class="page-header">
       <p class="label">Know Us</p>
       <h1 class="page-title">Meet the humans behind ACM JIT.</h1>
-      <p class="page-subtitle">Our chapter is led by dedicated student officers and faculty mentors shaping the chapter
-        with care, innovation, and technical leadership.</p>
+
     </header>
 
     <!-- ═══ INTERACTIVE FIGMA SHOWCASE STAGE ═══ -->
@@ -56,14 +55,24 @@
           </svg>
         </button>
 
-        <!-- Stage Header (Title from Figma Video) -->
+        <!-- Stage Header with Faculty Mentors & Chapter Officers -->
         <div class="ts-stage-header" id="ts-stage-header">
-          <h2 class="ts-stage-title">Chapter Officers</h2>
-          <p class="ts-stage-subtitle">Jyothy Institute of Technology ACM Student Chapter</p>
-          <p class="ts-swipe-hint">← Swipe cards to explore →</p>
+          <!-- ── FACULTY MENTORS (TOP LEADERSHIP) ── -->
+          <div class="ts-sub-header">
+            <h2 class="ts-stage-title">Faculty Mentors</h2>
+          </div>
+
+          <!-- ── FACULTY CARDS ROW (2 Specially Highlighted Cards) ── -->
+          <div class="ts-faculty-row" id="ts-faculty-row"></div>
+
+          <!-- ── CHAPTER OFFICERS ── -->
+          <div class="ts-sub-header" style="margin-top: 1rem;">
+            <h2 class="ts-stage-title">Chapter Officers</h2>
+            <p class="ts-swipe-hint">← Swipe cards to explore →</p>
+          </div>
         </div>
 
-        <!-- ── DECK VIEW: 7-Card Horizontal Fanned Row (Web Master at Center) ── -->
+        <!-- ── DECK VIEW: 6-Card Horizontal Fanned Row ── -->
         <div class="ts-cards-row" id="ts-cards-row"></div>
 
         <!-- ── SPOTLIGHT VIEW: Left Card + Right Detail Box ── -->
@@ -124,13 +133,79 @@
     (function () {
       'use strict';
 
-      // ── Official Chapter Officers (Web Master at Center - Slot 4 of 7) ──
-      const MEMBERS = [
+      // ── 1. Top Highlighted Faculty Mentors (HOD & Faculty Sponsor) ──
+      const FACULTY_MEMBERS = [
+        {
+          id: 'hod',
+          name: 'Dr. Kishore.G',
+          displayName: 'Dr. Kishore(HOD)',
+          image: './assets/team/hod.png',
+          location: 'Bengaluru',
+          role: 'Head of Department',
+          tag: 'HOD · ISE',
+          themeClass: 'theme-faculty-hod',
+          dossierClass: 'dossier-faculty-hod',
+          dotColor: '#6366f1',
+          sticker: './assets/Stickers/hod.png',
+          quote: '“Empowering future technologists through continuous innovation, academic excellence, and research.”',
+          bio: 'Head of Department of Information Science and Engineering at Jyothy Institute of Technology. Providing institutional leadership, research direction, and mentorship for the ACM Student Chapter.',
+          skills: ['Department Leadership', 'Academic Vision', 'Research & Development', 'Institutional Strategy'],
+          socials: {
+            linkedin: 'https://www.linkedin.com/company/acm-jit'
+          },
+          avatarSvg: `<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="80" cy="54" r="29" fill="#FFDFC4" stroke="#0B0F0D" stroke-width="2.5"/>
+            <path d="M48 48 C44 16 116 16 112 48 C112 76 118 108 118 108 L104 88 C104 88 96 22 80 22 C64 22 56 88 56 88 L42 108 C42 108 48 76 48 48 Z" fill="#0B0F0D"/>
+            <rect x="62" y="48" width="15" height="11" rx="2.5" fill="none" stroke="#0B0F0D" stroke-width="2"/>
+            <rect x="83" y="48" width="15" height="11" rx="2.5" fill="none" stroke="#0B0F0D" stroke-width="2"/>
+            <line x1="77" y1="53" x2="83" y2="53" stroke="#0B0F0D" stroke-width="2"/>
+            <circle cx="69" cy="53" r="2.5" fill="#0B0F0D"/>
+            <circle cx="90" cy="53" r="2.5" fill="#0B0F0D"/>
+            <path d="M74 65 Q80 72 86 65" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M38 165 C38 98 122 98 122 165 Z" fill="#312e81" stroke="#0B0F0D" stroke-width="2.5"/>
+            <polygon points="80,105 70,138 90,138" fill="#FFDFC4" stroke="#0B0F0D" stroke-width="2"/>
+            <path d="M44 136 C56 156 104 156 116 136" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>`
+        },
+        {
+          id: 'vandana',
+          name: 'Prof. Vandana G',
+          displayName: 'Prof. Vandana',
+          location: 'Bengaluru',
+          role: 'Faculty Sponsor',
+          tag: 'FACULTY SPONSOR',
+          themeClass: 'theme-faculty-sponsor',
+          dossierClass: 'dossier-faculty-sponsor',
+          dotColor: '#0d9488',
+          sticker: './assets/Stickers/facultysponsor.png',
+          quote: '“Guiding student innovation, academic research, and technical excellence.”',
+          bio: 'Faculty Sponsor mentoring the student officer committee, promoting technical conferences, hackathon excellence, and department research initiatives.',
+          skills: ['Faculty Mentorship', 'Academic Excellence', 'Research Guidance', 'Curriculum Innovation'],
+          socials: {
+            linkedin: 'https://www.linkedin.com/company/acm-jit'
+          },
+          avatarSvg: `<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="80" cy="55" r="30" fill="#FFDFC4" stroke="#0B0F0D" stroke-width="2.5"/>
+            <path d="M46 50 C46 20 114 20 114 50 C114 34 98 26 80 26 C62 26 46 34 46 50 Z" fill="#0B0F0D"/>
+            <rect x="62" y="48" width="16" height="11" rx="2" fill="none" stroke="#0B0F0D" stroke-width="2"/>
+            <rect x="82" y="48" width="16" height="11" rx="2" fill="none" stroke="#0B0F0D" stroke-width="2"/>
+            <line x1="78" y1="53" x2="82" y2="53" stroke="#0B0F0D" stroke-width="2"/>
+            <circle cx="70" cy="54" r="2.5" fill="#0B0F0D"/>
+            <circle cx="90" cy="54" r="2.5" fill="#0B0F0D"/>
+            <path d="M74 65 Q80 72 86 65" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M38 165 C38 98 122 98 122 165 Z" fill="#115e59" stroke="#0B0F0D" stroke-width="2.5"/>
+            <path d="M72 96 L80 115 L88 96 Z" fill="#FFDFC4" stroke="#0B0F0D" stroke-width="2"/>
+          </svg>`
+        }
+      ];
+
+      // ── 2. Official Student Chapter Officers ──
+      const OFFICER_MEMBERS = [
         {
           id: 'samhita',
           name: 'Ms Samhita Bharadwaj',
           displayName: 'Samhita',
-          image: '',
+          image: './assets/team/samhita.png',
           location: 'Bengaluru',
           role: 'Chair',
           themeClass: 'theme-orange',
@@ -156,7 +231,7 @@
         },
         {
           id: 'jyothi',
-          name: 'Jyothi Kumari',
+          name: 'Ms.Jyothi Kumari',
           displayName: 'Jyothi',
           location: 'Bengaluru',
           role: 'Vice Chair',
@@ -191,7 +266,7 @@
           id: 'shrikar',
           name: 'Shrikar Maddanna Joshi',
           displayName: 'Shrikar',
-          image: './assets/team/shrikar.png',
+          image: './assets/team/s4.jpeg',
           location: 'Bengaluru',
           role: 'Secretary',
           themeClass: 'theme-cyan',
@@ -221,7 +296,7 @@
         },
         {
           id: 'yakshith',
-          name: 'Yakshith V',
+          name: 'Mr.Yakshith V',
           displayName: 'Yakshith',
           location: 'Bengaluru',
           role: 'Web Master',
@@ -283,6 +358,7 @@
           id: 'bhoomika',
           name: 'Ms. Bhoomika Kulkarni',
           displayName: 'Bhoomika',
+          image: './assets/team/Bh.png',
           location: 'Bengaluru',
           role: 'Membership Chair',
           themeClass: 'theme-pink',
@@ -307,37 +383,11 @@
             <path d="M70 94 L80 110 L90 94 Z" fill="#FFE0B2" stroke="#0B0F0D" stroke-width="2"/>
             <path d="M42 136 C56 156 104 156 118 136" stroke="#0B0F0D" stroke-width="3" stroke-linecap="round"/>
           </svg>`
-        },
-        {
-          id: 'vandana',
-          name: 'Prof. Vandana G',
-          displayName: 'Vandana',
-          location: 'Bengaluru',
-          role: 'Faculty Sponsor',
-          themeClass: 'theme-blue',
-          dossierClass: 'dossier-blue',
-          dotColor: '#3b82f6',
-          sticker: './assets/Stickers/facultysponsor.png',
-          quote: '“Guiding student innovation, academic research, and technical excellence.”',
-          bio: 'Faculty Sponsor mentoring the student officer committee, promoting technical conferences, hackathon excellence, and department research initiatives.',
-          skills: ['Faculty Mentorship', 'Academic Excellence', 'Research Guidance', 'Curriculum Innovation'],
-          socials: {
-            linkedin: 'https://www.linkedin.com/company/acm-jit'
-          },
-          avatarSvg: `<svg viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="80" cy="55" r="30" fill="#FFDFC4" stroke="#0B0F0D" stroke-width="2.5"/>
-            <path d="M46 50 C46 20 114 20 114 50 C114 34 98 26 80 26 C62 26 46 34 46 50 Z" fill="#0B0F0D"/>
-            <rect x="62" y="48" width="16" height="11" rx="2" fill="none" stroke="#0B0F0D" stroke-width="2"/>
-            <rect x="82" y="48" width="16" height="11" rx="2" fill="none" stroke="#0B0F0D" stroke-width="2"/>
-            <line x1="78" y1="53" x2="82" y2="53" stroke="#0B0F0D" stroke-width="2"/>
-            <circle cx="70" cy="54" r="2.5" fill="#0B0F0D"/>
-            <circle cx="90" cy="54" r="2.5" fill="#0B0F0D"/>
-            <path d="M74 65 Q80 72 86 65" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M38 165 C38 98 122 98 122 165 Z" fill="#1d4ed8" stroke="#0B0F0D" stroke-width="2.5"/>
-            <path d="M72 96 L80 115 L88 96 Z" fill="#FFDFC4" stroke="#0B0F0D" stroke-width="2"/>
-          </svg>`
         }
       ];
+
+      // Combined member registry for spotlight & routing
+      const ALL_MEMBERS = [...FACULTY_MEMBERS, ...OFFICER_MEMBERS];
 
       // ── Social Icons ──
       const ICONS = {
@@ -346,6 +396,7 @@
       };
 
       // ── DOM References ──
+      const facultyRow = document.getElementById('ts-faculty-row');
       const cardsRow = document.getElementById('ts-cards-row');
       const spotlightWrap = document.getElementById('ts-spotlight-wrap');
       const spotlightCardSlot = document.getElementById('ts-spotlight-card-slot');
@@ -368,53 +419,78 @@
         return svgContent;
       }
 
-      // ── Render 7-Card Deck ──
+      // ── Helper: Build Individual Card Element ──
+      function buildCard(m, isFaculty = false) {
+        const card = document.createElement('div');
+        card.className = `ts-card ${m.themeClass} ${isFaculty ? 'ts-card-faculty' : ''}`;
+        card.dataset.id = m.id;
+
+        // Faculty Badge Pill Tag
+        if (isFaculty && m.tag) {
+          const facultyTag = document.createElement('div');
+          facultyTag.className = 'ts-faculty-tag';
+          facultyTag.textContent = m.tag;
+          card.appendChild(facultyTag);
+        }
+
+        // Floating Role Sticker Badge
+        const stickerBadge = document.createElement('div');
+        stickerBadge.className = 'ts-sticker ts-stk-tr';
+        stickerBadge.setAttribute('title', `${m.role} Sticker`);
+        stickerBadge.innerHTML = `<img src="${m.sticker}" alt="${m.role} Sticker" class="ts-sticker-img" />`;
+
+        // Avatar / Photo Wrap
+        const avatarWrap = document.createElement('div');
+        avatarWrap.className = 'ts-avatar-wrap';
+        avatarWrap.innerHTML = renderAvatarHtml(m);
+
+        // Info (Signature name + Role)
+        const info = document.createElement('div');
+        info.className = 'ts-info';
+        info.innerHTML = `
+          <div class="ts-name">${m.displayName}</div>
+          <div class="ts-location">${m.role}</div>
+        `;
+
+        card.appendChild(stickerBadge);
+        card.appendChild(avatarWrap);
+        card.appendChild(info);
+
+        // Click to expand
+        card.addEventListener('click', () => openSpotlight(m.id));
+
+        return card;
+      }
+
+      // ── Render Both Faculty Row and Student Officers Deck ──
       function renderDeck() {
-        cardsRow.innerHTML = '';
-        MEMBERS.forEach((m) => {
-          const card = document.createElement('div');
-          card.className = `ts-card ${m.themeClass}`;
-          card.dataset.id = m.id;
+        // 1. Render Faculty Mentors
+        if (facultyRow) {
+          facultyRow.innerHTML = '';
+          FACULTY_MEMBERS.forEach(m => {
+            facultyRow.appendChild(buildCard(m, true));
+          });
+        }
 
-          // Floating Role Sticker Badge
-          const stickerBadge = document.createElement('div');
-          stickerBadge.className = 'ts-sticker ts-stk-tr';
-          stickerBadge.setAttribute('title', `${m.role} Sticker`);
-          stickerBadge.innerHTML = `<img src="${m.sticker}" alt="${m.role} Sticker" class="ts-sticker-img" />`;
-
-          // Avatar / Photo Wrap
-          const avatarWrap = document.createElement('div');
-          avatarWrap.className = 'ts-avatar-wrap';
-          avatarWrap.innerHTML = renderAvatarHtml(m);
-
-          // Info (Signature name + Role)
-          const info = document.createElement('div');
-          info.className = 'ts-info';
-          info.innerHTML = `
-            <div class="ts-name">${m.displayName}</div>
-            <div class="ts-location">${m.role}</div>
-          `;
-
-          card.appendChild(stickerBadge);
-          card.appendChild(avatarWrap);
-          card.appendChild(info);
-
-          // Click to expand
-          card.addEventListener('click', () => openSpotlight(m.id));
-
-          cardsRow.appendChild(card);
-        });
+        // 2. Render Student Chapter Officers
+        if (cardsRow) {
+          cardsRow.innerHTML = '';
+          OFFICER_MEMBERS.forEach(m => {
+            cardsRow.appendChild(buildCard(m, false));
+          });
+        }
       }
 
       // ── Render Bottom Switcher Chips ──
       function renderBottomSwitcher() {
         bottomSwitcher.innerHTML = '';
-        MEMBERS.forEach((m) => {
+        ALL_MEMBERS.forEach((m) => {
+          const isFaculty = FACULTY_MEMBERS.some(f => f.id === m.id);
           const chip = document.createElement('button');
           chip.className = `ts-switcher-chip ${m.id === currentMemberId ? 'is-active' : ''}`;
           chip.innerHTML = `
             <span class="ts-switcher-dot" style="background: ${m.dotColor}"></span>
-            <span>${m.displayName}</span>
+            <span>${isFaculty ? '★ ' : ''}${m.displayName}</span>
           `;
           chip.addEventListener('click', () => openSpotlight(m.id));
           bottomSwitcher.appendChild(chip);
@@ -423,12 +499,13 @@
 
       // ── Open Spotlight View ──
       function openSpotlight(id) {
-        const member = MEMBERS.find(m => m.id === id);
+        const member = ALL_MEMBERS.find(m => m.id === id);
         if (!member) return;
 
         currentMemberId = id;
+        const isFaculty = FACULTY_MEMBERS.some(f => f.id === id);
 
-        // Hide deck & header, show back button & spotlight
+        // Hide deck & stage headers, show back button & spotlight
         cardsRow.classList.add('is-hidden');
         stageHeader.classList.add('is-hidden');
         backBtn.classList.add('is-visible');
@@ -437,6 +514,7 @@
         // Render Left Spotlight Card with Role Sticker Badge
         spotlightCardSlot.innerHTML = `
           <div class="ts-spotlight-card ${member.themeClass}">
+            ${isFaculty && member.tag ? `<div class="ts-faculty-tag" style="top: -12px; font-size: 0.7rem; padding: 3px 12px;">${member.tag}</div>` : ''}
             <div class="ts-sticker ts-stk-tr" title="${member.role} Sticker">
               <img src="${member.sticker}" alt="${member.role} Sticker" class="ts-sticker-img" />
             </div>

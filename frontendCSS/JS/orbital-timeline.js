@@ -85,7 +85,7 @@
   /* ── Build node DOM ─────────────────────────────── */
   timelineData.forEach((item) => {
     const node = document.createElement("div");
-    node.className = "orbital-node";
+    node.className = `orbital-node orbital-node-${item.id}`;
     node.dataset.id = item.id;
 
     // Dot

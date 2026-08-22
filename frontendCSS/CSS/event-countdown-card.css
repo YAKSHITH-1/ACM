@@ -1,22 +1,35 @@
 /* ══════════════════════════════════════════════════════════════════
    EVENT CARDS — KNOW US NEO-BRUTALIST VIBRANT STYLING
-   Adapted to match the Know-Us card design with event-specific components:
-   - Solid 2.5px borders & bold 5px offset drop shadows
-   - Playful rotating vibrant pop color themes (Orange, Purple, Cyan, Yellow, Green, Pink, Blue)
-   - Floating event-themed sticker badges with micro-tilt animations
-   - Retro brutalist timer blocks with high-contrast digits
-   - Punchy neo-brutalist buttons & status pills
-   - Light & Dark theme compatibility
    ══════════════════════════════════════════════════════════════════ */
+
+/* ── Page Layout & Spacing Overrides for Events Page ── */
+.main-content {
+  padding-top: calc(var(--nav-h, 64px) + 0.5rem) !important;
+  padding-bottom: 3rem !important;
+}
+
+.main-content .page-header {
+  margin-bottom: 1.25rem !important;
+}
+
+.main-content .page-header .label {
+  margin-bottom: 0.2rem;
+}
+
+.main-content .page-header .page-title {
+  margin-top: 0.25rem !important;
+  font-size: clamp(1.6rem, 3.2vw, 2.3rem) !important;
+  line-height: 1.15 !important;
+}
 
 /* ── Section & Grid Layout ── */
 .countdown-cards-section {
-  margin-top: 2.5rem;
-  margin-bottom: 3.5rem;
+  margin-top: 1rem;
+  margin-bottom: 2.5rem;
 }
 
 .countdown-cards-section .section-head {
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.15rem;
 }
 
 .countdown-cards-grid {

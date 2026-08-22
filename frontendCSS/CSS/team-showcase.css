@@ -7,12 +7,31 @@
    - Beautiful Light & Dark theme adaptation
    ═══════════════════════════════════════════════════════════════ */
 
+/* ── Main Content & Page Header Spacing ── */
+.main-content {
+  padding-top: calc(var(--nav-h, 64px) + 0.5rem) !important;
+  padding-bottom: 2.5rem !important;
+}
+
+.main-content .page-header {
+  margin-bottom: 0.5rem !important;
+}
+
+.main-content .page-header .label {
+  margin-bottom: 0.2rem;
+}
+
+.main-content .page-header .page-title {
+  margin-top: 0.25rem !important;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+}
+
 /* ── Container Wrapper ── */
 .ts-showcase-wrap {
   width: 100%;
   max-width: 84rem;
   margin: 0 auto;
-  padding: 1.5rem 1rem 4rem;
+  padding: 0.25rem 1rem 3.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,29 +41,77 @@
 /* ── Outer Stage Window (Desktop Browser / Canvas Frame) ── */
 .ts-stage {
   width: 100%;
-  background: var(--v-card-bg, #111A16);
+  background-color: #111A16;
+  background-image: 
+    radial-gradient(circle at 14px 14px, rgba(209, 250, 229, 0.08) 2px, transparent 2px),
+    radial-gradient(circle at 88% 12%, rgba(16, 185, 129, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 12% 88%, rgba(245, 158, 11, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.08) 0%, transparent 55%);
+  background-size: 26px 26px, 100% 100%, 100% 100%, 100% 100%;
   border: var(--block-border, 2px solid var(--v-text));
   border-radius: 28px;
   box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.35), 8px 8px 0px var(--v-text, #064E3B);
-  padding: 2.75rem 1.5rem 3.25rem;
+  padding: 1.35rem 1.5rem 2rem;
   position: relative;
   transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 540px;
+  min-height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow: hidden;
 }
 
 body.light-theme .ts-stage {
-  background: #f4f6f9;
+  background-color: #fcfcfd;
+  background-image: 
+    radial-gradient(circle at 14px 14px, rgba(11, 15, 13, 0.075) 2px, transparent 2px),
+    radial-gradient(circle at 92% 8%, rgba(253, 224, 71, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 8% 92%, rgba(134, 239, 172, 0.4) 0%, transparent 45%),
+    radial-gradient(circle at 45% 20%, rgba(192, 132, 252, 0.22) 0%, transparent 48%),
+    radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.3) 0%, transparent 42%);
+  background-size: 26px 26px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
   border-color: #0B0F0D;
   box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.08), 8px 8px 0px #0B0F0D;
+}
+
+/* Playful Floating Corner Doodles */
+.ts-stage::before {
+  content: '✦';
+  position: absolute;
+  top: 1.15rem;
+  left: 1.35rem;
+  font-size: 1.35rem;
+  color: #facc15;
+  text-shadow: 2px 2px 0px #0B0F0D;
+  opacity: 0.9;
+  pointer-events: none;
+  animation: tsFloatSparkle 3.5s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+.ts-stage::after {
+  content: '★';
+  position: absolute;
+  bottom: 1.15rem;
+  right: 1.35rem;
+  font-size: 1.35rem;
+  color: #fb7185;
+  text-shadow: 2px 2px 0px #0B0F0D;
+  opacity: 0.9;
+  pointer-events: none;
+  animation: tsFloatSparkle 4s ease-in-out infinite alternate-reverse;
+  z-index: 1;
+}
+
+@keyframes tsFloatSparkle {
+  0% { transform: translateY(0) rotate(0deg) scale(0.95); }
+  100% { transform: translateY(-5px) rotate(14deg) scale(1.12); }
 }
 
 /* ── Top Header Title in Stage ── */
 .ts-stage-header {
   text-align: center;
-  margin-bottom: 2.25rem;
+  margin-bottom: 1.25rem;
   transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -60,12 +127,12 @@ body.light-theme .ts-stage {
 
 .ts-stage-title {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
   font-weight: 800;
-  line-height: 1.12;
+  line-height: 1.15;
   color: var(--v-text, #D1FAE5);
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.02em;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
 }
 
 body.light-theme .ts-stage-title {
@@ -88,8 +155,8 @@ body.light-theme .ts-stage-subtitle {
 /* ── Top-Right Undo / Back Button ── */
 .ts-back-btn {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 1.25rem;
+  right: 1.5rem;
   width: 46px;
   height: 46px;
   border-radius: 14px;
@@ -138,8 +205,136 @@ body.light-theme .ts-back-btn {
   transform: translateX(-2px);
 }
 
+/* ── Section Sub-Headers & Kickers inside Stage ── */
+.ts-sub-header {
+  margin-bottom: 0.75rem;
+}
+
+.ts-pill-kicker {
+  display: inline-block;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--v-text, #10b981);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid rgba(16, 185, 129, 0.35);
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  margin-bottom: 0.35rem;
+}
+
+body.light-theme .ts-pill-kicker {
+  color: #047857;
+  background: #d1fae5;
+  border-color: #047857;
+}
+
 /* ═══════════════════════════════════════════════════════════════
-   DECK VIEW (7 Cards Horizontal Fanned Row)
+   FACULTY MENTORS ROW (Top Highlighted Leadership Cards)
+   ═══════════════════════════════════════════════════════════════ */
+.ts-faculty-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1.2rem, 3vw, 2.25rem);
+  width: 100%;
+  padding: 0.5rem 0.5rem 1rem;
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ts-faculty-row.is-hidden {
+  opacity: 0;
+  transform: scale(0.92) translateY(20px);
+  pointer-events: none;
+  position: absolute;
+  visibility: hidden;
+}
+
+/* Specially Highlighted Faculty Card */
+.ts-card.ts-card-faculty {
+  width: clamp(140px, 14vw, 165px);
+  height: clamp(230px, 21vw, 258px);
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 5px 5px 0px #0B0F0D;
+  border-radius: 20px;
+  position: relative;
+  overflow: visible;
+  padding: 0.85rem 0.5rem 0.65rem;
+}
+
+.ts-card.ts-card-faculty .ts-avatar-wrap {
+  height: 145px;
+}
+
+.ts-faculty-row .ts-card-faculty:nth-child(1) {
+  transform: rotate(-1.5deg) translateY(-2px);
+}
+
+.ts-faculty-row .ts-card-faculty:nth-child(2) {
+  transform: rotate(1.5deg) translateY(-2px);
+}
+
+.ts-card-faculty:hover {
+  transform: rotate(0deg) translateY(-12px) scale(1.07) !important;
+  box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.28), 7px 7px 0px #0B0F0D !important;
+  z-index: 15;
+}
+
+/* Gold/Vibrant Faculty Tag Badge at top */
+.ts-faculty-tag {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #facc15;
+  color: #0B0F0D;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 2px solid #0B0F0D;
+  box-shadow: 2px 2px 0px #0B0F0D;
+  white-space: nowrap;
+  z-index: 10;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.ts-card-faculty:hover .ts-faculty-tag {
+  transform: translateX(-50%) scale(1.06);
+  background: #fde047;
+}
+
+/* Faculty Theme Colors */
+.ts-card.theme-faculty-hod { background: #6366f1; color: #1e1b4b; }
+.ts-card.theme-faculty-sponsor { background: #0d9488; color: #042f2e; }
+
+body.light-theme .ts-card.theme-faculty-hod { background: #818cf8; color: #0f172a; }
+body.light-theme .ts-card.theme-faculty-sponsor { background: #2dd4bf; color: #0f172a; }
+
+/* Faculty Spotlight Dossier Borders */
+.ts-spotlight-dossier.dossier-faculty-hod {
+  border-color: #6366f1;
+}
+body.light-theme .ts-spotlight-dossier.dossier-faculty-hod {
+  background: #eef2ff;
+  border-color: #0B0F0D;
+}
+
+.ts-spotlight-dossier.dossier-faculty-sponsor {
+  border-color: #0d9488;
+}
+body.light-theme .ts-spotlight-dossier.dossier-faculty-sponsor {
+  background: #f0fdfa;
+  border-color: #0B0F0D;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DECK VIEW (Chapter Officers Fanned Row)
    ═══════════════════════════════════════════════════════════════ */
 .ts-cards-row {
   display: flex;
@@ -147,7 +342,7 @@ body.light-theme .ts-back-btn {
   align-items: center;
   gap: clamp(0.4rem, 0.9vw, 0.75rem);
   width: 100%;
-  padding: 1rem 0.5rem;
+  padding: 0.5rem 0.5rem 1rem;
   transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -159,7 +354,7 @@ body.light-theme .ts-back-btn {
   visibility: hidden;
 }
 
-/* Individual Card (Perfect fit for 7 items inside stage) */
+/* Individual Card (Perfect fit inside stage) */
 .ts-card {
   width: clamp(124px, 12vw, 145px);
   height: clamp(215px, 20vw, 238px);
@@ -177,14 +372,14 @@ body.light-theme .ts-back-btn {
   flex-shrink: 0;
 }
 
-/* Fanned angles for 7 Chapter Officers with Web Master at Center */
-.ts-card:nth-child(1) { transform: rotate(-4.5deg) translateY(6px); }
-.ts-card:nth-child(2) { transform: rotate(-3deg) translateY(3px); }
-.ts-card:nth-child(3) { transform: rotate(-1.5deg) translateY(1px); }
-.ts-card:nth-child(4) { transform: rotate(0deg) translateY(-4px); z-index: 2; } /* Web Master (Center) */
-.ts-card:nth-child(5) { transform: rotate(1.5deg) translateY(1px); }
-.ts-card:nth-child(6) { transform: rotate(3deg) translateY(3px); }
-.ts-card:nth-child(7) { transform: rotate(4.5deg) translateY(6px); }
+/* Fanned angles for Chapter Officers */
+.ts-cards-row .ts-card:nth-child(1) { transform: rotate(-4.5deg) translateY(5px); }
+.ts-cards-row .ts-card:nth-child(2) { transform: rotate(-2.7deg) translateY(2px); }
+.ts-cards-row .ts-card:nth-child(3) { transform: rotate(-0.9deg) translateY(0px); }
+.ts-cards-row .ts-card:nth-child(4) { transform: rotate(0.9deg) translateY(0px); }
+.ts-cards-row .ts-card:nth-child(5) { transform: rotate(2.7deg) translateY(2px); }
+.ts-cards-row .ts-card:nth-child(6) { transform: rotate(4.5deg) translateY(5px); }
+.ts-cards-row .ts-card:nth-child(7) { transform: rotate(6deg) translateY(7px); }
 
 .ts-card:hover {
   transform: rotate(0deg) translateY(-14px) scale(1.08) !important;
@@ -233,10 +428,12 @@ body.light-theme .ts-card.theme-blue   { background: #93c5fd; color: #0f172a; }
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: center bottom;
+  object-position: center top;
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.18));
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: block;
+  -webkit-mask-image: linear-gradient(to bottom, #000 90%, rgba(0, 0, 0, 0.4) 98%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 90%, rgba(0, 0, 0, 0.4) 98%, transparent 100%);
 }
 
 .ts-card:hover .ts-avatar-svg,
@@ -381,6 +578,11 @@ body.light-theme .ts-card.theme-blue   { background: #93c5fd; color: #0f172a; }
 
 .ts-spotlight-card .ts-avatar-wrap {
   height: 240px;
+}
+
+.ts-spotlight-card .ts-avatar-img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 88%, rgba(0, 0, 0, 0.5) 96%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 88%, rgba(0, 0, 0, 0.5) 96%, transparent 100%);
 }
 
 .ts-spotlight-card .ts-sticker {

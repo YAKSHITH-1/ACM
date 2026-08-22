@@ -3,17 +3,43 @@
    Vanilla CSS port — ACM JIT Design System
    ══════════════════════════════════════ */
 
+/* ── Page Layout & Spacing Overrides ── */
+.main-content {
+  padding-top: calc(var(--nav-h, 64px) + 0.5rem) !important;
+  padding-bottom: 2.5rem !important;
+}
+
+.main-content .page-header {
+  margin-bottom: 0.5rem !important;
+}
+
+.main-content .page-header .label {
+  margin-bottom: 0.2rem;
+}
+
+.main-content .page-header .page-title {
+  margin-top: 0.25rem !important;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+}
+
 /* ── Container ── */
 .orbital-timeline {
   position: relative;
   width: 100%;
+  max-width: 84rem;
+  margin: 0 auto;
   height: 560px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: default;
   user-select: none;
-  transition: var(--transition, all 0.25s cubic-bezier(0.4, 0, 0.2, 1));
+  background: transparent;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.light-theme .orbital-timeline {
+  background: transparent;
 }
 
 /* ── Orbit ring + center planet ── */
@@ -25,9 +51,12 @@
   width: 380px;
   height: 380px;
   border-radius: 50%;
-  border: 2px solid var(--v-text, #D1FAE5);
-  opacity: 0.15;
+  border: 2.5px dashed rgba(16, 185, 129, 0.3);
   pointer-events: none;
+}
+
+body.light-theme .orbital-ring {
+  border-color: rgba(11, 15, 13, 0.2);
 }
 
 /* ── Planet container ── */
@@ -36,114 +65,58 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
   pointer-events: auto;
   cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.orbital-planet:hover {
+  transform: translate(-50%, -50%) scale(1.12) rotate(6deg);
 }
 
 /* ── Ambient glow / corona ── */
 .orbital-planet-glow {
   position: absolute;
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(16, 185, 129, 0.22) 0%,
-    rgba(16, 185, 129, 0.08) 35%,
-    rgba(16, 185, 129, 0.02) 55%,
+    rgba(250, 204, 21, 0.28) 0%,
+    rgba(250, 204, 21, 0.08) 45%,
     transparent 70%
   );
   pointer-events: none;
   animation: planet-corona 4s ease-in-out infinite;
 }
 
-/* ── Planet sphere ── */
-.orbital-planet-body {
-  position: relative;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  overflow: hidden;
-  /* Deep space-planet gradient: dark core → bright limb */
-  background:
-    radial-gradient(circle at 35% 35%,
-      #34d399 0%,
-      #10B981 25%,
-      #059669 50%,
-      #064e3b 80%,
-      #022c22 100%
-    );
-  box-shadow:
-    /* inner crescent shadow for 3D sphere feel */
-    inset -10px -6px 16px rgba(0, 0, 0, 0.6),
-    /* subtle rim light on the lit side */
-    inset 3px 2px 8px rgba(52, 211, 153, 0.25),
-    /* outer glow */
-    0 0 18px rgba(16, 185, 129, 0.35),
-    0 0 40px rgba(16, 185, 129, 0.10);
+/* ── Illustrated Planet Image (assets/globe.png) ── */
+.orbital-planet-img {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  filter: drop-shadow(4px 4px 0px #0B0F0D) drop-shadow(0 6px 14px rgba(250, 204, 21, 0.25));
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.3s ease;
+  display: block;
+  z-index: 2;
 }
 
-/* ── Rotating terminator (day/night edge) ── */
-.orbital-planet-terminator {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  /* The terminator: left half transparent, right half dark shadow */
-  background: linear-gradient(90deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(0, 0, 0, 0.15) 48%,
-    rgba(0, 0, 0, 0.45) 55%,
-    rgba(0, 0, 0, 0.65) 65%,
-    rgba(0, 0, 0, 0.75) 80%,
-    rgba(0, 0, 0, 0.85) 100%
-  );
-  animation: planet-terminator-rotate 30s linear infinite;
-}
-
-/* ── Specular highlight ── */
-.orbital-planet-highlight {
-  position: absolute;
-  top: 7px;
-  left: 10px;
-  width: 14px;
-  height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse,
-    rgba(255, 255, 255, 0.50) 0%,
-    rgba(255, 255, 255, 0.10) 60%,
-    transparent 100%
-  );
-  transform: rotate(-30deg);
-  pointer-events: none;
-}
-
-/* ── Saturn-style ring ── */
-.orbital-planet-ring {
-  position: absolute;
-  width: 80px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid rgba(16, 185, 129, 0.35);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotateX(75deg) rotateZ(-20deg);
-  pointer-events: none;
-  box-shadow:
-    0 0 0 1px rgba(16, 185, 129, 0.08),
-    0 0 0 4px rgba(16, 185, 129, 0.04);
+.orbital-planet:hover .orbital-planet-img {
+  transform: scale(1.08);
 }
 
 /* ── Moon orbit container ── */
 .orbital-planet-orbit {
   position: absolute;
-  width: 90px;
-  height: 90px;
+  width: 105px;
+  height: 105px;
   border-radius: 50%;
   animation: moon-orbit 6s linear infinite;
   pointer-events: none;
@@ -155,13 +128,12 @@
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--v-text, #D1FAE5);
-  box-shadow:
-    0 0 4px rgba(209, 250, 229, 0.5),
-    0 0 8px rgba(209, 250, 229, 0.2);
+  background: #facc15;
+  border: 1px solid #0B0F0D;
+  box-shadow: 0 0 6px #facc15;
 }
 
 /* ── Orbital node (each timeline item) ── */
@@ -174,84 +146,119 @@
   z-index: 5;
 }
 
+/* ── Node Dot (Vibrant Neo-Brutalist Circle Badges) ── */
 .orbital-node-dot {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--v-text, #D1FAE5);
-  background: var(--v-card-bg, #111A16);
-  color: var(--v-text, #D1FAE5);
-  transition: all 0.3s ease;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 3.5px 3.5px 0px #0B0F0D;
+  background: #10B981;
+  color: #0B0F0D;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
   position: relative;
 }
 
+.orbital-node:hover .orbital-node-dot {
+  transform: translateY(-4px) scale(1.12);
+  box-shadow: 5px 5px 0px #0B0F0D;
+}
+
+/* Category-specific Vibrant Node Colors */
+.orbital-node-1 .orbital-node-dot {
+  background: #fb923c;
+  color: #431407;
+}
+
+.orbital-node-2 .orbital-node-dot {
+  background: #c084fc;
+  color: #3b0764;
+}
+
+.orbital-node-3 .orbital-node-dot {
+  background: #38bdf8;
+  color: #083344;
+}
+
 .orbital-node-dot svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   stroke: currentColor;
   fill: none;
-  stroke-width: 2;
+  stroke-width: 2.4;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .orbital-node.is-active .orbital-node-dot {
-  background: var(--v-primary, #10B981);
-  color: var(--v-white, #fff);
-  border-color: var(--v-primary, #10B981);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-  transform: scale(1.35);
+  transform: scale(1.25) translateY(-2px);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), 5px 5px 0px #0B0F0D;
 }
 
 .orbital-node.is-related .orbital-node-dot {
-  background: var(--v-secondary, #059669);
-  color: var(--v-white, #fff);
-  border-color: var(--v-secondary, #059669);
   animation: orbital-related-pulse 1.2s ease-in-out infinite;
 }
 
-/* Node label */
+/* ── Node Label (Sticker Pill Badge) ── */
 .orbital-node-label {
   position: absolute;
-  top: 52px;
+  top: 58px;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.68rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--v-text, #D1FAE5);
-  opacity: 0.65;
+  letter-spacing: 0.08em;
+  background: #ffffff;
+  color: #0B0F0D;
+  border: 2px solid #0B0F0D;
+  box-shadow: 2.5px 2.5px 0px #0B0F0D;
+  padding: 3px 10px;
+  border-radius: 999px;
   transition: all 0.3s ease;
+  z-index: 6;
+}
+
+body:not(.light-theme) .orbital-node-label {
+  background: #111A16;
+  color: #D1FAE5;
+  border-color: #0B0F0D;
+  box-shadow: 2.5px 2.5px 0px #0B0F0D;
 }
 
 .orbital-node.is-active .orbital-node-label {
-  opacity: 1;
-  color: var(--v-primary, #10B981);
-  transform: translateX(-50%) scale(1.1);
+  background: #facc15;
+  color: #0B0F0D;
+  transform: translateX(-50%) scale(1.06);
 }
 
-/* ── Expanded detail card ── */
+/* ── Expanded Detail Card ── */
 .orbital-detail-card {
   position: absolute;
-  top: 76px;
+  top: 88px;
   left: 50%;
   transform: translateX(-50%);
-  width: 260px;
-  border-radius: var(--block-radius, 12px);
-  border: var(--block-border, 2px solid #D1FAE5);
-  box-shadow: var(--block-shadow, 6px 6px 0px #D1FAE5);
-  background: var(--v-card-bg, #111A16);
+  width: 275px;
+  border-radius: 18px;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 6px 6px 0px #0B0F0D;
+  background: #111A16;
+  color: #D1FAE5;
   padding: 0;
   z-index: 100;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.light-theme .orbital-detail-card {
+  background: #ffffff;
+  color: #0B0F0D;
 }
 
 .orbital-node.is-active .orbital-detail-card {
@@ -266,10 +273,9 @@
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
+  width: 2.5px;
   height: 12px;
-  background: var(--v-text, #D1FAE5);
-  opacity: 0.4;
+  background: #0B0F0D;
 }
 
 .orbital-card-header {
@@ -402,6 +408,41 @@
   stroke: currentColor;
   fill: none;
   stroke-width: 2.5;
+}
+
+body.light-theme .orbital-card-title {
+  color: #0B0F0D;
+}
+
+body.light-theme .orbital-card-content {
+  color: #334155;
+  opacity: 0.95;
+}
+
+body.light-theme .orbital-card-date {
+  color: #64748b;
+  opacity: 0.9;
+}
+
+body.light-theme .orbital-connections-section {
+  border-top-color: rgba(11, 15, 13, 0.1);
+}
+
+body.light-theme .orbital-connections-title {
+  color: #475569;
+  opacity: 0.9;
+}
+
+body.light-theme .orbital-connection-btn {
+  border: 1.5px solid #0B0F0D;
+  color: #0B0F0D;
+  background: #f1f5f9;
+}
+
+body.light-theme .orbital-connection-btn:hover {
+  background: #047857;
+  color: #ffffff;
+  border-color: #0B0F0D;
 }
 
 /* ── Section heading for the timeline ── */

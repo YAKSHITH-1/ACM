@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isNaN(d.getTime())) {
         return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
       }
-    } catch {}
+    } catch { }
     return dStr;
   };
 
@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       themeClass: "theme-indigo",
       category: "Workshop & Lab",
-      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>` // Lightning ⚡
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>` // Lightning 
     },
     {
       themeClass: "theme-coral",
@@ -331,12 +331,12 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       themeClass: "theme-amber",
       category: "Chapter Summit",
-      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>` // Badge ✨
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>` // Badge 
     },
     {
       themeClass: "theme-teal",
       category: "Open Source & Lab",
-      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>` // Grid ⚡
+      stickerSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#0B0F0D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>` // Grid 
     }
   ];
 
@@ -388,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ── Past ── */
     if (events.past.length) {
       pastList.innerHTML = events.past.map((event, i) => {
-        const emojis = ["🏆", "⚡", "💻", "🚀", "🎯", "⭐", "🎉"];
+        const emojis = ["", "", "", "", "", "⭐", ""];
         const emoji = emojis[i % emojis.length];
         return `
           <div class="past-neo-card">
@@ -616,49 +616,101 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(announcementStoreKey, JSON.stringify(announcements));
   };
 
-  const renderPublicAnnouncements = () => {
-    const list = document.getElementById("announcements-list");
-    if (!list) {
-      console.warn("[Announcements] announcements-list element not found");
-      return;
-    }
+  let activeAnnFilter = "all";
 
-    const announcements = readAnnouncements();
-    console.log("[Announcements] read announcements:", announcements);
+  const renderPublicAnnouncements = (filter = activeAnnFilter) => {
+    activeAnnFilter = filter;
+    const list = document.getElementById("announcements-list");
+    if (!list) return;
+
+    let announcements = readAnnouncements();
+
+    if (filter !== "all") {
+      announcements = announcements.filter(ann => {
+        const cat = (ann.category || "").toLowerCase();
+        if (filter === "cyan") return cat === "cyan" || cat === "general" || (ann.badge && ann.badge.toLowerCase().includes("hack"));
+        if (filter === "violet") return cat === "violet" || cat === "event" || (ann.badge && ann.badge.toLowerCase().includes("core"));
+        if (filter === "emerald") return cat === "emerald" || (ann.badge && ann.badge.toLowerCase().includes("workshop"));
+        if (filter === "rose") return cat === "rose" || cat === "alert" || (ann.badge && ann.badge.toLowerCase().includes("alert"));
+        return cat === filter;
+      });
+    }
 
     if (announcements.length) {
       list.innerHTML = announcements.map((ann, index) => {
-        const cat = escapeHtml(ann.category);
-
-        let iconSvg = '';
-        if (cat === "event") {
-          iconSvg = `<svg class="announcement-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2l.5-.5"></path><path d="M12 15l-3-3a22 22 0 0 1 3.86-8.86c.86-1.14 2.14-2.14 3.14-2.14 1 0 2 1 2 2 0 1-1 2.28-2.14 3.14A22 22 0 0 1 15 12z"></path></svg>`;
-        } else if (cat === "alert") {
-          iconSvg = `<svg class="announcement-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-        } else {
-          iconSvg = `<svg class="announcement-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M19.5 8.5c1.5 1.5 2.5 4 1 6-1.5 2-4.5 2-6 1L9.5 8.5c-1.5-1-4.5-1-6 1-1.5 2-.5 4.5 1 6"></path></svg>`;
-        }
+        const cat = escapeHtml(ann.category || "cyan");
+        const tapeLabels = {
+          cyan: "📌 SPRINT",
+          violet: " CORE",
+          emerald: "🛠 LAB",
+          rose: " URGENT",
+          amber: " NOTICE",
+          general: " BULLETIN",
+          event: " EVENT",
+          alert: " ALERT"
+        };
+        const tapeText = tapeLabels[cat] || "📌 DISPATCH";
 
         return `
-      <article class="space-card ${cat}" style="animation-delay: ${index * 0.1}s">
-        <div class="space-icon-wrapper">
-          ${iconSvg}
-        </div>
-        <div class="space-content">
-          <div class="item-meta">
-            <span class="item-badge ${cat}">${escapeHtml(ann.badge)}</span>
-            <time class="item-time">${escapeHtml(ann.time)}</time>
+      <article class="space-card ${cat}" data-id="${escapeHtml(ann.id)}">
+        <span class="space-card-tape">${tapeText}</span>
+        
+        <div class="item-meta">
+          <div class="item-meta-left">
+            <span class="item-badge">${escapeHtml(ann.badge || "Bulletin")}</span>
+            <time class="item-time">⏱ ${escapeHtml(ann.time || "Recent")}</time>
           </div>
-          <h2 class="item-title">${escapeHtml(ann.title)}</h2>
-          <p class="item-body">${escapeHtml(ann.body)}</p>
+          <span class="item-index-num">#0${index + 1}</span>
+        </div>
+
+        <h3 class="item-title">${escapeHtml(ann.title)}</h3>
+        <p class="item-body">${escapeHtml(ann.body)}</p>
+
+        <div class="space-card-footer">
+          <span class="space-card-stamp">
+            <span>✦</span> Official Chapter Dispatch
+          </span>
+          <button type="button" class="space-share-btn" onclick="navigator.clipboard?.writeText('${escapeHtml(ann.title)}: ${escapeHtml(ann.body)}'); const b=this; b.innerHTML='✓ Copied!'; setTimeout(()=>{ b.innerHTML='<svg width=\\'12\\' height=\\'12\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2.5\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\'><rect x=\\'9\\' y=\\'9\\' width=\\'13\\' height=\\'13\\' rx=\\'2\\' ry=\\'2\\'></rect><path d=\\'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\\'></path></svg> Share'; }, 2000);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Share
+          </button>
         </div>
       </article>`;
       }).join("");
-      console.log("[Announcements] rendered", announcements.length, "items");
     } else {
-      list.innerHTML = '<p style="color:#ff6b6b; font-size:1.2rem; font-weight:600; text-align:center; padding:2rem;">No announcements yet.</p>';
-      console.log("[Announcements] no announcements, showing placeholder");
+      list.innerHTML = `
+        <div class="profile-empty-state" style="margin-top:0.5rem;">
+          <p>No announcements found in this category.</p>
+          <button class="profile-browse-btn" onclick="document.querySelector('.ann-tab-btn[data-cat=all]')?.click();">
+            View All Dispatches
+          </button>
+        </div>`;
     }
+  };
+
+  // Wire up category filter tabs and sidebar legend clicks
+  const setupAnnFilterTabs = () => {
+    const tabs = document.querySelectorAll(".ann-tab-btn");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        renderPublicAnnouncements(tab.dataset.cat);
+      });
+    });
+
+    const legendItems = document.querySelectorAll(".ann-legend-item");
+    legendItems.forEach(item => {
+      item.addEventListener("click", () => {
+        const filter = item.dataset.filter;
+        const matchingTab = document.querySelector(`.ann-tab-btn[data-cat="${filter}"]`);
+        if (matchingTab) {
+          matchingTab.click();
+        } else {
+          renderPublicAnnouncements(filter);
+        }
+      });
+    });
   };
 
   const renderAdminAnnouncements = () => {
@@ -756,18 +808,26 @@ document.addEventListener("DOMContentLoaded", () => {
     button.style.opacity = "";
   };
   const showPopup = (title, message, options = {}) => {
-    const popup = document.getElementById("popup");
-    const popupTitle = document.getElementById("popup-title");
-    const popupMessage = document.getElementById("popup-message");
-    const popupBtn = document.getElementById("popup-btn");
-
-    if (!popup || !popupTitle || !popupMessage || !popupBtn) {
-      alert(`${title}: ${message}`);
-      return;
+    let popup = document.getElementById("popup");
+    if (!popup) {
+      popup = document.createElement("div");
+      popup.id = "popup";
+      document.body.appendChild(popup);
     }
 
-    popupTitle.textContent = title;
-    popupMessage.textContent = message;
+    const isSuccess = title.toLowerCase().includes("success");
+    const isError = title.toLowerCase().includes("fail") || title.toLowerCase().includes("error") || title.toLowerCase().includes("invalid");
+    const tagClass = isSuccess ? "success" : isError ? "error" : "info";
+    const tagLabel = isSuccess ? " SUCCESS" : isError ? " NOTICE" : " BULLETIN";
+
+    popup.innerHTML = `
+      <div id="popup-content">
+        <div class="popup-tag-pill ${tagClass}">${tagLabel}</div>
+        <h2 id="popup-title">${escapeHtml(title)}</h2>
+        <p id="popup-message">${escapeHtml(message)}</p>
+        <button id="popup-btn" type="button">Close</button>
+      </div>
+    `;
 
     popup.style.display = "flex";
 
@@ -776,10 +836,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (options.onClose) options.onClose();
     };
 
-    popupBtn.onclick = closePopup;
+    const popupBtn = document.getElementById("popup-btn");
+    if (popupBtn) popupBtn.onclick = closePopup;
+
+    popup.onclick = (e) => {
+      if (e.target === popup) closePopup();
+    };
 
     // Auto-close after 3 seconds for success messages
-    if (title.toLowerCase().includes("success")) {
+    if (isSuccess) {
       setTimeout(closePopup, 3000);
     }
   };
@@ -1613,6 +1678,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCountdownCards();
   renderPublicEvents();
   renderPublicAnnouncements();
+  setupAnnFilterTabs();
   setupAdminPanel();
   setupAdminAnnouncements();
   setupAuthForms();
@@ -1706,17 +1772,20 @@ document.addEventListener("DOMContentLoaded", () => {
             if (href?.includes("register") || href?.includes("join-us")) link.style.display = "none";
           });
 
-          // Add profile avatar exactly after 'Know Us' button
-          const nameParts = (profileData.fullName || profileData.name || "User").split(" ");
-          const initials = nameParts.length > 1 ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase() : nameParts[0].substr(0, 2).toUpperCase();
+          if (!document.getElementById("profile-drawer-css")) {
+            const link = document.createElement("link");
+            link.id = "profile-drawer-css";
+            link.rel = "stylesheet";
+            link.href = "./CSS/profile-drawer.css";
+            document.head.appendChild(link);
+          }
 
           const rightControls = document.getElementById("nav-right-controls") || document.getElementById("nav-menu-button");
           if (rightControls && !document.getElementById("profile-avatar-container")) {
             rightControls.insertAdjacentHTML('beforeend', `
             <div id="profile-avatar-container" class="profile-avatar-container" style="display:flex;align-items:center;position:relative;">
-              <button type="button" id="profile-avatar-btn" style="width:2.5rem;height:2.5rem;border-radius:50%;background:rgba(255,255,255,0.05);border:2px solid transparent;background-clip:padding-box;position:relative;cursor:pointer;display:grid;place-items:center;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);padding:0;" onmouseover="this.style.transform='scale(1.1)';this.querySelector('.avatar-glow').style.opacity='1';" onmouseout="this.style.transform='none';this.querySelector('.avatar-glow').style.opacity='0';" title="View Profile">
-                <div class="avatar-glow" style="position:absolute;inset:-4px;border-radius:50%;background:rgba(255,255,255,0.2);z-index:-1;opacity:0;transition:opacity 0.3s ease;filter:blur(4px);"></div>
-                <img src="https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;z-index:1;background:rgba(255,255,255,0.1);" />
+              <button type="button" id="profile-avatar-btn" style="width:2.35rem;height:2.35rem;border-radius:50%;background:#facc15;border:2px solid #0B0F0D;box-shadow:2px 2px 0px #0B0F0D;cursor:pointer;display:grid;place-items:center;padding:0;overflow:hidden;transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='none'" title="View Profile">
+                <img src="https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent" alt="Avatar" style="width:100%;height:100%;object-fit:cover;" />
               </button>
             </div>
           `);
@@ -1729,72 +1798,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
               // Inject modal markup
               const modalHTML = `
-              <div id="profile-info-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;justify-content:flex-end;z-index:9999;opacity:0;transition:opacity 0.3s ease;font-family:var(--font-body,'Inter',sans-serif);">
-                <div id="profile-modal-body" style="background:rgba(10,15,30,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-left:1px solid rgba(255,255,255,0.1);max-width:400px;width:100%;height:100%;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(0,0,0,0.5);transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);color:#f1f5f9;position:relative;">
+              <div id="profile-info-modal">
+                <div id="profile-modal-body">
+                  <button id="close-profile-modal-btn" class="profile-close-btn" title="Close">×</button>
                   
-                  <!-- Header -->
-                  <div style="padding:2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;position:relative;">
-                    <button id="close-profile-modal-btn" style="position:absolute;top:1rem;right:1rem;background:transparent;border:none;color:#94a3b8;font-size:1.5rem;cursor:pointer;transition:all 0.2s ease;" onmouseover="this.style.color='#fff';this.style.transform='scale(1.15)';" onmouseout="this.style.color='#94a3b8';this.style.transform='none';" title="Close">×</button>
-                    
-                    <div style="width:6rem;height:6rem;border-radius:50%;position:relative;margin-bottom:1rem;">
-                      <div style="position:absolute;inset:-3px;border-radius:50%;background:rgba(255,255,255,0.2);animation:pulse-glow 2s infinite;"></div>
-                      <img src="https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent" alt="Avatar" style="width:100%;height:100%;border-radius:50%;position:relative;z-index:1;background:rgba(20,20,35,1);object-fit:cover;" />
+                  <!-- Header Dossier Card -->
+                  <div class="profile-header-card">
+                    <div class="profile-avatar-frame">
+                      <img src="https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent" alt="Avatar" class="profile-avatar-img" />
                     </div>
                     
-                    <div id="profile-name-display-container" style="display:flex;align-items:center;gap:0.5rem;justify-content:center;margin:0;">
-                      <h3 id="profile-name-display" style="font-size:1.4rem;font-weight:900;color:#fff;margin:0;text-align:center;">${profileData.fullName || profileData.name || "User"}</h3>
-                      <button id="edit-profile-name-btn" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:0.25rem;transition:color 0.2s;display:flex;align-items:center;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='#94a3b8';" title="Edit Name">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <div id="profile-name-display-container" class="profile-name-row">
+                      <h3 id="profile-name-display" class="profile-name-text">${profileData.fullName || profileData.name || "User"}</h3>
+                      <button id="edit-profile-name-btn" class="profile-name-edit-btn" title="Edit Name">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                       </button>
                     </div>
-                    <div id="profile-name-edit-container" style="display:none;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;width:100%;">
-                      <input type="text" id="profile-name-input" value="${profileData.fullName || profileData.name || "User"}" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:0.4rem 0.6rem;border-radius:0.5rem;font-size:1rem;flex:1;min-width:140px;max-width:220px;outline:none;" />
-                      <button id="save-profile-name-btn" style="background:#fff;color:#000;border:none;padding:0.4rem 0.75rem;border-radius:0.5rem;font-weight:700;cursor:pointer;font-size:0.85rem;">Save</button>
-                      <button id="cancel-profile-name-btn" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:0.25rem;font-size:1.2rem;display:grid;place-items:center;">✖</button>
+
+                    <div id="profile-name-edit-container" class="profile-edit-box">
+                      <input type="text" id="profile-name-input" class="profile-edit-input" value="${profileData.fullName || profileData.name || "User"}" />
+                      <button id="save-profile-name-btn" class="profile-edit-save-btn">Save</button>
+                      <button id="cancel-profile-name-btn" class="profile-edit-cancel-btn">✖</button>
                     </div>
-                    <p style="font-size:0.9rem;color:#94a3b8;margin:0.25rem 0 0 0;text-align:center;">${profileData.email}</p>
-                    <span style="display:inline-block;margin-top:0.75rem;padding:0.35rem 1rem;border-radius:9999px;font-size:0.75rem;font-weight:800;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;text-transform:uppercase;letter-spacing:1px;">
-                      ${profileData.role || 'Student'}
+
+                    <p class="profile-email-text">${profileData.email}</p>
+                    <span class="profile-role-badge">
+                      <span></span> ${profileData.role || 'Student Member'}
                     </span>
                   </div>
 
                   <!-- Body / Registered Events -->
-                  <div style="padding:1.5rem;flex:1;overflow-y:auto;" id="profile-registered-events-section">
-                    <h4 style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;font-family:var(--font-heading,'Inter',sans-serif);">
-                      <span></span> Registered Events
-                    </h4>
+                  <div class="profile-content-scroll" id="profile-registered-events-section">
+                    <div class="profile-section-heading">
+                      <span>Registered Events</span>
+                      <span id="profile-event-badge" class="profile-event-counter">0</span>
+                    </div>
                     
                     <div id="my-events-loader" style="text-align:center;padding:2rem 0;color:#94a3b8;">
-                      <div style="width:1.5rem;height:1.5rem;border:2px solid #fff;border-top-color:transparent;border-radius:50%;margin:0 auto 0.75rem;animation:spin 0.8s linear infinite;"></div>
+                      <div style="width:1.5rem;height:1.5rem;border:2.5px solid #0B0F0D;border-top-color:#38bdf8;border-radius:50%;margin:0 auto 0.75rem;animation:spin 0.8s linear infinite;"></div>
                       Loading your events...
                     </div>
-                    <div id="my-events-list" style="display:none;flex-direction:column;gap:1rem;"></div>
+                    <div id="my-events-list" style="display:none;flex-direction:column;gap:0.75rem;"></div>
                   </div>
 
-                  <!-- Footer -->
-                  <div style="padding:1.5rem;background:rgba(0,0,0,0.3);border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
-                    <!-- Theme Mode Toggle -->
-                    <div class="theme-switch-container" style="display:flex;align-items:center;gap:0.75rem;">
-                      <button id="theme-toggle-btn" type="button" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;width:2.5rem;height:2.5rem;border-radius:0.75rem;cursor:pointer;display:grid;place-items:center;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);outline:none;position:relative;" title="Toggle Light/Dark Theme">
-                        <svg id="theme-toggle-sun" style="width:1.25rem;height:1.25rem;color:var(--amber-300);transition:transform 0.5s ease;display:none;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="5"></circle>
-                          <line x1="12" y1="1" x2="12" y2="3"></line>
-                          <line x1="12" y1="21" x2="12" y2="23"></line>
-                          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                          <line x1="1" y1="12" x2="3" y2="12"></line>
-                          <line x1="21" y1="12" x2="23" y2="12"></line>
-                          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                        <svg id="theme-toggle-moon" style="width:1.25rem;height:1.25rem;color:var(--violet-300);transition:transform 0.5s ease;display:none;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                      </button>
-                      <span id="theme-toggle-label" style="font-size:0.8rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;font-family:var(--font-heading,'Inter',sans-serif);">Dark Mode</span>
-                    </div>
+                  <!-- Footer Bar -->
+                  <div class="profile-footer-bar">
+                    <button id="theme-toggle-btn" class="profile-theme-btn" type="button" title="Toggle Light/Dark Theme">
+                      <svg id="theme-toggle-sun" style="width:1rem;height:1rem;display:none;color:#d97706;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                      </svg>
+                      <svg id="theme-toggle-moon" style="width:1rem;height:1rem;display:none;color:#7c3aed;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                      </svg>
+                      <span id="theme-toggle-label">Theme</span>
+                    </button>
 
-                    <button id="profile-logout-btn" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);color:var(--rose-300);font-weight:700;padding:0.5rem 1rem;border-radius:0.75rem;font-size:0.875rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(244,63,94,0.2)'" onmouseout="this.style.background='rgba(244,63,94,0.1)'">
+                    <button id="profile-logout-btn" class="profile-logout-btn">
                       Logout
                     </button>
                   </div>
@@ -1803,10 +1870,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
               <style>
                 @keyframes spin { to { transform: rotate(360deg); } }
-                @keyframes pulse-glow { 0% { opacity: 0.6; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.6; transform: scale(0.98); } }
-                #profile-registered-events-section::-webkit-scrollbar { width: 6px; }
-                #profile-registered-events-section::-webkit-scrollbar-track { background: transparent; }
-                #profile-registered-events-section::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
               </style>
             `;
 
@@ -1825,27 +1888,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (theme === "light") {
                   if (sunIcon) sunIcon.style.display = "block";
                   if (moonIcon) moonIcon.style.display = "none";
-                  if (toggleLabel) {
-                    toggleLabel.textContent = "Light Mode";
-                    toggleLabel.style.color = "#0f172a";
-                  }
-                  if (toggleBtn) {
-                    toggleBtn.style.background = "rgba(15, 83, 240, 0.05)";
-                    toggleBtn.style.borderColor = "rgba(15,23,42,0.1)";
-                    toggleBtn.style.color = "#0f172a";
-                  }
+                  if (toggleLabel) toggleLabel.textContent = "Light Mode";
                 } else {
                   if (sunIcon) sunIcon.style.display = "none";
                   if (moonIcon) moonIcon.style.display = "block";
-                  if (toggleLabel) {
-                    toggleLabel.textContent = "Dark Mode";
-                    toggleLabel.style.color = "#f1f5f9";
-                  }
-                  if (toggleBtn) {
-                    toggleBtn.style.background = "rgba(255,255,255,0.06)";
-                    toggleBtn.style.borderColor = "rgba(255,255,255,0.1)";
-                    toggleBtn.style.color = "#f1f5f9";
-                  }
+                  if (toggleLabel) toggleLabel.textContent = "Dark Mode";
                 }
               };
 
@@ -1911,7 +1958,7 @@ document.addEventListener("DOMContentLoaded", () => {
               document.getElementById("cancel-profile-name-btn")?.addEventListener("click", () => {
                 nameEditContainer.style.display = "none";
                 nameDisplayContainer.style.display = "flex";
-                nameInput.value = nameDisplay.textContent; // reset
+                nameInput.value = nameDisplay.textContent.trim();
               });
 
               saveNameBtn?.addEventListener("click", async () => {
@@ -1923,7 +1970,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 try {
                   const res = await fetch(`${API_BASE_URL}/auth/profile/name`, {
-                    method: 'PUT',
+                    method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
                       "Authorization": `Bearer ${token}`
@@ -1960,43 +2007,45 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                   const loader = document.getElementById("my-events-loader");
                   const container = document.getElementById("my-events-list");
+                  const countBadge = document.getElementById("profile-event-badge");
                   if (loader) loader.style.display = "none";
                   if (container) container.style.display = "flex";
 
                   if (!data.success || !data.registrations || data.registrations.length === 0) {
+                    if (countBadge) countBadge.textContent = "0";
                     if (container) {
                       container.innerHTML = `
-                    <div style="text-align:center;padding:2rem 0;color:#94a3b8;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:1rem;">
-                      <p style="margin:0 0 1rem 0;font-size:0.95rem;">You haven't registered for any events yet.</p>
-                      <a href="events.html" style="display:inline-block;padding:0.5rem 1rem;background:var(--cyan-400);color:#0d0d0d;border-radius:0.5rem;font-size:0.85rem;font-weight:800;text-decoration:none;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Browse Events</a>
+                    <div class="profile-empty-state">
+                      <p>You haven't registered for any events yet.</p>
+                      <a href="events.html" class="profile-browse-btn">
+                        <span></span> Browse Events
+                      </a>
                     </div>
                   `;
                     }
                     return;
                   }
 
+                  if (countBadge) countBadge.textContent = data.registrations.length;
+
                   if (container) {
                     container.innerHTML = data.registrations.map(reg => `
-                  <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:1rem;padding:1.25rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(34,211,238,0.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
-                    <div style="display:flex;justify-content:space-between;align-items:start;gap:1rem;">
-                      <div style="flex:1;text-align:left;">
-                        <h5 style="font-size:1.05rem;font-weight:800;color:#fff;margin:0 0 0.25rem 0;font-family:var(--font-heading,'Inter',sans-serif);">${reg.eventTitle}</h5>
-                        <div style="font-size:0.8rem;color:#cbd5e1;display:flex;flex-direction:column;gap:0.25rem;margin-top:0.5rem;font-family:var(--font-body,'Inter',sans-serif);">
-                          <div><strong>USN:</strong> ${reg.usn}</div>
-                          <div><strong>College:</strong> ${reg.collegeName}</div>
-                          ${reg.teamSize > 1 ? `
-                            <div style="margin-top:0.25rem;padding-top:0.25rem;border-top:1px dashed rgba(255,255,255,0.06);">
-                              <strong>Team Size:</strong> ${reg.teamSize}
-                              <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.25rem;max-height:60px;overflow-y:auto;">
-                                ${reg.teamMembers.map((m, idx) => `<div>${idx + 1}. ${m.name} (${m.usn})</div>`).join('')}
-                              </div>
-                            </div>
-                          ` : ''}
+                  <div class="profile-event-card">
+                    <div class="profile-event-top">
+                      <h5 class="profile-event-title">${reg.eventTitle}</h5>
+                      <span class="profile-event-status-pill">Registered</span>
+                    </div>
+                    <div class="profile-event-meta">
+                      <div><strong>USN:</strong> ${reg.usn}</div>
+                      <div><strong>College:</strong> ${reg.collegeName}</div>
+                      ${reg.teamSize > 1 ? `
+                        <div style="margin-top:0.35rem;padding-top:0.35rem;border-top:1px dashed rgba(11,15,13,0.2);">
+                          <strong>Team Size:</strong> ${reg.teamSize}
+                          <div style="font-size:0.72rem;margin-top:0.25rem;max-height:60px;overflow-y:auto;">
+                            ${reg.teamMembers.map((m, idx) => `<div>${idx + 1}. ${m.name} (${m.usn})</div>`).join('')}
+                          </div>
                         </div>
-                      </div>
-                      <span style="font-size:0.7rem;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:rgba(255,255,255,0.05);padding:0.25rem 0.5rem;border-radius:0.5rem;font-family:var(--font-heading,'Inter',sans-serif);">
-                        Registered
-                      </span>
+                      ` : ''}
                     </div>
                   </div>
                 `).join("");
