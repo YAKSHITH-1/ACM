@@ -1494,6 +1494,77 @@ document.addEventListener("DOMContentLoaded", () => {
   ══════════════════════════════════════ */
 
   /**
+   * Generates tailored dynamic neo-brutalist tech artwork & banners matching the event title/topic.
+   */
+  const getEventDynamicBanner = (event, theme) => {
+    const text = `${event.title || ''} ${event.description || ''} ${theme?.category || ''}`.toLowerCase();
+    
+    // 1. Hackathon / Build Sprint / Dev Jam
+    if (/hack|sprint|build|jam|matrix|devfest|ideathon/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #0b1120 0%, #1e1b4b 45%, #312e81 80%, #0284c7 100%)",
+        watermark: "HACK"
+      };
+    }
+    
+    // 2. Artificial Intelligence / Machine Learning / Deep Learning / Data Science
+    if (/ai|neural|agent|model|machine learning|deep learning|vision|gpt|llm|intelligence|data/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #180828 0%, #3b0764 45%, #581c87 80%, #7c3aed 100%)",
+        watermark: "AI"
+      };
+    }
+    
+    // 3. Web Dev / Frontend / UI/UX / Fullstack
+    if (/web|frontend|ui|ux|css|html|react|design|interface|craft|fullstack|javascript/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #042f2e 0%, #064e3b 45%, #0d9488 80%, #0284c7 100%)",
+        watermark: "WEB"
+      };
+    }
+    
+    // 4. Algorithms / Competitive Programming / DSA / Coding Quest
+    if (/algo|algoquest|dsa|competitive|coding|logic|quest|leetcode|contest|problem/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 45%, #2563eb 80%, #6366f1 100%)",
+        watermark: "CODE"
+      };
+    }
+    
+    // 5. Cloud / DevOps / Backend / Systems / Docker / API
+    if (/cloud|devops|docker|kubernetes|aws|backend|server|database|systems|pipeline/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #0c4a6e 0%, #075985 45%, #0284c7 80%, #0d9488 100%)",
+        watermark: "CLOUD"
+      };
+    }
+    
+    // 6. Cybersecurity / CTF / Security / Ethical Hacking
+    if (/security|cyber|ctf|crypto|shield|auth|safe|defense|firewall/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #3b0764 0%, #7f1d1d 45%, #991b1b 80%, #f43f5e 100%)",
+        watermark: "SEC"
+      };
+    }
+
+    // 7. Talks / Keynote / Summit / Conference / Induction
+    if (/talk|keynote|summit|induction|conference|meet|inaugural|speaker/.test(text)) {
+      return {
+        bg: "linear-gradient(135deg, #3b1d03 0%, #78350f 45%, #92400e 80%, #d97706 100%)",
+        watermark: "TALK"
+      };
+    }
+
+    // 8. Dynamic fallback using event initials
+    const words = (event.title || "Event").trim().split(/\s+/);
+    const initials = words.slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'ACM';
+    return {
+      bg: "linear-gradient(135deg, #0b1120 0%, #1e293b 45%, #334155 80%, #0f172a 100%)",
+      watermark: initials
+    };
+  };
+
+  /**
    * Creates one countdown card HTML string in the Know Us neo-brutalist style.
    * @param {Object} event - event object from API  { _id, title, date, description, status, teamSize, ... }
    * @param {number} index - index for stagger delay & theme selection
@@ -1508,17 +1579,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const st = (event.status || "").toLowerCase();
     const isOpen = st.includes("open") && !st.includes("closed");
     const theme = EVENT_THEMES[index % EVENT_THEMES.length];
-
-    // Curated high-res tech/hackathon imagery
-    const stockImages = [
-      "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop"
-    ];
-    const image = stockImages[index % stockImages.length];
+    const banner = getEventDynamicBanner(event, theme);
 
     const buttonText = isOpen ? "Reserve Your Spot" : "View Details";
     const buttonDataAttrs = isOpen
@@ -1532,10 +1593,12 @@ document.addEventListener("DOMContentLoaded", () => {
           ${theme.stickerSvg}
         </div>
 
-        <!-- Image Wrap -->
-        <div class="countdown-card__image-wrap">
-          <img class="countdown-card__image" src="${image}" alt="${title}" loading="lazy" />
-          <div class="countdown-card__image-gradient"></div>
+        <!-- Dynamic Context-Aware Event Graphic Banner -->
+        <div class="countdown-card__graphic-wrap">
+          <div class="countdown-card__graphic-bg" style="background: ${banner.bg};"></div>
+          <div class="countdown-card__graphic-grid"></div>
+          <div class="countdown-card__graphic-watermark">${banner.watermark}</div>
+
           <div class="countdown-card__urgency-badge" data-urgency-badge hidden>⏱ Starts Soon!</div>
           ${event.status ? `<div class="countdown-card__status-badge">${escapeHtml(event.status)}</div>` : ''}
         </div>

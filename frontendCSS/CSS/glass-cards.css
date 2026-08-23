@@ -156,10 +156,21 @@
 }
 
 /* Light Theme tweaks */
-body.light-theme .glass-card.theme-cyan   { background: #38bdf8; }
-body.light-theme .glass-card.theme-green  { background: #86efac; }
-body.light-theme .glass-card.theme-purple { background: #c084fc; }
-body.light-theme .glass-card.theme-yellow { background: #fde047; }
+body.light-theme .glass-card.theme-cyan {
+  background: #38bdf8;
+}
+
+body.light-theme .glass-card.theme-green {
+  background: #86efac;
+}
+
+body.light-theme .glass-card.theme-purple {
+  background: #c084fc;
+}
+
+body.light-theme .glass-card.theme-yellow {
+  background: #fde047;
+}
 
 /* ═══════════════════════════════════════
    RESPONSIVE (Smooth PC & Mobile)
@@ -168,6 +179,7 @@ body.light-theme .glass-card.theme-yellow { background: #fde047; }
   .glass-cards-container {
     max-width: 540px;
   }
+
   .glass-card {
     max-width: 520px;
     height: 255px;

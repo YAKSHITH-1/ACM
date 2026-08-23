@@ -252,20 +252,55 @@ body.light-theme .ts-pill-kicker {
   visibility: hidden;
 }
 
-/* Specially Highlighted Faculty Card */
+/* Specially Highlighted Faculty Card (Premium Multi-Color & Glass Finish) */
 .ts-card.ts-card-faculty {
   width: clamp(140px, 14vw, 165px);
   height: clamp(230px, 21vw, 258px);
   border: 2.5px solid #0B0F0D;
-  box-shadow: 5px 5px 0px #0B0F0D;
+  box-shadow: 5px 5px 0px #0B0F0D, inset 0 1.5px 2px rgba(255, 255, 255, 0.65), inset 0 -2px 6px rgba(0, 0, 0, 0.12);
   border-radius: 20px;
   position: relative;
   overflow: visible;
   padding: 0.85rem 0.5rem 0.65rem;
 }
 
+/* Prismatic Glass Gloss Overlay for Faculty Cards */
+.ts-card.ts-card-faculty::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    140deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.12) 28%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
 .ts-card.ts-card-faculty .ts-avatar-wrap {
   height: 145px;
+  position: relative;
+  z-index: 2;
+}
+
+.ts-card.ts-card-faculty .ts-info {
+  position: relative;
+  z-index: 2;
+}
+
+.ts-card.ts-card-faculty .ts-name {
+  color: #0B0F0D;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.ts-card.ts-card-faculty .ts-location {
+  color: #0B0F0D;
+  font-weight: 800;
+  opacity: 0.85;
 }
 
 .ts-faculty-row .ts-card-faculty:nth-child(1) {
@@ -278,7 +313,7 @@ body.light-theme .ts-pill-kicker {
 
 .ts-card-faculty:hover {
   transform: rotate(0deg) translateY(-12px) scale(1.07) !important;
-  box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.28), 7px 7px 0px #0B0F0D !important;
+  box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.32), 7px 7px 0px #0B0F0D, inset 0 2px 3px rgba(255, 255, 255, 0.85) !important;
   z-index: 15;
 }
 
@@ -288,35 +323,76 @@ body.light-theme .ts-pill-kicker {
   top: -11px;
   left: 50%;
   transform: translateX(-50%);
-  background: #facc15;
+  background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #eab308 100%);
   color: #0B0F0D;
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 0.62rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 2px 9px;
+  padding: 2.5px 10px;
   border-radius: 999px;
   border: 2px solid #0B0F0D;
   box-shadow: 2px 2px 0px #0B0F0D;
   white-space: nowrap;
   z-index: 10;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .ts-card-faculty:hover .ts-faculty-tag {
   transform: translateX(-50%) scale(1.06);
-  background: #fde047;
+  background: linear-gradient(135deg, #fff 0%, #fde047 50%, #facc15 100%);
 }
 
-/* Faculty Theme Colors */
-.ts-card.theme-faculty-hod { background: #6366f1; color: #1e1b4b; }
-.ts-card.theme-faculty-sponsor { background: #0d9488; color: #042f2e; }
+/* ── Faculty Multi-Color Mixture Themes ── */
 
-body.light-theme .ts-card.theme-faculty-hod { background: #818cf8; color: #0f172a; }
-body.light-theme .ts-card.theme-faculty-sponsor { background: #2dd4bf; color: #0f172a; }
+/* 1. HOD Card (Dr. Kishore): Royal Indigo, Electric Azure, Velvet Violet & Cobalt Aura */
+.ts-card.theme-faculty-hod,
+.ts-spotlight-card.theme-faculty-hod {
+  background: 
+    radial-gradient(ellipse at 15% 15%, rgba(129, 140, 248, 0.85) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(192, 132, 252, 0.8) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(56, 189, 248, 0.75) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 85%, rgba(168, 85, 247, 0.8) 0%, transparent 50%),
+    linear-gradient(145deg, #4338ca 0%, #4f46e5 28%, #7c3aed 65%, #2563eb 100%);
+  color: #0f172a;
+}
 
-/* Faculty Spotlight Dossier Borders */
+body.light-theme .ts-card.theme-faculty-hod,
+body.light-theme .ts-spotlight-card.theme-faculty-hod {
+  background: 
+    radial-gradient(ellipse at 15% 15%, rgba(199, 210, 254, 0.9) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(233, 213, 255, 0.85) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(186, 230, 253, 0.8) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 85%, rgba(221, 214, 254, 0.85) 0%, transparent 50%),
+    linear-gradient(145deg, #818cf8 0%, #6366f1 32%, #a855f7 68%, #60a5fa 100%);
+  color: #0f172a;
+}
+
+/* 2. Faculty Sponsor Card (Prof. Vandana): Deep Jewel Emerald, Jade, Electric Teal & Aquamarine Prism */
+.ts-card.theme-faculty-sponsor,
+.ts-spotlight-card.theme-faculty-sponsor {
+  background: 
+    radial-gradient(ellipse at 15% 15%, rgba(45, 212, 191, 0.85) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(56, 189, 248, 0.8) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(16, 185, 129, 0.85) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 85%, rgba(6, 182, 212, 0.75) 0%, transparent 50%),
+    linear-gradient(145deg, #0d9488 0%, #0f766e 28%, #059669 65%, #0284c7 100%);
+  color: #042f2e;
+}
+
+body.light-theme .ts-card.theme-faculty-sponsor,
+body.light-theme .ts-spotlight-card.theme-faculty-sponsor {
+  background: 
+    radial-gradient(ellipse at 15% 15%, rgba(94, 234, 212, 0.9) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(125, 211, 252, 0.85) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(110, 231, 183, 0.88) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 85%, rgba(103, 232, 249, 0.8) 0%, transparent 50%),
+    linear-gradient(145deg, #2dd4bf 0%, #14b8a6 32%, #10b981 68%, #38bdf8 100%);
+  color: #042f2e;
+}
+
+/* Faculty Spotlight Dossier Borders & Accents */
 .ts-spotlight-dossier.dossier-faculty-hod {
   border-color: #6366f1;
 }
