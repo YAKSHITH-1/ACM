@@ -92,7 +92,7 @@ input, textarea, select, label,
 .filter-input, .filter-select,
 .reg-card-date, .reg-detail-value, .reg-notes,
 .stat-text, .member-bio, .team-role, .team-bio, .float-card-sub, .event-desc,
-.empty-state, .empty-msg, .item-body, .hub-desc, .marquee-card-overlay p,
+.empty-state, .empty-msg, .item-body, .hub-desc,
 .modal-body, .modal-text {
   font-family: var(--font-body) !important;
 }

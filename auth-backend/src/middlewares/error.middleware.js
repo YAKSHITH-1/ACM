@@ -1,3 +1,5 @@
+import ApiError from "../utils/ApiError.js";
+
 const errorMiddleware = (err, req, res, next) => {
   // Default status code
   let statusCode = err.statusCode || 500;
@@ -8,9 +10,13 @@ const errorMiddleware = (err, req, res, next) => {
   // Determine appropriate message to send to client
   let message;
 
-  // If we have a custom ApiError, use its message (assumed safe)
-  if (err instanceof ApiError) {
-    message = err.message;
+  // If we have an ApiError, or explicit 4xx operational status code
+  if (err instanceof ApiError || err.name === "ApiError" || (err.statusCode && err.statusCode < 500)) {
+    message = err.message || "Request failed";
+    statusCode = err.statusCode || 400;
+  } else if (err.message === "Invalid credentials") {
+    message = "Invalid credentials";
+    statusCode = 401;
   } else {
     // Handle known operational errors with generic messages
     if (statusCode === 500) {
@@ -38,17 +44,15 @@ const errorMiddleware = (err, req, res, next) => {
         message = "Token expired";
         statusCode = 401;
       }
-      // In production, hide internal error details for any other 500 error
+      // In production, hide internal error details for unexpected 500 errors
       else if (process.env.NODE_ENV === "production") {
         message = "Internal Server Error";
       }
-      // In development, we can show the error message (but still no stack trace)
+      // In development, show error message
       else {
         message = err.message || "Server Error";
       }
     } else {
-      // For non-500 errors (e.g., 400 from validation), use the error message if set,
-      // otherwise fallback to a generic message.
       message = err.message || "Error";
     }
   }
@@ -58,15 +62,5 @@ const errorMiddleware = (err, req, res, next) => {
     message
   });
 };
-
-// ApiError class (keep it here or import; we define locally to avoid circular)
-// Better to import from utils/ApiError.js but to keep simple we re-declare same shape.
-class ApiError extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.name = "ApiError";
-    this.statusCode = statusCode;
-  }
-}
 
 export default errorMiddleware;

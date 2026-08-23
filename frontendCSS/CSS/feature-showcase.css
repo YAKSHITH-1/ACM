@@ -1,140 +1,255 @@
 /* ═══════════════════════════════════════════════════════════════
-   FEATURE SHOWCASE — Vanilla CSS
-   Converts two React components:
-   1. "Latest Blog" card grid (static 3-up)
-   2. Marquee carousel with hover-pause + overlay reveal
+   FEATURE SHOWCASE — Playful Neo-Brutalist Marquee Carousel
+   Inspired by the Know-Us Team Showcase design language
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Marquee carousel ── */
+/* ── Marquee Carousel Wrapper ── */
 .marquee-wrap {
   position: relative;
   overflow: hidden;
   width: 100%;
-  max-width: 72rem;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 1.5rem auto 0;
+  padding: 1.25rem 0 1.75rem;
 }
 
-/* Gradient edge fades */
+/* Gradient edge fades for seamless entry/exit */
 .marquee-fade-left,
 .marquee-fade-right {
   position: absolute;
   top: 0;
   height: 100%;
-  width: 5rem;
-  z-index: 5;
+  width: 6rem;
+  z-index: 8;
   pointer-events: none;
 }
 
 .marquee-fade-left {
   left: 0;
-  background: linear-gradient(to right, #0b0c10, transparent);
+  background: linear-gradient(to right, #0B0F0D 0%, rgba(11, 15, 13, 0.8) 40%, transparent 100%);
 }
 
 .marquee-fade-right {
   right: 0;
-  background: linear-gradient(to left, #0b0c10, transparent);
+  background: linear-gradient(to left, #0B0F0D 0%, rgba(11, 15, 13, 0.8) 40%, transparent 100%);
 }
 
-/* The inner track */
+body.light-theme .marquee-fade-left {
+  background: linear-gradient(to right, rgba(248, 250, 252, 0.95) 0%, rgba(248, 250, 252, 0.7) 40%, transparent 100%);
+}
+
+body.light-theme .marquee-fade-right {
+  background: linear-gradient(to left, rgba(248, 250, 252, 0.95) 0%, rgba(248, 250, 252, 0.7) 40%, transparent 100%);
+}
+
+/* The continuous rolling track */
 .marquee-track {
   display: flex;
   width: fit-content;
-  animation: marqueeScroll linear infinite;
+  align-items: center;
+  animation: marqueeScroll 34s linear infinite;
+  will-change: transform;
 }
 
 @keyframes marqueeScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.marquee-track.paused {
+.marquee-wrap:hover .marquee-track {
   animation-play-state: paused;
 }
 
-/* Individual marquee card */
+/* ── Individual Playful Neo-Brutalist Card ── */
 .marquee-card {
   position: relative;
-  width: 14rem;
-  height: 20rem;
-  margin: 0 1rem;
+  width: 15rem;
+  height: 20.5rem;
+  margin: 0 0.85rem;
+  padding: 1.25rem 1.15rem 1rem;
   flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
+  border-radius: 22px;
+  border: 2.5px solid #0B0F0D;
+  box-shadow: 4px 4px 0px #0B0F0D;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 }
 
 .marquee-card:hover {
-  transform: scale(0.92);
+  transform: translateY(-8px) scale(1.04) rotate(-1.5deg);
+  box-shadow: 7px 7px 0px #0B0F0D;
   z-index: 10;
 }
 
-.marquee-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+/* ── Top Tag / Category Pill ── */
+.marquee-tag {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1.5px solid #0B0F0D;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.45);
+  color: #0B0F0D;
+  box-shadow: 1.5px 1.5px 0px #0B0F0D;
 }
 
-/* Hover overlay with text */
-.marquee-card-overlay {
-  position: absolute;
-  inset: 0;
+/* ── Center Graphic Box ── */
+.marquee-icon-box {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  border: 2px solid #0B0F0D;
+  box-shadow: 3px 3px 0px #0B0F0D;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.85);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  margin: 0.75rem auto;
+  transform: rotate(-3deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.marquee-card:hover .marquee-card-overlay {
-  opacity: 1;
+.marquee-icon-box svg {
+  width: 32px;
+  height: 32px;
+  stroke: #0B0F0D;
 }
 
-.marquee-card-overlay p {
-  color: #50e3c2;
-  font-family: var(--font-body, 'Inter', 'Poppins', sans-serif);
-  font-size: 1.25rem;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.3;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+.marquee-card:hover .marquee-icon-box {
+  transform: rotate(0deg) scale(1.12);
+  box-shadow: 4px 4px 0px #0B0F0D;
 }
+
+/* ── Card Content Typography ── */
+.marquee-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.marquee-title {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: inherit;
+  letter-spacing: -0.01em;
+}
+
+.marquee-desc {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.35;
+  opacity: 0.9;
+  color: inherit;
+}
+
+/* ── Card Bottom Footer Bar ── */
+.marquee-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.6rem;
+  border-top: 1.5px dashed rgba(11, 15, 13, 0.3);
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.marquee-footer svg {
+  transition: transform 0.25s ease;
+}
+
+.marquee-card:hover .marquee-footer svg {
+  transform: translateX(3px);
+}
+
+/* ── Vibrant Color Themes (Matching Know-Us Palette) ── */
+.marquee-card.theme-orange {
+  background: #fb923c;
+  color: #431407;
+}
+
+.marquee-card.theme-cyan {
+  background: #38bdf8;
+  color: #082f49;
+}
+
+.marquee-card.theme-green {
+  background: #86efac;
+  color: #064e3b;
+}
+
+.marquee-card.theme-pink {
+  background: #fb7185;
+  color: #4c0519;
+}
+
+.marquee-card.theme-yellow {
+  background: #fde047;
+  color: #422006;
+}
+
+.marquee-card.theme-purple {
+  background: #c084fc;
+  color: #3b0764;
+}
+
+/* Light Theme tweaks */
+body.light-theme .marquee-card.theme-orange { background: #fb923c; color: #431407; }
+body.light-theme .marquee-card.theme-cyan   { background: #38bdf8; color: #082f49; }
+body.light-theme .marquee-card.theme-green  { background: #86efac; color: #064e3b; }
+body.light-theme .marquee-card.theme-pink   { background: #fb7185; color: #4c0519; }
+body.light-theme .marquee-card.theme-yellow { background: #fde047; color: #422006; }
+body.light-theme .marquee-card.theme-purple { background: #c084fc; color: #3b0764; }
 
 /* ═══════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════ */
-@media (max-width: 639px) {
-  .showcase-grid {
-    gap: 1.5rem;
-  }
-  .showcase-card {
-    max-width: 100%;
-  }
+@media (max-width: 767px) {
   .marquee-card {
-    width: 11rem;
-    height: 16rem;
+    width: 12.5rem;
+    height: 18rem;
+    padding: 1rem 0.9rem 0.85rem;
+    margin: 0 0.6rem;
   }
+
+  .marquee-title {
+    font-size: 1rem;
+  }
+
+  .marquee-desc {
+    font-size: 0.7rem;
+  }
+
+  .marquee-icon-box {
+    width: 56px;
+    height: 56px;
+  }
+
+  .marquee-icon-box svg {
+    width: 26px;
+    height: 26px;
+  }
+
   .marquee-fade-left,
   .marquee-fade-right {
-    width: 2.5rem;
+    width: 3rem;
   }
-}
-
-/* ═══════════════════════════════════════
-   LIGHT THEME
-   ═══════════════════════════════════════ */
-body.light-theme .showcase-card-title {
-  color: var(--v-text, #064E3B);
-}
-
-body.light-theme .marquee-fade-left {
-  background: linear-gradient(to right, var(--v-bg, #FFFDF7), transparent);
-}
-
-body.light-theme .marquee-fade-right {
-  background: linear-gradient(to left, var(--v-bg, #FFFDF7), transparent);
 }
