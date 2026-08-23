@@ -188,6 +188,34 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove("light-theme");
   }
 
+  // --- USER SANITIZER & STORAGE CLEANUP ---
+  const sanitizeUser = (user) => {
+    if (!user || typeof user !== "object") return null;
+    return {
+      _id: user._id || user.id || "",
+      name: user.name || user.fullName || "",
+      email: user.email || "",
+      role: user.role || "user",
+      isVerified: Boolean(user.isVerified)
+    };
+  };
+
+  // Clean any old insecure storage entries (e.g. containing refresh tokens or internal fields)
+  try {
+    const rawStoredUser = localStorage.getItem("user");
+    if (rawStoredUser) {
+      const parsedStoredUser = JSON.parse(rawStoredUser);
+      const cleanedUser = sanitizeUser(parsedStoredUser);
+      if (cleanedUser && (cleanedUser._id || cleanedUser.email)) {
+        localStorage.setItem("user", JSON.stringify(cleanedUser));
+      } else {
+        localStorage.removeItem("user");
+      }
+    }
+  } catch (e) {
+    localStorage.removeItem("user");
+  }
+
   const DEFAULT_EVENTS = {
     upcoming: [
       {
@@ -893,9 +921,11 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
 
-          // Save new token and user
+          // Save new token and safe sanitized user
           localStorage.setItem("token", data.accessToken);
-          localStorage.setItem("user", JSON.stringify(data.user));
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(sanitizeUser(data.user)));
+          }
 
           showPopup(
             "Success",
@@ -1024,9 +1054,13 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             return;
           }
-          // Auto-login: save token and user data
+          // Auto-login: save token and safe sanitized user data
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
           localStorage.setItem("token", data.accessToken);
-          localStorage.setItem("user", JSON.stringify(data.user));
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(sanitizeUser(data.user)));
+          }
 
           showPopup(
             "Success",
@@ -1733,38 +1767,73 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       // CHECK LOGIN STATUS & VALIDATE WITH BACKEND
       const token = localStorage.getItem("token");
-      const localUserStr = localStorage.getItem("user");
       if (!token) {
         // not logged in
         return;
       }
 
+      // Validate token by fetching profile from backend with automatic silent refresh
+      const fetchProfile = async () => {
+        try {
+          let currentToken = localStorage.getItem("token");
+          let res = await fetch(`${API_BASE_URL}/auth/profile`, {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${currentToken}`
+            }
+          });
 
-      // Validate token by fetching profile from backend
-      fetch(`${API_BASE_URL}/auth/profile`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      })
-        .then(async (res) => {
+          // If access token expired, try refreshing via HttpOnly refresh token cookie
+          if (res.status === 401) {
+            const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+              method: "POST",
+              credentials: "include"
+            });
+
+            if (refreshRes.ok) {
+              const refreshData = await refreshRes.json();
+              if (refreshData.accessToken) {
+                currentToken = refreshData.accessToken;
+                localStorage.setItem("token", currentToken);
+                if (refreshData.user) {
+                  localStorage.setItem("user", JSON.stringify(sanitizeUser(refreshData.user)));
+                }
+                // Retry profile fetch with new access token
+                res = await fetch(`${API_BASE_URL}/auth/profile`, {
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${currentToken}`
+                  }
+                });
+              }
+            }
+          }
+
           if (!res.ok) {
-            // token invalid or expired
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             return null;
           }
-          const data = await res.json();
-          return data;
-        })
+
+          const profile = await res.json();
+          return profile;
+        } catch (err) {
+          console.error("Profile check error:", err);
+          return null;
+        }
+      };
+
+      fetchProfile()
         .then((profile) => {
           if (!profile) return;
 
           // backend returns { success: true, user }
-          const profileData = profile.user || profile;
+          const profileData = sanitizeUser(profile.user || profile);
+          if (!profileData) return;
 
-          // Update local user storage with fresh profile (store only the user object)
+          // Update local user storage with fresh sanitized profile
           try { localStorage.setItem('user', JSON.stringify(profileData)); } catch { }
           // Hide auth links (register / join-us) for authenticated user
           menu.querySelectorAll("a").forEach(link => {
@@ -1936,7 +2005,13 @@ document.addEventListener("DOMContentLoaded", () => {
               });
 
               // Logout handler
-              document.getElementById("profile-logout-btn")?.addEventListener("click", () => {
+              document.getElementById("profile-logout-btn")?.addEventListener("click", async () => {
+                try {
+                  await fetch(`${API_BASE_URL}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                  });
+                } catch (e) { }
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
                 window.location.reload();
@@ -1969,20 +2044,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 saveNameBtn.disabled = true;
 
                 try {
+                  const currentAuthToken = localStorage.getItem("token") || token;
                   const res = await fetch(`${API_BASE_URL}/auth/profile/name`, {
                     method: "PUT",
+                    credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
-                      "Authorization": `Bearer ${token}`
+                      "Authorization": `Bearer ${currentAuthToken}`
                     },
                     body: JSON.stringify({ name: newName })
                   });
                   const data = await res.json();
                   if (data.success) {
                     nameDisplay.textContent = newName;
-                    const cachedUser = JSON.parse(localStorage.getItem('user') || "{}");
+                    const cachedUser = sanitizeUser(JSON.parse(localStorage.getItem('user') || "{}")) || {};
                     cachedUser.name = newName;
-                    cachedUser.fullName = newName;
                     localStorage.setItem('user', JSON.stringify(cachedUser));
                   } else {
                     alert("Failed to update name: " + (data.message || "Unknown error"));

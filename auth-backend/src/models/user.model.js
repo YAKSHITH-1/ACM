@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
       maxlength: 1000 // Prevent extremely long passwords that could cause DoS during hashing
     },
 
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema(
 
     refreshToken: {
       type: String,
+      select: false,
       maxlength: 2048 // JWTs should not exceed this size
     },
 
@@ -42,21 +44,29 @@ const userSchema = new mongoose.Schema(
 
     verificationCode: {
       type: String,
+      select: false,
       maxlength: 4,
       minlength: 4
       // Verification code is generated as a 4-digit number (1000-9999)
     },
 
-    verificationCodeExpire: Date,
+    verificationCodeExpire: {
+      type: Date,
+      select: false
+    },
 
     resetPasswordToken: {
       type: String,
+      select: false,
       maxlength: 4,
       minlength: 4
       // Stores the 4‑digit reset code sent via email
     },
 
-    resetPasswordExpire: Date
+    resetPasswordExpire: {
+      type: Date,
+      select: false
+    }
   },
   {
     timestamps: true

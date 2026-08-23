@@ -23,7 +23,7 @@ export const registerService = async (data) => {
 };
 
 export const loginService = async (email, password) => {
-  const user = await User.findOne({ email: String(email) });
+  const user = await User.findOne({ email: String(email) }).select("+password +refreshToken");
 
   if (!user) {
     throw new Error("Invalid credentials");

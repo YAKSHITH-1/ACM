@@ -130,6 +130,26 @@ export const register = asyncHandler(async (req, res) => {
 });
 
 
+// Helper to return sanitized user object (never leaks refreshToken, passwords, or internal fields)
+export const formatSafeUser = (user) => {
+  if (!user) return null;
+  return {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    isVerified: Boolean(user.isVerified)
+  };
+};
+
+const getCookieOptions = (maxAge) => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
+  ...(maxAge ? { maxAge } : {})
+});
+
 // LOGIN
 export const login = asyncHandler(async (req, res) => {
 
@@ -141,26 +161,12 @@ export const login = asyncHandler(async (req, res) => {
       req.body.password
     );
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
-  });
+  res.cookie("accessToken", accessToken, getCookieOptions(15 * 60 * 1000));
+  res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
   res.status(200).json({
     success: true,
-    user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    },
+    user: formatSafeUser(user),
     accessToken
   });
 
@@ -170,9 +176,19 @@ export const login = asyncHandler(async (req, res) => {
 // LOGOUT
 export const logout = asyncHandler(async (req, res) => {
 
-  res.clearCookie("accessToken");
+  const token = req.cookies.refreshToken;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+      await User.findByIdAndUpdate(decoded.id, { refreshToken: null });
+    } catch (e) {
+      // Continue clearing cookies even if verification fails
+    }
+  }
 
-  res.clearCookie("refreshToken");
+  const clearOptions = getCookieOptions();
+  res.clearCookie("accessToken", clearOptions);
+  res.clearCookie("refreshToken", clearOptions);
 
   res.status(200).json({
     success: true,
@@ -194,12 +210,33 @@ export const refreshToken = asyncHandler(async (req, res) => {
     });
   }
 
-  const decoded = jwt.verify(
-    token,
-    process.env.JWT_REFRESH_SECRET
-  );
+  let decoded;
+  try {
+    decoded = jwt.verify(
+      token,
+      process.env.JWT_REFRESH_SECRET
+    );
+  } catch (err) {
+    const clearOptions = getCookieOptions();
+    res.clearCookie("accessToken", clearOptions);
+    res.clearCookie("refreshToken", clearOptions);
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired refresh token"
+    });
+  }
 
-  const user = await User.findById(decoded.id);
+  const user = await User.findById(decoded.id).select("+refreshToken");
+
+  if (!user || user.refreshToken !== token) {
+    const clearOptions = getCookieOptions();
+    res.clearCookie("accessToken", clearOptions);
+    res.clearCookie("refreshToken", clearOptions);
+    return res.status(401).json({
+      success: false,
+      message: "Invalid refresh token"
+    });
+  }
 
   const accessToken = jwt.sign(
     {
@@ -212,9 +249,22 @@ export const refreshToken = asyncHandler(async (req, res) => {
     }
   );
 
+  const newRefreshToken = jwt.sign(
+    { id: user._id },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
+  );
+
+  user.refreshToken = newRefreshToken;
+  await user.save();
+
+  res.cookie("accessToken", accessToken, getCookieOptions(15 * 60 * 1000));
+  res.cookie("refreshToken", newRefreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
+
   res.status(200).json({
     success: true,
-    accessToken
+    accessToken,
+    user: formatSafeUser(user)
   });
 
 });
@@ -225,7 +275,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
   const email = normalizeEmail(req.body.email);
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+resetPasswordToken +resetPasswordExpire");
 
   if (!user) {
     return res.status(404).json({
@@ -276,7 +326,7 @@ export const verifyResetToken = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({
     resetPasswordToken: token,
-  });
+  }).select("+resetPasswordToken +resetPasswordExpire");
 
   if (!user) {
     return res.status(400).json({
@@ -306,7 +356,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({
     resetPasswordToken: token,
-  });
+  }).select("+password +resetPasswordToken +resetPasswordExpire");
 
   if (!user) {
     return res.status(400).json({
@@ -325,6 +375,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   user.password = await bcrypt.hash(password, 10);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
+  user.refreshToken = null; // Invalidate old refresh token on password reset
 
   await user.save();
 
@@ -347,7 +398,7 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     verificationCodeExpire: {
       $gt: new Date()
     }
-  });
+  }).select("+verificationCode +verificationCodeExpire +refreshToken");
 
   if (!user) {
     return res.status(400).json({
@@ -376,28 +427,14 @@ export const verifyEmail = asyncHandler(async (req, res) => {
   user.refreshToken = refreshToken;
   await user.save();
 
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
-  });
+  res.cookie("accessToken", accessToken, getCookieOptions(15 * 60 * 1000));
+  res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
   res.status(200).json({
     success: true,
     message: "Email verified successfully",
     accessToken,
-    user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    }
+    user: formatSafeUser(user)
   });
 
 });
@@ -406,12 +443,17 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 // PROFILE
 export const getProfile = asyncHandler(async (req, res) => {
 
-  const user = await User.findById(req.user.id)
-    .select("-password");
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found"
+    });
+  }
 
   res.status(200).json({
     success: true,
-    user
+    user: formatSafeUser(user)
   });
 
 });
@@ -424,19 +466,18 @@ export const updateProfileName = asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false, message: "Name is required" });
   }
 
-  const user = await User.findById(req.user.id).select("-password");
+  const user = await User.findById(req.user.id);
   if (!user) {
     return res.status(404).json({ success: false, message: "User not found" });
   }
 
   user.name = name.trim();
-  // Note: fullName field does not exist in User schema; removing assignment
   await user.save();
 
   res.status(200).json({
     success: true,
     message: "Name updated successfully",
-    user
+    user: formatSafeUser(user)
   });
 
 });
