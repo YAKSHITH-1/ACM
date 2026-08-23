@@ -1,16 +1,21 @@
 /* ═══════════════════════════════════════════════════════════════
    FEATURE SHOWCASE — Playful Neo-Brutalist Marquee Carousel
-   Inspired by the Know-Us Team Showcase design language
+   Optimized for buttery-smooth PC and Mobile Viewports
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Marquee Carousel Wrapper ── */
+/* ── Full-Bleed Marquee Carousel Wrapper ── */
 .marquee-wrap {
   position: relative;
   overflow: hidden;
-  width: 100%;
-  max-width: 100%;
-  margin: 1.5rem auto 0;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 1.5rem;
+  margin-bottom: 0;
   padding: 1.25rem 0 1.75rem;
+  touch-action: pan-y;
+  cursor: pointer;
 }
 
 /* Gradient edge fades for seamless entry/exit */
@@ -19,7 +24,7 @@
   position: absolute;
   top: 0;
   height: 100%;
-  width: 6rem;
+  width: 5rem;
   z-index: 8;
   pointer-events: none;
 }
@@ -47,32 +52,47 @@ body.light-theme .marquee-fade-right {
   display: flex;
   width: fit-content;
   align-items: center;
-  animation: marqueeScroll 34s linear infinite;
+  animation: marqueeScroll 32s linear infinite;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 @keyframes marqueeScroll {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-.marquee-wrap:hover .marquee-track {
-  animation-play-state: paused;
+/* Pause scroll on hover, active click, tap, or JS is-paused state */
+.marquee-track.is-paused,
+.marquee-wrap.is-paused .marquee-track,
+.marquee-wrap:active .marquee-track,
+.marquee-track:active,
+.marquee-card:active {
+  animation-play-state: paused !important;
+}
+
+@media (hover: hover) {
+  .marquee-wrap:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 /* ── Individual Playful Neo-Brutalist Card ── */
 .marquee-card {
   position: relative;
-  width: 15rem;
-  height: 20.5rem;
-  margin: 0 0.85rem;
-  padding: 1.25rem 1.15rem 1rem;
+  width: 14rem;
+  height: 19rem;
+  margin: 0 0.75rem;
+  padding: 1.2rem 1rem 0.95rem;
   flex-shrink: 0;
-  border-radius: 22px;
+  border-radius: 20px;
   border: 2.5px solid #0B0F0D;
   box-shadow: 4px 4px 0px #0B0F0D;
   display: flex;
@@ -80,77 +100,89 @@ body.light-theme .marquee-fade-right {
   justify-content: space-between;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  -webkit-user-select: none;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
 }
 
-.marquee-card:hover {
-  transform: translateY(-8px) scale(1.04) rotate(-1.5deg);
-  box-shadow: 7px 7px 0px #0B0F0D;
-  z-index: 10;
+.marquee-card:active {
+  transform: scale(0.97) !important;
+  box-shadow: 2px 2px 0px #0B0F0D !important;
+}
+
+@media (hover: hover) {
+  .marquee-card:hover {
+    transform: translateY(-6px) scale(1.03) rotate(-1deg);
+    box-shadow: 6px 6px 0px #0B0F0D;
+    z-index: 10;
+  }
 }
 
 /* ── Top Tag / Category Pill ── */
 .marquee-tag {
   align-self: flex-start;
-  padding: 4px 12px;
+  padding: 3px 11px;
   border-radius: 999px;
   border: 1.5px solid #0B0F0D;
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.5);
   color: #0B0F0D;
   box-shadow: 1.5px 1.5px 0px #0B0F0D;
 }
 
 /* ── Center Graphic Box ── */
 .marquee-icon-box {
-  width: 68px;
-  height: 68px;
-  border-radius: 18px;
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
   border: 2px solid #0B0F0D;
-  box-shadow: 3px 3px 0px #0B0F0D;
+  box-shadow: 2.5px 2.5px 0px #0B0F0D;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.75rem auto;
+  margin: 0.6rem auto;
   transform: rotate(-3deg);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .marquee-icon-box svg {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   stroke: #0B0F0D;
 }
 
-.marquee-card:hover .marquee-icon-box {
-  transform: rotate(0deg) scale(1.12);
-  box-shadow: 4px 4px 0px #0B0F0D;
+@media (hover: hover) {
+  .marquee-card:hover .marquee-icon-box {
+    transform: rotate(0deg) scale(1.1);
+    box-shadow: 3.5px 3.5px 0px #0B0F0D;
+  }
 }
 
 /* ── Card Content Typography ── */
 .marquee-content {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
 }
 
 .marquee-title {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   line-height: 1.2;
   color: inherit;
   letter-spacing: -0.01em;
+  margin-bottom: 0.15rem;
 }
 
 .marquee-desc {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 600;
   line-height: 1.35;
   opacity: 0.9;
@@ -162,10 +194,10 @@ body.light-theme .marquee-fade-right {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 0.6rem;
+  padding-top: 0.55rem;
   border-top: 1.5px dashed rgba(11, 15, 13, 0.3);
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -176,8 +208,10 @@ body.light-theme .marquee-fade-right {
   transition: transform 0.25s ease;
 }
 
-.marquee-card:hover .marquee-footer svg {
-  transform: translateX(3px);
+@media (hover: hover) {
+  .marquee-card:hover .marquee-footer svg {
+    transform: translateX(3px);
+  }
 }
 
 /* ── Vibrant Color Themes (Matching Know-Us Palette) ── */
@@ -220,36 +254,112 @@ body.light-theme .marquee-card.theme-yellow { background: #fde047; color: #42200
 body.light-theme .marquee-card.theme-purple { background: #c084fc; color: #3b0764; }
 
 /* ═══════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — TABLET & MOBILE VIEW
    ═══════════════════════════════════════ */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
+  .marquee-wrap {
+    padding: 0.9rem 0 1.35rem;
+    margin-top: 1rem;
+  }
+
   .marquee-card {
-    width: 12.5rem;
-    height: 18rem;
-    padding: 1rem 0.9rem 0.85rem;
-    margin: 0 0.6rem;
+    width: 11.25rem;
+    height: 16rem;
+    padding: 0.95rem 0.85rem 0.75rem;
+    margin: 0 0.45rem;
+    border-radius: 18px;
+    box-shadow: 3.5px 3.5px 0px #0B0F0D;
   }
 
-  .marquee-title {
-    font-size: 1rem;
-  }
-
-  .marquee-desc {
-    font-size: 0.7rem;
+  .marquee-tag {
+    font-size: 0.56rem;
+    padding: 2px 8px;
   }
 
   .marquee-icon-box {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    margin: 0.4rem auto;
   }
 
   .marquee-icon-box svg {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .marquee-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .marquee-desc {
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .marquee-footer {
+    font-size: 0.58rem;
+    padding-top: 0.45rem;
   }
 
   .marquee-fade-left,
   .marquee-fade-right {
-    width: 3rem;
+    width: 2.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .marquee-wrap {
+    padding: 0.75rem 0 1.15rem;
+  }
+
+  .marquee-track {
+    animation-duration: 26s;
+  }
+
+  .marquee-card {
+    width: 10.25rem;
+    height: 14.8rem;
+    padding: 0.85rem 0.75rem 0.65rem;
+    margin: 0 0.35rem;
+    border-radius: 16px;
+    box-shadow: 3px 3px 0px #0B0F0D;
+  }
+
+  .marquee-tag {
+    font-size: 0.52rem;
+    padding: 2px 7px;
+  }
+
+  .marquee-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    margin: 0.35rem auto;
+  }
+
+  .marquee-icon-box svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .marquee-title {
+    font-size: 0.88rem;
+  }
+
+  .marquee-desc {
+    font-size: 0.64rem;
+    line-height: 1.25;
+  }
+
+  .marquee-footer {
+    font-size: 0.54rem;
+    padding-top: 0.4rem;
+  }
+
+  .marquee-fade-left,
+  .marquee-fade-right {
+    width: 1.5rem;
   }
 }

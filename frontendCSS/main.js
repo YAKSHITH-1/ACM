@@ -2203,34 +2203,48 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!grid) return;
 
   const stats = [
-    { number: '4+', label: 'Technical Domains' },
-    { number: '5+', label: 'Events Conducted' },
-    { number: '28+', label: 'Active Members' },
-    { number: '∞', label: 'Ideas Welcome' }
-  ];
-
-  const colors = [
-    'rgba(103, 232, 249, 0.8)',
-    'rgba(110, 231, 183, 0.8)',
-    'rgba(167, 139, 250, 0.8)', // Purple
-    'rgba(251, 113, 133, 0.8)'  // Rose
+    {
+      number: '4+',
+      label: 'Technical Domains',
+      category: 'CORE DISCIPLINES',
+      theme: 'theme-cyan'
+    },
+    {
+      number: '5+',
+      label: 'Events Conducted',
+      category: 'COMMUNITY IMPACT',
+      theme: 'theme-green'
+    },
+    {
+      number: '28+',
+      label: 'Active Members',
+      category: 'STUDENT NETWORK',
+      theme: 'theme-purple'
+    },
+    {
+      number: '∞',
+      label: 'Ideas Welcome',
+      category: 'OPEN HORIZON',
+      theme: 'theme-yellow'
+    }
   ];
 
   grid.innerHTML = stats.map((stat, i) => `
     <div class="glass-card-wrapper">
-      <div class="glass-card" style="top: calc(-5vh + ${i * 25}px);">
-        <div class="glass-card-border" style="background: conic-gradient(from 0deg, transparent 0deg, ${colors[i]} 60deg, ${colors[i].replace('0.8', '0.6')} 120deg, transparent 180deg, ${colors[i].replace('0.8', '0.4')} 240deg, transparent 360deg);"></div>
-        <div class="glass-card-body">
-          <div class="glass-card-reflection"></div>
-          <div class="glass-card-shine"></div>
-          <div class="glass-card-side-reflection"></div>
-          <div class="glass-card-texture"></div>
-          <div class="glass-card-number">0${i + 1}</div>
-          
-          <div class="glass-card-content" style="text-align: center; justify-content: center; align-items: center; display: flex; flex-direction: column;">
-            <h3 class="glass-card-title" style="font-size: 3rem; margin-bottom: 0.5rem; text-transform: uppercase;">${stat.number}</h3>
-            <p class="glass-card-desc" style="font-size: 1.25rem;">${stat.label}</p>
-          </div>
+      <div class="glass-card ${stat.theme}" style="top: calc(8vh + ${i * 24}px);">
+        <!-- Giant Watermark Index -->
+        <div class="glass-card-watermark">0${i + 1}</div>
+
+        <!-- Top Bar -->
+        <div class="glass-card-topbar">
+          <span class="stat-pill-milestone">MILESTONE // 0${i + 1}</span>
+          <span class="stat-pill-category">${stat.category}</span>
+        </div>
+
+        <!-- Center Content -->
+        <div class="glass-card-center">
+          <div class="stat-number-display">${stat.number}</div>
+          <h3 class="stat-label-title">${stat.label}</h3>
         </div>
       </div>
     </div>
@@ -2241,20 +2255,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalCards = cards.length;
 
     cards.forEach((card, index) => {
-      const targetScale = 1 - (totalCards - index) * 0.05;
+      const targetScale = 1 - (totalCards - index) * 0.04;
 
       gsap.set(card, {
         scale: 1,
-        transformOrigin: "center top"
+        transformOrigin: "center top",
+        force3D: true
       });
 
       const wrapper = card.parentElement;
 
       ScrollTrigger.create({
         trigger: wrapper,
-        start: "top center",
-        end: "bottom center",
-        scrub: 3.0,
+        start: "top 35%",
+        end: "bottom 65%",
+        scrub: 1.0,
         onUpdate: (self) => {
           const progress = self.progress;
           const scale = gsap.utils.interpolate(1, targetScale, progress);
@@ -2270,4 +2285,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 })();
+
+// Marquee Carousel Click & Touch Controls (Auto-resume after 3s)
+(function initMarqueeControls() {
+  const marqueeWrap = document.getElementById('marquee-wrap');
+  if (!marqueeWrap) return;
+  const marqueeTrack = document.getElementById('marquee-track');
+  if (!marqueeTrack) return;
+
+  let resumeTimer = null;
+
+  const pauseAndAutoResume = () => {
+    marqueeTrack.classList.add('is-paused');
+    marqueeWrap.classList.add('is-paused');
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => {
+      marqueeTrack.classList.remove('is-paused');
+      marqueeWrap.classList.remove('is-paused');
+    }, 3000);
+  };
+
+  marqueeWrap.addEventListener('click', pauseAndAutoResume);
+  marqueeWrap.addEventListener('touchstart', pauseAndAutoResume, { passive: true });
+})();
+
 
