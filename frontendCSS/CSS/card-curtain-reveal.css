@@ -42,14 +42,24 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.45);
   pointer-events: none;
   transition: opacity 0.3s ease;
   z-index: 5;
 }
 
+.curtain-card:hover .curtain-hint,
 .curtain-card.is-hovered .curtain-hint {
   opacity: 0;
+}
+
+/* ── Content elements relative z-index so they sit above overlay ── */
+.curtain-icon,
+.curtain-title,
+.curtain-desc,
+.curtain-action {
+  position: relative;
+  z-index: 2;
 }
 
 /* ── Title that slides up on hover ── */
@@ -64,6 +74,7 @@
   transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), color 0.2s ease 0.1s;
 }
 
+.curtain-card:hover .curtain-title,
 .curtain-card.is-hovered .curtain-title {
   transform: translateY(0);
   color: #0b0c10;
@@ -79,6 +90,7 @@
   transition: clip-path 0.35s cubic-bezier(0.25, 1, 0.5, 1), color 0.2s ease 0.1s;
 }
 
+.curtain-card:hover .curtain-desc,
 .curtain-card.is-hovered .curtain-desc {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   color: #0b0c10;
@@ -91,6 +103,7 @@
   transition: clip-path 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.05s;
 }
 
+.curtain-card:hover .curtain-action,
 .curtain-card.is-hovered .curtain-action {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
@@ -119,12 +132,14 @@
   height: 18px;
 }
 
+.curtain-card:hover .curtain-action-btn,
 .curtain-card.is-hovered .curtain-action-btn {
   border-color: rgba(11, 12, 16, 0.3);
   background: rgba(11, 12, 16, 0.1);
   color: #0b0c10;
 }
 
+.curtain-card:hover .curtain-action-btn:hover,
 .curtain-card.is-hovered .curtain-action-btn:hover {
   background: rgba(11, 12, 16, 0.2);
   border-color: rgba(11, 12, 16, 0.5);
@@ -140,9 +155,10 @@
   height: 100%;
   clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
   transition: clip-path 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  z-index: -1;
+  z-index: 1;
 }
 
+.curtain-card:hover .curtain-overlay,
 .curtain-card.is-hovered .curtain-overlay {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
@@ -155,6 +171,7 @@
   overflow: hidden;
 }
 
+.curtain-card:hover .curtain-footer,
 .curtain-card.is-hovered .curtain-footer {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
@@ -259,6 +276,7 @@
   transition: color 0.2s ease, background 0.2s ease;
 }
 
+.curtain-card:hover .curtain-icon,
 .curtain-card.is-hovered .curtain-icon {
   background: rgba(11, 12, 16, 0.1) !important;
   color: #0b0c10 !important;

@@ -733,23 +733,16 @@
 
   <script>
     // Curtain Reveal Cards — hover state toggle (replaces React + Framer Motion)
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
     document.querySelectorAll('.curtain-card').forEach(card => {
-      // Desktop only: mouse hover
-      if (!isTouchDevice) {
-        card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
-        card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
-      }
+      // Mouse hover
+      card.addEventListener('mouseenter', () => card.classList.add('is-hovered'));
+      card.addEventListener('mouseleave', () => card.classList.remove('is-hovered'));
 
-      // Mobile / touch: single tap to reveal
+      // Mobile / touch: tap to toggle reveal
       card.addEventListener('click', (e) => {
-        if (isTouchDevice || window.innerWidth <= 767) {
-          e.preventDefault();
+        if (window.innerWidth <= 768 || ('ontouchstart' in window)) {
           const wasHovered = card.classList.contains('is-hovered');
-          // Close all cards first
           document.querySelectorAll('.curtain-card').forEach(c => c.classList.remove('is-hovered'));
-          // If it wasn't already open, open it
           if (!wasHovered) {
             card.classList.add('is-hovered');
           }
