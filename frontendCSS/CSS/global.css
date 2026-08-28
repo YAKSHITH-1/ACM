@@ -5374,97 +5374,11 @@ body.light-theme .splash-blob-2 {
     display: none;
   }
 }
-/* -- Announcements Grid & Cards -- */
+/* -- Announcements Grid & Cards (Base structure, design handled in announcements.css) -- */
 .announcements-grid {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.space-card {
-  position: relative;
-  display: flex;
   gap: 1.25rem;
-  /* Minimalist gradient & translucent background to let the stars shine through! */
-  background: linear-gradient(180deg, rgba(30, 30, 40, 0.5) 0%, rgba(10, 10, 15, 0.4) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top-color: rgba(255, 255, 255, 0.18); /* Subtle top highlight */
-  border-radius: 1rem;
-  padding: 1.5rem;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(20px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.space-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.15);
-  border-top-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(180deg, rgba(40, 40, 50, 0.6) 0%, rgba(15, 15, 20, 0.5) 100%);
-}
-
-.announcements-grid.visible .space-card {
-  animation: glideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes glideUpFade {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* The icon wrapper */
-.space-icon-wrapper {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--slate-300);
-  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
-}
-
-.space-card:hover .space-icon-wrapper {
-  transform: scale(1.05);
-}
-
-/* Category Specific Accents */
-.space-card.general .space-icon-wrapper { color: var(--cyan-300); border-color: rgba(103, 232, 249, 0.2); }
-.space-card.general:hover .space-icon-wrapper { background: rgba(103, 232, 249, 0.1); box-shadow: 0 0 12px rgba(103, 232, 249, 0.2); }
-
-.space-card.event .space-icon-wrapper { color: var(--violet-300); border-color: rgba(196, 181, 253, 0.2); }
-.space-card.event:hover .space-icon-wrapper { background: rgba(196, 181, 253, 0.1); box-shadow: 0 0 12px rgba(196, 181, 253, 0.2); }
-
-.space-card.alert .space-icon-wrapper { color: var(--rose-300); border-color: rgba(253, 164, 175, 0.2); }
-.space-card.alert:hover .space-icon-wrapper { background: rgba(253, 164, 175, 0.1); box-shadow: 0 0 12px rgba(253, 164, 175, 0.2); }
-
-.announcement-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.space-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-  z-index: 1;
-}
-
-.announcements-grid.visible .space-card {
-  animation: spaceFloatIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes spaceFloatIn {
-  0% { opacity: 0; transform: translateY(40px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 639px) {

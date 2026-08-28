@@ -63,7 +63,7 @@ body:not(.light-theme) .ann-page-header {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -78,14 +78,52 @@ body:not(.light-theme) .ann-tab-btn {
 
 .ann-tab-btn:hover {
   transform: translate(-1.5px, -1.5px);
-  box-shadow: 3.5px 3.5px 0px #0B0F0D;
+  box-shadow: 4px 4px 0px #0B0F0D;
   background: #facc15;
+  color: #0B0F0D;
+}
+
+.ann-tab-btn[data-cat="all"]:hover,
+.ann-tab-btn[data-cat="cyan"]:hover {
+  background: #38bdf8;
+  color: #0B0F0D;
+}
+
+.ann-tab-btn[data-cat="violet"]:hover {
+  background: #c084fc;
+  color: #0B0F0D;
+}
+
+.ann-tab-btn[data-cat="emerald"]:hover {
+  background: #86efac;
+  color: #0B0F0D;
+}
+
+.ann-tab-btn[data-cat="rose"]:hover {
+  background: #fb7185;
   color: #0B0F0D;
 }
 
 .ann-tab-btn.is-active {
   background: #38bdf8 !important;
   color: #0B0F0D !important;
+  transform: translate(1px, 1px);
+  box-shadow: 1.5px 1.5px 0px #0B0F0D !important;
+}
+
+.ann-tab-btn.is-active[data-cat="violet"] {
+  background: #c084fc !important;
+}
+
+.ann-tab-btn.is-active[data-cat="emerald"] {
+  background: #86efac !important;
+}
+
+.ann-tab-btn.is-active[data-cat="rose"] {
+  background: #fb7185 !important;
+}
+
+.ann-tab-btn.is-active:hover {
   transform: translate(1px, 1px);
   box-shadow: 1.5px 1.5px 0px #0B0F0D !important;
 }
@@ -149,7 +187,7 @@ body:not(.light-theme) .ann-tab-btn {
   color: var(--ann-text);
   overflow: visible;
   counter-increment: ann;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
 body.light-theme .space-card {
@@ -174,15 +212,38 @@ body.light-theme .space-card {
   --ann-accent: #facc15;
 }
 
-/* Alternating subtle tilt on hover */
+/* Explicit Card Hover States — prevents any black or muddy gradient override */
+.space-card:hover {
+  background: var(--ann-card-bg) !important;
+}
+
+body:not(.light-theme) .space-card:hover {
+  background: #1f352b !important;
+  color: #D1FAE5 !important;
+}
+
+body.light-theme .space-card:hover {
+  background: #ffffff !important;
+  color: #0B0F0D !important;
+}
+
+/* Alternating subtle tilt & enhanced shadow on hover */
 .space-card:nth-child(odd):hover {
-  transform: translateY(-4px) rotate(-0.6deg);
+  transform: translateY(-5px) rotate(-0.6deg);
   box-shadow: 7px 7px 0px #0B0F0D;
 }
 
 .space-card:nth-child(even):hover {
-  transform: translateY(-4px) rotate(0.6deg);
+  transform: translateY(-5px) rotate(0.6deg);
   box-shadow: 7px 7px 0px #0B0F0D;
+}
+
+.space-card:hover .space-card-tape {
+  transform: rotate(-2deg) scale(1.06);
+}
+
+.space-card:hover .item-index-num {
+  opacity: 1;
 }
 
 /* Top corner tape / pin sticker tag */
@@ -204,6 +265,7 @@ body.light-theme .space-card {
   white-space: nowrap;
   z-index: 5;
   transform: rotate(2deg);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ── Card Header Meta ── */
