@@ -47,21 +47,51 @@ export const forgotPasswordValidator = [
 ];
 
 export const verifyResetTokenValidator = [
-  param("token")
+  body("email")
     .trim()
-    .isLength({ min: 4, max: 4 })
-    .withMessage("Token must be a 4-digit numeric code")
-    .isNumeric()
-    .withMessage("Token must contain only digits")
+    .isEmail()
+    .withMessage("Please enter a valid email address")
+    .normalizeEmail(),
+  param("token")
+    .optional()
+    .trim()
+    .isLength({ min: 10, max: 128 })
+    .withMessage("Invalid reset token format"),
+  body("token")
+    .optional()
+    .trim()
+    .isLength({ min: 10, max: 128 })
+    .withMessage("Invalid reset token format"),
+  body().custom((value, { req }) => {
+    if (!req.params?.token && !req.body?.token) {
+      throw new Error("Reset token is required");
+    }
+    return true;
+  })
 ];
 
 export const resetPasswordValidator = [
-  param("token")
+  body("email")
     .trim()
-    .isLength({ min: 4, max: 4 })
-    .withMessage("Token must be a 4-digit numeric code")
-    .isNumeric()
-    .withMessage("Token must contain only digits"),
+    .isEmail()
+    .withMessage("Please enter a valid email address")
+    .normalizeEmail(),
+  param("token")
+    .optional()
+    .trim()
+    .isLength({ min: 10, max: 128 })
+    .withMessage("Invalid reset token format"),
+  body("token")
+    .optional()
+    .trim()
+    .isLength({ min: 10, max: 128 })
+    .withMessage("Invalid reset token format"),
+  body().custom((value, { req }) => {
+    if (!req.params?.token && !req.body?.token) {
+      throw new Error("Reset token is required");
+    }
+    return true;
+  }),
   body("password")
     .isLength({ min: 12 })
     .withMessage("Password must be at least 12 characters")
@@ -82,7 +112,10 @@ export const verifyEmailValidator = [
     .isLength({ min: 4, max: 4 })
     .withMessage("Verification code must be exactly 4 digits")
     .isNumeric()
-    .withMessage("Verification code must contain only digits")
+    .withMessage("Verification code must contain only digits"),
+  body("signupToken")
+    .optional()
+    .trim()
 ];
 
 export const profileNameValidator = [

@@ -988,6 +988,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
+          if (data.signupToken) {
+            try { sessionStorage.setItem("signupToken", data.signupToken); } catch {}
+          }
+
           const registeredEmail = formData.get("email");
           showPopup(
             "Success",
@@ -1031,6 +1035,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setButtonBusy(submitButton, "Confirming...");
 
         try {
+          const signupToken = sessionStorage.getItem("signupToken") || undefined;
           const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
             method: "POST",
             credentials: "include",
@@ -1040,6 +1045,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body: JSON.stringify({
               email: formData.get("email"),
               code: formData.get("verificationCode"),
+              signupToken: signupToken
             }),
           });
 
@@ -1054,6 +1060,8 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             return;
           }
+          // Clear temporary signup token
+          try { sessionStorage.removeItem("signupToken"); } catch {}
           // Auto-login: save token and safe sanitized user data
           localStorage.removeItem("token");
           localStorage.removeItem("user");
@@ -1090,6 +1098,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tokenNote = forgotPasswordForm.querySelector("[data-reset-token-note]");
       const passwordFields = forgotPasswordForm.querySelectorAll("[data-password-field]");
 
+      let submittedEmail = "";
       let resetTokenSent = false;
       let tokenVerified = false;
 
@@ -1099,8 +1108,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const submitButton = forgotPasswordForm.querySelector("button[type='submit']");
         const formData = new FormData(forgotPasswordForm);
 
-
         if (!resetTokenSent) {
+          submittedEmail = (formData.get("identifier") || "").trim().toLowerCase();
+          if (!submittedEmail) {
+            showPopup("Validation Error", "Please enter your registered email address.");
+            return;
+          }
+
           setButtonBusy(submitButton, "Sending Token...");
 
           try {
@@ -1113,7 +1127,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  email: formData.get("identifier"),
+                  email: submittedEmail,
                 }),
               }
             );
@@ -1141,7 +1155,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (tokenNote) {
               tokenNote.style.display = "";
               tokenNote.textContent =
-                "Reset token sent successfully.";
+                "A secure reset token has been sent to your email (expires in 15 mins).";
             }
 
             submitButton.textContent = "Verify Token";
@@ -1160,16 +1174,26 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-
-        const token = formData.get("resetToken");
+        const token = (formData.get("resetToken") || "").trim();
+        if (!token) {
+          showPopup("Validation Error", "Please enter the reset token sent to your email.");
+          return;
+        }
 
         if (!tokenVerified) {
           setButtonBusy(submitButton, "Verifying...");
 
           try {
-            const response = await fetch(`${API_BASE_URL}/auth/verify-reset-token/${token}`, {
+            const response = await fetch(`${API_BASE_URL}/auth/verify-reset-token/${encodeURIComponent(token)}`, {
               method: "POST",
               credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: submittedEmail,
+                token: token
+              }),
             });
 
             const data = await response.json();
@@ -1200,7 +1224,10 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        if (formData.get("newPassword") !== formData.get("confirmPassword")) {
+        const newPassword = formData.get("newPassword");
+        const confirmPassword = formData.get("confirmPassword");
+
+        if (newPassword !== confirmPassword) {
           showPopup("Error", "Passwords do not match");
           return;
         }
@@ -1208,9 +1235,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setButtonBusy(submitButton, "Resetting...");
 
         try {
-
           const response = await fetch(
-            `${API_BASE_URL}/auth/reset-password/${token}`,
+            `${API_BASE_URL}/auth/reset-password/${encodeURIComponent(token)}`,
             {
               method: "POST",
               credentials: "include",
@@ -1218,24 +1244,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                password: formData.get("newPassword"),
+                email: submittedEmail,
+                token: token,
+                password: newPassword,
               }),
             }
           );
 
           const text = await response.text();
-
-
-
           let data;
 
           try {
             data = JSON.parse(text);
           } catch {
-
-            return;
+            data = { message: "Unexpected server response" };
           }
-
 
           restoreButton(submitButton);
 
@@ -1249,17 +1272,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
           showPopup(
             "Success",
-            "Password reset successful",
+            "Password reset successful! Please sign in with your new password.",
             { onClose: () => window.location.href = "join-us.html" }
           );
 
           forgotPasswordForm.reset();
-
+          submittedEmail = "";
           resetTokenSent = false;
           tokenVerified = false;
 
           if (requestField) requestField.style.display = "";
-
           if (identifierInput) identifierInput.disabled = false;
 
           if (resetTokenInput) {
@@ -1269,11 +1291,9 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           if (newPasswordInput) newPasswordInput.disabled = true;
-
           if (confirmPasswordInput) confirmPasswordInput.disabled = true;
 
           passwordFields.forEach(field => field.style.display = "none");
-
           if (tokenNote) tokenNote.style.display = "none";
 
           submitButton.textContent = "Send Reset Token";

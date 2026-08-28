@@ -35,19 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. Dynamic Content & Typewriter Configuration
   const path = window.location.pathname;
   const isForgot = path.includes("forgot-password.html");
-  const isSignIn = path.includes("join-us.html") || 
-                   path.endsWith("/") ||
-                   path.includes("index.html"); 
-                   // index.html isn't an auth page, but safe fallback
+  const isVerify = path.includes("verify.html");
+  const isSignUp = path.includes("register.html");
   
   // Set images based on page
   const bgElement = document.querySelector(".auth-panel-left-bg");
   if (bgElement) {
     let bgUrl = "https://i.ibb.co/XrkdGrrv/original-ccdd6d6195fff2386a31b684b7abdd2e-removebg-preview.png"; // default sign in
-    if (isForgot) {
-      bgUrl = "https://i.ibb.co/XrkdGrrv/original-ccdd6d6195fff2386a31b684b7abdd2e-removebg-preview.png"; // reuse sign in astronaut
-    } else if (!isSignIn) {
-      bgUrl = "https://i.ibb.co/HTZ6DPsS/original-33b8479c324a5448d6145b3cad7c51e7-removebg-preview.png"; // sign up
+    if (isSignUp || isVerify) {
+      bgUrl = "https://i.ibb.co/HTZ6DPsS/original-33b8479c324a5448d6145b3cad7c51e7-removebg-preview.png"; // sign up & verification
     }
 
     bgElement.style.backgroundImage = `url('${bgUrl}')`;
@@ -65,7 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let textToType = "Welcome Back! The journey continues.";
     if (isForgot) {
       textToType = "Lost your key? Let's get you back inside.";
-    } else if (!isSignIn) {
+    } else if (isVerify) {
+      textToType = "One last step. Verify your chapter access.";
+    } else if (isSignUp) {
       textToType = "Create an account. A new chapter awaits.";
     }
       

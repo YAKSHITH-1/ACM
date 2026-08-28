@@ -58,9 +58,8 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: {
       type: String,
       select: false,
-      maxlength: 4,
-      minlength: 4
-      // Stores the 4‑digit reset code sent via email
+      maxlength: 128
+      // Stores the SHA-256 hash of the cryptographically secure reset token
     },
 
     resetPasswordExpire: {
@@ -76,5 +75,6 @@ const userSchema = new mongoose.Schema(
 // Indexes for query performance
 userSchema.index({ verificationCode: 1 });
 userSchema.index({ resetPasswordToken: 1 });
+userSchema.index({ email: 1, resetPasswordToken: 1 });
 
 export default mongoose.model("User", userSchema);

@@ -6,165 +6,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Verify Account | ACM JIT</title>
   <link rel="canonical" href="https://jyothyacm.vercel.app/verify.html" />
+  <meta name="description"
+    content="Verify your ACM JIT student account — enter your 4-digit verification code to activate your chapter portal access.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./CSS/global.css">
   <link rel="stylesheet" href="./CSS/theme.css">
   <link rel="stylesheet" href="./CSS/stars.css">
+  <link rel="stylesheet" href="./CSS/typography.css">
+  <link rel="icon" href="acm-favicon.svg" type="image/svg+xml">
   <style>
     body {
-      background: #020617;
+      background: #111A16;
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      min-height: 100vh;
     }
 
-    .bg-overlay {
-      background:
-        radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.2), transparent 31%),
-        radial-gradient(circle at 78% 22%, rgba(139, 92, 246, 0.2), transparent 30%),
-        radial-gradient(circle at 50% 86%, rgba(14, 165, 233, 0.14), transparent 32%),
-        linear-gradient(180deg, #020617, #0f172a 55%, #020617);
+    body.light-theme {
+      background: #f4f4f5;
     }
 
     .auth-page {
       display: grid;
       place-items: center;
       min-height: 100vh;
-      padding: 7rem 1rem 4rem;
+      padding: 7rem 1.25rem 4rem;
+      user-select: none;
     }
 
-    .auth-card {
+    /* ── Neo-Brutalist Stage Card (Know Us Style) ── */
+    .nb-card {
       width: 100%;
-      max-width: 44rem;
-      border-radius: 2rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 25px 50px -12px rgba(8, 51, 68, 0.3);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 1.5rem;
+      max-width: 34rem;
+      background-color: #FCFCFD;
+      border: 3px solid #0B0F0D;
+      border-radius: 24px;
+      box-shadow: 8px 8px 0px #0B0F0D;
+      padding: 2.25rem;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    @media (min-width: 640px) {
-      .auth-card {
-        padding: 2.5rem;
-      }
+    body.dark-theme .nb-card,
+    body:not(.light-theme) .nb-card {
+      background-color: #16221c;
+      border-color: #D1FAE5;
+      box-shadow: 8px 8px 0px #064E3B;
     }
 
-    .auth-kicker {
-      font-size: 0.75rem;
+    /* Playful Corner Doodles */
+    .nb-sparkle-left {
+      position: absolute;
+      top: -14px;
+      left: 18px;
+      font-size: 1.5rem;
+      color: #FACC15;
+      text-shadow: 2px 2px 0px #0B0F0D;
+      pointer-events: none;
+      animation: nbFloat 3.5s ease-in-out infinite alternate;
+    }
+
+    .nb-sparkle-right {
+      position: absolute;
+      top: -14px;
+      right: 18px;
+      font-size: 1.5rem;
+      color: #FB7185;
+      text-shadow: 2px 2px 0px #0B0F0D;
+      pointer-events: none;
+      animation: nbFloat 4s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes nbFloat {
+      0% { transform: translateY(0) rotate(0deg) scale(0.95); }
+      100% { transform: translateY(-6px) rotate(14deg) scale(1.15); }
+    }
+
+    /* ── Header Badge Pill ── */
+    .nb-badge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .nb-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FDE047;
+      color: #0B0F0D;
+      border: 2px solid #0B0F0D;
+      box-shadow: 2.5px 2.5px 0px #0B0F0D;
+      border-radius: 999px;
+      padding: 4px 16px;
+      font-size: 0.72rem;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.24em;
-      color: var(--cyan-300);
+      letter-spacing: 0.12em;
     }
 
-    .auth-title {
-      margin-top: 0.75rem;
-      font-size: clamp(2rem, 4vw, 2.75rem);
+    /* ── Typography ── */
+    .nb-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.15rem);
       font-weight: 900;
-      line-height: 1.12;
-      color: #fff;
+      line-height: 1.15;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      color: #0B0F0D;
+      margin: 0 0 0.5rem;
     }
 
-    .auth-desc {
-      margin-top: 0.9rem;
-      max-width: 36rem;
-      line-height: 1.8;
-      color: var(--slate-300);
+    body.dark-theme .nb-title,
+    body:not(.light-theme) .nb-title {
+      color: #D1FAE5;
     }
 
-    .auth-form {
-      margin-top: 2rem;
+    .nb-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 500;
+      line-height: 1.55;
+      text-align: center;
+      color: #475569;
+      margin: 0 0 1.75rem;
+    }
+
+    body.dark-theme .nb-desc,
+    body:not(.light-theme) .nb-desc {
+      color: #94A3B8;
+    }
+
+    /* ── Form Controls ── */
+    .nb-form {
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
     }
 
-    .form-input {
-      background: rgba(2, 6, 23, 0.7);
-      padding: 1rem;
-      transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-input:focus {
-      background: #020617;
-      border-color: var(--cyan-300);
-      box-shadow: 0 10px 15px -3px rgba(8, 51, 68, 0.4);
-    }
-
-    .form-input.violet:focus {
-      border-color: var(--violet-300);
-      box-shadow: 0 10px 15px -3px rgba(30, 20, 68, 0.4);
-    }
-
-    .btn-submit {
-      width: 100%;
-      border-radius: 0.75rem;
-      background: var(--cyan-400);
-      color: #020617;
+    .nb-label {
+      display: block;
+      font-size: 0.75rem;
       font-weight: 900;
-      padding: 1rem 1.5rem;
-      border: none;
-      font-size: 1rem;
-      box-shadow: 0 20px 25px -5px rgba(34, 211, 238, 0.2);
-      transition: transform 0.3s ease, background 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #0B0F0D;
+      margin-bottom: 0.35rem;
     }
 
-    .btn-submit:hover {
-      transform: translateY(-4px);
-      background: #fff;
+    body.dark-theme .nb-label,
+    body:not(.light-theme) .nb-label {
+      color: #D1FAE5;
     }
 
-    .auth-links {
-      margin-top: 1.5rem;
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--slate-400);
+    .nb-input {
+      width: 100%;
+      background: #FFFFFF;
+      border: 2.5px solid #0B0F0D;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0px #0B0F0D;
+      color: #0B0F0D;
+      padding: 0.85rem 1rem;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s ease;
     }
 
-    .auth-links a {
-      color: var(--cyan-200);
-      font-weight: 800;
-      transition: color 0.3s ease;
+    body.dark-theme .nb-input,
+    body:not(.light-theme) .nb-input {
+      background: #0d1512;
+      border-color: #D1FAE5;
+      box-shadow: 3px 3px 0px #064E3B;
+      color: #D1FAE5;
     }
 
-    .auth-links a:hover {
-      color: #fff;
+    .nb-input:focus {
+      outline: none;
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0px #0B0F0D;
     }
-      /* ── OTP verification (reel-inspired premium OTP UI) ── */
+
+    body.dark-theme .nb-input:focus,
+    body:not(.light-theme) .nb-input:focus {
+      box-shadow: 5px 5px 0px #D1FAE5;
+    }
+
+    /* ── 4-Digit Neo-Brutalist Number Cards (Know Us Mixture Theme) ── */
     .otp-field {
       display: flex;
       flex-direction: column;
-      gap: 0.9rem;
+      gap: 0.65rem;
     }
 
     .otp-group {
       position: relative;
       display: flex;
-      gap: 0.7rem;
+      gap: 0.75rem;
       justify-content: center;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
     .otp-box {
-      width: 3.9rem;
-      height: 4.2rem;
-      border-radius: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(2, 6, 23, 0.7);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      color: #fff;
-      font-size: 1.9rem;
-      font-weight: 800;
-      font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
+      width: 3.65rem;
+      height: 4.35rem;
+      border-radius: 14px;
+      border: 2.5px solid #0B0F0D;
+      box-shadow: 4px 4px 0px #0B0F0D;
+      color: #0B0F0D;
+      font-size: 2rem;
+      font-weight: 900;
+      font-family: 'Space Grotesk', monospace;
       text-align: center;
-      caret-color: var(--cyan-300);
+      caret-color: #0B0F0D;
       outline: none;
       -moz-appearance: textfield;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    /* Multi-color pastels for the 4 boxes */
+    .otp-box:nth-child(1) { background-color: #A7F3D0; } /* Mint */
+    .otp-box:nth-child(2) { background-color: #BAE6FD; } /* Sky */
+    .otp-box:nth-child(3) { background-color: #FDE047; } /* Yellow */
+    .otp-box:nth-child(4) { background-color: #DDD6FE; } /* Purple */
 
     .otp-box::-webkit-outer-spin-button,
     .otp-box::-webkit-inner-spin-button {
@@ -172,17 +240,13 @@
     }
 
     .otp-box:hover {
-      border-color: rgba(103, 232, 249, 0.45);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #0B0F0D;
     }
 
     .otp-box:focus {
-      background: #020617;
-      border-color: var(--cyan-300);
-      transform: translateY(-3px) scale(1.05);
-      box-shadow:
-        0 0 0 4px rgba(34, 211, 238, 0.14),
-        0 18px 30px -12px rgba(8, 51, 68, 0.75),
-        0 0 20px rgba(34, 211, 238, 0.35);
+      transform: translate(-2px, -2px) scale(1.04);
+      box-shadow: 6px 6px 0px #0B0F0D;
     }
 
     .otp-box.pop {
@@ -191,109 +255,161 @@
 
     @keyframes otp-pop {
       0% { transform: scale(1); }
-      45% { transform: scale(1.14); }
+      45% { transform: scale(1.2) rotate(-3deg); }
       100% { transform: scale(1); }
     }
 
     .otp-hint {
       font-size: 0.8rem;
-      color: var(--slate-300);
-      opacity: 0.85;
+      font-weight: 600;
+      color: #64748B;
+      text-align: center;
     }
 
-    /* Success state — played after the server confirms the code */
+    /* Success overlay */
     .otp-success {
       position: absolute;
-      inset: -0.75rem;
+      inset: -0.4rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.55rem;
-      background: radial-gradient(circle at center, rgba(2, 6, 23, 0.96) 40%, rgba(2, 6, 23, 0.9));
-      border: 1px solid rgba(103, 232, 249, 0.25);
-      border-radius: 1.25rem;
+      gap: 0.5rem;
+      background: #FCFCFD;
+      border: 2.5px solid #0B0F0D;
+      box-shadow: 5px 5px 0px #0B0F0D;
+      border-radius: 16px;
       opacity: 0;
       pointer-events: none;
       transform: scale(0.85);
       transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 10;
     }
 
-    .otp-group.is-success .otp-success { opacity: 1; transform: scale(1); }
-    .otp-group.is-success .otp-box { animation: otp-exit 0.3s ease forwards; }
+    .otp-group.is-success .otp-success {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .otp-group.is-success .otp-box {
+      animation: otp-exit 0.3s ease forwards;
+    }
 
     @keyframes otp-exit {
       to { opacity: 0; transform: scale(0.7); }
     }
 
-    .otp-check { width: 3.4rem; height: 3.4rem; }
+    .otp-check {
+      width: 3rem;
+      height: 3rem;
+    }
 
     .otp-check circle {
-      fill: none;
-      stroke: var(--cyan-300);
+      fill: #A7F3D0;
+      stroke: #0B0F0D;
       stroke-width: 3;
-      stroke-linecap: round;
-      stroke-dasharray: 151;
-      stroke-dashoffset: 151;
-      filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.65));
-      animation: otp-draw 0.55s ease-out forwards;
     }
 
     .otp-check path {
       fill: none;
-      stroke: #fff;
-      stroke-width: 4.5;
+      stroke: #0B0F0D;
+      stroke-width: 4;
       stroke-linecap: round;
       stroke-linejoin: round;
       stroke-dasharray: 40;
       stroke-dashoffset: 40;
-      animation: otp-draw 0.4s ease-out 0.4s forwards;
+      animation: otp-draw 0.4s ease-out 0.2s forwards;
     }
 
-    @keyframes otp-draw { to { stroke-dashoffset: 0; } }
-
-    .otp-success-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 6rem;
-      height: 6rem;
-      margin: -3rem 0 0 -3rem;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(34, 211, 238, 0.28), transparent 70%);
-      animation: otp-glow 1.5s ease-out infinite;
-    }
-
-    @keyframes otp-glow {
-      from { transform: scale(0.5); opacity: 1; }
-      to { transform: scale(1.5); opacity: 0; }
+    @keyframes otp-draw {
+      to { stroke-dashoffset: 0; }
     }
 
     .otp-ok {
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--cyan-200);
-      opacity: 0;
-      animation: otp-fade-up 0.4s ease 0.55s forwards;
+      letter-spacing: 0.15em;
+      color: #0B0F0D;
     }
 
-    @keyframes otp-fade-up {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ── Neo-Brutalist Action Button ── */
+    .nb-btn-submit {
+      width: 100%;
+      border-radius: 14px;
+      background: #10B981;
+      color: #0B0F0D;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.95rem 1.5rem;
+      border: 2.5px solid #0B0F0D;
+      box-shadow: 4px 4px 0px #0B0F0D;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
-    @media (max-width: 420px) {
-      .otp-box { width: 3.3rem; height: 3.7rem; font-size: 1.6rem; }
-      .otp-group { gap: 0.5rem; }
+    .nb-btn-submit:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #0B0F0D;
+      background: #34D399;
+    }
+
+    .nb-btn-submit:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #0B0F0D;
+    }
+
+    /* ── Footer Links ── */
+    .nb-links {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748B;
+    }
+
+    .nb-links a {
+      color: #0B0F0D;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
+    }
+
+    body.dark-theme .nb-links a,
+    body:not(.light-theme) .nb-links a {
+      color: #34D399;
+    }
+
+    .nb-links a:hover {
+      color: #10B981;
+    }
+
+    @media (max-width: 440px) {
+      .nb-card { padding: 1.5rem 1.25rem; }
+      .otp-box { width: 3.1rem; height: 3.8rem; font-size: 1.65rem; }
+      .otp-group { gap: 0.45rem; }
     }
   </style>
-  <link rel="stylesheet" href="./CSS/typography.css">
-  <link rel="icon" href="acm-favicon.svg" type="image/svg+xml">
+  <script>
+    if (localStorage.getItem("theme") === "light" || !localStorage.getItem("theme")) {
+      document.documentElement.classList.add("light-theme");
+    }
+  </script>
 </head>
 
 <body>
+  <script>
+    if (localStorage.getItem("theme") === "light") {
+      document.body.classList.add("light-theme");
+    }
+  </script>
   <script>
     // Redirect to register if no email query parameter (prevent direct access)
     const urlParams = new URLSearchParams(window.location.search);
@@ -305,20 +421,27 @@
   <div id="global-navbar"></div>
 
   <main class="auth-page">
-    <section class="auth-card" aria-labelledby="verify-title">
-      <p class="auth-kicker">Account Verification</p>
-      <h1 id="verify-title" class="auth-title">Confirm your chapter access.</h1>
-      <p class="auth-desc">Enter your email and the verification code shared during registration to activate your ACM
-        JIT portal account.</p>
+    <section class="nb-card" aria-labelledby="verify-title">
+      <!-- Playful Corner Stickers -->
+      <span class="nb-sparkle-left">✦</span>
+      <span class="nb-sparkle-right">★</span>
 
-      <form id="verify-form" class="auth-form">
-        <label>
-          <span class="form-label">Email Address</span>
-          <input name="email" type="email" placeholder="name@jyothyit.ac.in" class="form-input" autocomplete="email"
-            required>
-        </label>
+      <!-- Badge Pill -->
+      <div class="nb-badge-wrap">
+        <span class="nb-pill-badge">✦ ACM STUDENT CHAPTER • JIT ✦</span>
+      </div>
+
+      <h1 id="verify-title" class="nb-title">Confirm Chapter Access</h1>
+      <p class="nb-desc">Enter your registered email and 4-digit verification passkey to activate your portal account.</p>
+
+      <form id="verify-form" class="nb-form">
+        <div>
+          <label class="nb-label">Email Address</label>
+          <input name="email" type="email" placeholder="name@jyothyit.ac.in" class="nb-input" autocomplete="email" required>
+        </div>
+
         <div class="otp-field">
-          <span class="form-label" id="otp-label">Verification Code</span>
+          <label class="nb-label" id="otp-label">4-Digit Verification Passkey</label>
           <div class="otp-group" id="otp-group" role="group" aria-labelledby="otp-label">
             <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box"
               autocomplete="one-time-code" aria-label="Digit 1 of 4" required>
@@ -329,77 +452,44 @@
             <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box"
               autocomplete="one-time-code" aria-label="Digit 4 of 4" required>
             <div class="otp-success" aria-hidden="true">
-              <span class="otp-success-glow"></span>
               <svg class="otp-check" viewBox="0 0 52 52">
-                <circle cx="26" cy="26" r="24"></circle>
-                <path d="M14 27l8 8 16-16"></path>
+                <circle cx="26" cy="26" r="23"></circle>
+                <path d="M15 27l8 8 15-15"></path>
               </svg>
-              <span class="otp-ok">Verified</span>
+              <span class="otp-ok">Passkey Verified!</span>
             </div>
           </div>
           <input type="hidden" name="verificationCode" id="otp-value" autocomplete="one-time-code">
-          <p class="otp-hint">Enter the 4-digit code from your email.</p>
+          <p class="otp-hint">⏱ Valid for 10 minutes only</p>
         </div>
-        <button type="submit" class="btn-submit">Confirm Activation</button>
+
+        <button type="submit" class="nb-btn-submit">Confirm & Activate</button>
       </form>
 
-      <p class="auth-links"><a href="register.html">Back to Registration</a></p>
+      <div class="nb-links">
+        <div>Didn't receive the passkey? <a href="register.html">Sign Up Again</a></div>
+        <div><a href="join-us.html">Back to Sign In</a></div>
+      </div>
     </section>
   </main>
 
+  <!-- Popup Modal (Neo-Brutalist) -->
   <div id="popup"
-    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px);animation:fadeIn 0.3s ease-out;"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:1000;padding:1rem;"
     onkeydown="if(event.key==='Escape')document.getElementById('popup-btn').click()">
-    <style>
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95);
-        }
-
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-
-      @keyframes slideIn {
-        from {
-          transform: translateY(-20px);
-          opacity: 0;
-        }
-
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-
-      #popup-content {
-        animation: slideIn 0.4s ease-out;
-      }
-
-      #popup-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(34, 211, 238, 0.3);
-      }
-
-      #popup-btn:active {
-        transform: translateY(0);
-      }
-    </style>
     <div id="popup-content"
-      style="background:linear-gradient(135deg,rgba(2,6,23,0.95),rgba(15,23,42,0.95));border:1px solid rgba(103,232,249,0.2);border-radius:1rem;padding:2.5rem;max-width:450px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.1);">
-      <h2 id="popup-title" style="font-size:1.5rem;font-weight:900;color:#f1f5f9;margin-bottom:0.75rem;"></h2>
-      <p id="popup-message" style="font-size:0.95rem;color:#cbd5e1;line-height:1.6;margin-bottom:2rem;"></p>
+      style="background:#FCFCFD;border:3px solid #0B0F0D;border-radius:20px;box-shadow:8px 8px 0px #0B0F0D;padding:2rem;max-width:440px;width:100%;text-align:center;">
+      <h2 id="popup-title" style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:900;color:#0B0F0D;margin:0 0 0.75rem;text-transform:uppercase;"></h2>
+      <p id="popup-message" style="font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:500;color:#334155;line-height:1.6;margin:0 0 1.5rem;"></p>
       <button id="popup-btn" type="button"
-        style="width:100%;border:none;background:linear-gradient(135deg,var(--cyan-400),#06b6d4);color:#020617;padding:0.75rem 1.5rem;border-radius:0.75rem;cursor:pointer;font-weight:900;font-size:0.95rem;transition:all 0.3s ease;box-shadow:0 10px 25px -5px rgba(34,211,238,0.2);">Close</button>
+        style="width:100%;border:2.5px solid #0B0F0D;box-shadow:3px 3px 0px #0B0F0D;background:#FDE047;color:#0B0F0D;padding:0.75rem 1.5rem;border-radius:12px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1rem;text-transform:uppercase;transition:all 0.15s ease;">Dismiss</button>
     </div>
   </div>
+
   <script src="JS/animated-dots-bg.js"></script>
   <script src="main.js"></script>
   <script>
-    // OTP micro-interactions (reel-inspired, kept minimal)
+    // OTP micro-interactions (reel-inspired number animation, fully preserved)
     (function () {
       var form = document.getElementById("verify-form");
       var group = document.getElementById("otp-group");
@@ -413,7 +503,7 @@
           box.value = box.value.replace(/\D/g, "").slice(0, 1);
           if (box.value) {
             box.classList.remove("pop");
-            void box.offsetWidth; // restart the pop animation
+            void box.offsetWidth;
             box.classList.add("pop");
             if (i < boxes.length - 1) boxes[i + 1].focus();
           }
@@ -448,7 +538,6 @@
         boxes[Math.min(start + digits.length, boxes.length - 1)].focus();
       });
 
-      // Success check animation — plays when main.js resets the form after a verified email
       form.addEventListener("reset", function () {
         boxes.forEach(function (b) {
           b.value = "";
