@@ -5,8 +5,8 @@ export const createEventValidator = [
     .trim()
     .isLength({ min: 3, max: 100 })
     .withMessage("Title must be between 3 and 100 characters")
-    .matches(/^[a-zA-Z0-9\s.'-]+$/)
-    .withMessage("Title can only contain letters, numbers, spaces, periods, apostrophes, and hyphens"),
+    .matches(/^[a-zA-Z0-9\s.,'":/&()!?-]+$/)
+    .withMessage("Title contains invalid characters"),
 
   body("date")
     .trim()

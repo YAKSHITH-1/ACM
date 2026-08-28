@@ -385,6 +385,7 @@ export const formatSafeUser = (user) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    avatar: user.avatar || "",
     isVerified: Boolean(user.isVerified)
   };
 };
@@ -800,6 +801,30 @@ export const updateProfileName = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Name updated successfully",
+    user: formatSafeUser(user)
+  });
+
+});
+
+// UPDATE PROFILE AVATAR
+export const updateProfileAvatar = asyncHandler(async (req, res) => {
+  const { avatar } = req.body;
+
+  if (typeof avatar !== "string") {
+    return res.status(400).json({ success: false, message: "Avatar must be a valid string URL or config" });
+  }
+
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  user.avatar = avatar.trim();
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Avatar updated successfully",
     user: formatSafeUser(user)
   });
 

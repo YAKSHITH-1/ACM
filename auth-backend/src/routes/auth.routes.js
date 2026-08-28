@@ -11,7 +11,8 @@ import {
   resetPassword,
   verifyEmail,
   getProfile,
-  updateProfileName
+  updateProfileName,
+  updateProfileAvatar
 } from "../controllers/auth.controller.js";
 
 import validate from "../middlewares/validate.middleware.js";
@@ -98,6 +99,12 @@ router.put(
   profileNameValidator,
   validate,
   updateProfileName
+);
+
+router.put(
+  "/profile/avatar",
+  protect,
+  updateProfileAvatar
 );
 
 router.get(

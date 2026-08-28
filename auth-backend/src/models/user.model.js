@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema(
       default: "user"
     },
 
+    avatar: {
+      type: String,
+      default: "",
+      maxlength: 500
+    },
+
     refreshToken: {
       type: String,
       select: false,

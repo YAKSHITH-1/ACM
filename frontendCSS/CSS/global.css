@@ -3285,6 +3285,57 @@ img {
   color: var(--cyan-300);
 }
 
+/* Footer Social & Contact Pills */
+.footer-social-contact {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+  padding: 1.25rem 0 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-contact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.05rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  color: #D1FAE5;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.footer-contact-pill svg {
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.footer-contact-pill:hover {
+  background: #38bdf8 !important;
+  color: #0B0F0D !important;
+  border-color: #0B0F0D !important;
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px #0B0F0D !important;
+}
+
+.footer-contact-pill.instagram:hover {
+  background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6) !important;
+  color: #ffffff !important;
+  border-color: #0B0F0D !important;
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px #0B0F0D !important;
+}
+
 .footer-copy {
   width: 100%;
   text-align: center;

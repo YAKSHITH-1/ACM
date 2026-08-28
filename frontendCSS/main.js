@@ -217,54 +217,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const DEFAULT_EVENTS = {
-    upcoming: [
-      {
-        _id: "evt-hack-2026",
-        title: "HackMatrix '26: Chapter Hackathon",
-        date: "September 15, 2026",
-        description: "24-hour national hackathon challenging student engineers to build high-impact AI, Cloud, and Web3 solutions with industry mentorship.",
-        status: "Registration Open",
-        teamSize: 4
-      },
-      {
-        _id: "evt-web-craft",
-        title: "Modern Web Architecture & Systems Lab",
-        date: "September 28, 2026",
-        description: "Hands-on masterclass in building fluid interfaces, animations, modern component architectures, and scalable full-stack pipelines.",
-        status: "Fast Filling",
-        teamSize: 2
-      },
-      {
-        _id: "evt-ai-summit",
-        title: "Agentic AI & Neural Systems Summit",
-        date: "October 10, 2026",
-        description: "Keynote sessions and live technical demonstrations by AI researchers, showcasing autonomous agents, LLM pipelines, and computer vision.",
-        status: "Registration Open",
-        teamSize: 1
-      },
-      {
-        _id: "evt-code-quest",
-        title: "AlgoQuest: Chapter Competitive Coding",
-        date: "October 24, 2026",
-        description: "Timed competitive algorithmic challenge testing problem-solving, dynamic programming, and data structures with live leaderboard ranking.",
-        status: "Closing Soon",
-        teamSize: 1
-      }
-    ],
-    past: [
-      {
-        title: "Inaugural Chapter Keynote & Induction",
-        description: "Official launch of the ACM JIT Chapter with inaugural address by chapter mentors and senior leadership."
-      },
-      {
-        title: "Full Stack Workshop & Cloud Bootcamp",
-        description: "3-day technical bootcamp on Node.js, TypeScript, Docker containers, and cloud deployment."
-      },
-      {
-        title: "DevSprint '25 Inter-College Hack",
-        description: "Over 200 participants collaborated on real-world engineering challenges across 4 tracks."
-      }
-    ]
+    upcoming: [],
+    past: []
   };
 
   const fetchEvents = async () => {
@@ -272,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_BASE_URL}/events`);
       if (res.ok) {
         const data = await res.json();
-        if (data.success && (data.upcoming?.length || data.past?.length)) {
+        if (data.success && Array.isArray(data.upcoming) && Array.isArray(data.past)) {
           return { upcoming: data.upcoming || [], past: data.past || [] };
         }
       }
@@ -283,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const resProd = await fetch(`${PROD_BACKEND_URL}/events`);
           if (resProd.ok) {
             const dataProd = await resProd.json();
-            if (dataProd.success && (dataProd.upcoming?.length || dataProd.past?.length)) {
+            if (dataProd.success && Array.isArray(dataProd.upcoming) && Array.isArray(dataProd.past)) {
               return { upcoming: dataProd.upcoming || [], past: dataProd.past || [] };
             }
           }
@@ -462,6 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (event.status) {
           regInfo = `<p style="margin-top:0.5rem;font-size:0.8rem;color:#94a3b8;">${escapeHtml(event.status)}</p>`;
         }
+        const eventId = event._id || event.id || "";
         return `
         <article style="border-radius:1rem;border:1px solid rgba(255,255,255,0.1);background:rgba(2,6,23,0.6);padding:1.25rem;">
           <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1rem;">
@@ -473,8 +428,8 @@ document.addEventListener("DOMContentLoaded", () => {
               <p style="margin-top:0.75rem;font-size:0.875rem;line-height:1.75;color:#cbd5e1;">${escapeHtml(event.description)}</p>
             </div>
             <button type="button"
-              data-delete-event="${escapeHtml(event._id)}"
-              data-delete-type="${escapeHtml(event.type)}"
+              data-delete-event="${escapeHtml(eventId)}"
+              data-delete-type="${escapeHtml(event.type || '')}"
               style="flex-shrink:0;border-radius:0.5rem;border:1px solid rgba(253,164,175,0.3);background:rgba(244,63,94,0.1);color:#fecdd3;font-weight:900;padding:0.5rem 0.75rem;font-size:0.875rem;cursor:pointer;font-family:inherit;"
               onmouseenter="this.style.background='rgba(244,63,94,0.2)'"
               onmouseleave="this.style.background='rgba(244,63,94,0.1)'"
@@ -559,7 +514,8 @@ document.addEventListener("DOMContentLoaded", () => {
           toggleUpcomingFields();
           await renderAdminEvents();
         } else {
-          alert("Failed to save event");
+          const errData = await res.json().catch(() => ({}));
+          alert("Failed to save event: " + (errData.message || "Unknown error"));
         }
       } catch (err) {
         console.error(err);
@@ -572,9 +528,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const btn = e.target.closest("[data-delete-event]");
       if (!btn) return;
 
+      const eventId = btn.dataset.deleteEvent;
+      if (!eventId || eventId === "undefined" || eventId === "null") {
+        alert("This event does not have a database ID. Please refresh the page to sync with database.");
+        return;
+      }
+
       if (!confirm("Are you sure you want to delete this event?")) return;
 
-      const eventId = btn.dataset.deleteEvent;
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
@@ -583,13 +544,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "Authorization": `Bearer ${token}`
           }
         });
-        if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
           await renderAdminEvents();
         } else {
-          alert("Failed to delete event");
+          alert("Failed to delete event: " + (data.message || "Unknown error"));
         }
       } catch (err) {
         console.error(err);
+        alert("Network or server error while deleting event.");
       }
     });
 
@@ -989,7 +952,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           if (data.signupToken) {
-            try { sessionStorage.setItem("signupToken", data.signupToken); } catch {}
+            try { sessionStorage.setItem("signupToken", data.signupToken); } catch { }
           }
 
           const registeredEmail = formData.get("email");
@@ -1061,7 +1024,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
           // Clear temporary signup token
-          try { sessionStorage.removeItem("signupToken"); } catch {}
+          try { sessionStorage.removeItem("signupToken"); } catch { }
           // Auto-login: save token and safe sanitized user data
           localStorage.removeItem("token");
           localStorage.removeItem("user");
@@ -1518,7 +1481,7 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const getEventDynamicBanner = (event, theme) => {
     const text = `${event.title || ''} ${event.description || ''} ${theme?.category || ''}`.toLowerCase();
-    
+
     // 1. Hackathon / Build Sprint / Dev Jam
     if (/hack|sprint|build|jam|matrix|devfest|ideathon/.test(text)) {
       return {
@@ -1526,7 +1489,7 @@ document.addEventListener("DOMContentLoaded", () => {
         watermark: "HACK"
       };
     }
-    
+
     // 2. Artificial Intelligence / Machine Learning / Deep Learning / Data Science
     if (/ai|neural|agent|model|machine learning|deep learning|vision|gpt|llm|intelligence|data/.test(text)) {
       return {
@@ -1534,7 +1497,7 @@ document.addEventListener("DOMContentLoaded", () => {
         watermark: "AI"
       };
     }
-    
+
     // 3. Web Dev / Frontend / UI/UX / Fullstack
     if (/web|frontend|ui|ux|css|html|react|design|interface|craft|fullstack|javascript/.test(text)) {
       return {
@@ -1542,7 +1505,7 @@ document.addEventListener("DOMContentLoaded", () => {
         watermark: "WEB"
       };
     }
-    
+
     // 4. Algorithms / Competitive Programming / DSA / Coding Quest
     if (/algo|algoquest|dsa|competitive|coding|logic|quest|leetcode|contest|problem/.test(text)) {
       return {
@@ -1550,7 +1513,7 @@ document.addEventListener("DOMContentLoaded", () => {
         watermark: "CODE"
       };
     }
-    
+
     // 5. Cloud / DevOps / Backend / Systems / Docker / API
     if (/cloud|devops|docker|kubernetes|aws|backend|server|database|systems|pipeline/.test(text)) {
       return {
@@ -1558,7 +1521,7 @@ document.addEventListener("DOMContentLoaded", () => {
         watermark: "CLOUD"
       };
     }
-    
+
     // 6. Cybersecurity / CTF / Security / Ethical Hacking
     if (/security|cyber|ctf|crypto|shield|auth|safe|defense|firewall/.test(text)) {
       return {
@@ -1934,10 +1897,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const rightControls = document.getElementById("nav-right-controls") || document.getElementById("nav-menu-button");
           if (rightControls && !document.getElementById("profile-avatar-container")) {
+            let currentAvatarUrl = profileData.avatar || localStorage.getItem(`user_avatar_${profileData.email}`) || `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent`;
+
             rightControls.insertAdjacentHTML('beforeend', `
             <div id="profile-avatar-container" class="profile-avatar-container" style="display:flex;align-items:center;position:relative;">
               <button type="button" id="profile-avatar-btn" style="width:2.35rem;height:2.35rem;border-radius:50%;background:#facc15;border:2px solid #0B0F0D;box-shadow:2px 2px 0px #0B0F0D;cursor:pointer;display:grid;place-items:center;padding:0;overflow:hidden;transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='none'" title="View Profile">
-                <img src="https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent" alt="Avatar" style="width:100%;height:100%;object-fit:cover;" />
+                <img src="${currentAvatarUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;" />
               </button>
             </div>
           `);
@@ -1956,8 +1921,16 @@ document.addEventListener("DOMContentLoaded", () => {
                   
                   <!-- Header Dossier Card -->
                   <div class="profile-header-card">
-                    <div class="profile-avatar-frame">
-                      <img src="https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent" alt="Avatar" class="profile-avatar-img" />
+                    <div class="profile-avatar-frame-wrap">
+                      <div class="profile-avatar-frame" id="profile-avatar-frame" title="Click to choose DiceBear avatar">
+                        <img id="profile-modal-avatar-img" src="${currentAvatarUrl}" alt="Avatar" class="profile-avatar-img" />
+                      </div>
+                      <button id="edit-profile-avatar-btn" class="profile-avatar-edit-btn" title="Choose DiceBear Avatar">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                      </button>
                     </div>
                     
                     <div id="profile-name-display-container" class="profile-name-row">
@@ -2098,6 +2071,243 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
                 window.location.reload();
+              });
+
+              // DiceBear Avatar Picker Modal Function
+              const openDicebearPicker = () => {
+                const existingPicker = document.getElementById("dicebear-picker-modal");
+                if (existingPicker) existingPicker.remove();
+
+                const dicebearStyles = [
+                  { id: "micah", name: "Micah", icon: "", presets: ["Felix", "Luna", "Alex", "Milo", "Zoe", "Sam", "Leo", "Nova"] },
+                  { id: "adventurer", name: "Adventurer", icon: "", presets: ["Knight", "Mage", "Rogue", "Scout", "Hero", "Valkyrie", "Ranger", "Warrior"] },
+                  { id: "bottts", name: "Bottts", icon: "", presets: ["Cyber", "Sparky", "Gizmo", "Byte", "Pixel", "Unit-7", "Matrix", "Echo"] },
+                  { id: "fun-emoji", name: "Fun Emoji", icon: "", presets: ["Joy", "Wink", "Grin", "Star", "Happy", "Cool", "Love", "Cheer"] },
+                  { id: "pixel-art", name: "Pixel Art", icon: "", presets: ["Retro", "Arcade", "Gamer", "Quest", "Glitch", "Bit", "Chief", "Player1"] },
+                  { id: "lorelei", name: "Lorelei", icon: "", presets: ["Aria", "Elena", "Sophia", "Chloe", "Maya", "Ivy", "Lily", "Amara"] }
+                ];
+
+                let selectedStyle = "micah";
+                let selectedSeed = "Felix";
+
+                try {
+                  const urlObj = new URL(currentAvatarUrl);
+                  const pathParts = urlObj.pathname.split("/");
+                  if (pathParts.length >= 3 && pathParts[1] === "7.x") {
+                    const matchStyle = dicebearStyles.find(s => s.id === pathParts[2]);
+                    if (matchStyle) selectedStyle = matchStyle.id;
+                  }
+                  const seedParam = urlObj.searchParams.get("seed");
+                  if (seedParam) selectedSeed = decodeURIComponent(seedParam);
+                } catch { }
+
+                const pickerMarkup = `
+                <div id="dicebear-picker-modal" class="dicebear-picker-overlay">
+                  <div class="dicebear-picker-modal">
+                    <div class="dicebear-picker-header">
+                      <h3 class="dicebear-picker-title">
+                        <span>✦</span> Choose Avatar
+                      </h3>
+                      <button id="close-dicebear-picker-btn" class="dicebear-picker-close" title="Close">×</button>
+                    </div>
+
+                    <div class="dicebear-picker-body">
+                      <!-- Live Preview Box -->
+                      <div class="dicebear-preview-box">
+                        <div class="dicebear-preview-circle" id="dicebear-live-preview-circle">
+                          <img id="dicebear-live-preview-img" src="https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent" alt="Preview" />
+                        </div>
+                        <div class="dicebear-preview-info">
+                          <div style="display:flex;align-items:center;gap:0.4rem;">
+                            <span class="dicebear-style-badge" id="dicebear-preview-badge">${selectedStyle}</span>
+                          </div>
+                          <span style="font-size:0.78rem;font-weight:800;opacity:0.9;" id="dicebear-preview-seed-label">${escapeHtml(selectedSeed)}</span>
+                          <button type="button" id="dicebear-randomize-btn" class="dicebear-random-btn">
+                             Random Pick
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Style Selector Chips (Clean Wrap, No Horizontal Scrollbar) -->
+                      <div>
+                        <div class="dicebear-section-label">
+                          <span>Avatar Category</span>
+                        </div>
+                        <div class="dicebear-styles-wrap" id="dicebear-styles-list">
+                          ${dicebearStyles.map(st => `
+                            <button type="button" class="dicebear-style-chip ${st.id === selectedStyle ? 'is-active' : ''}" data-style="${st.id}">
+                              ${st.icon} ${st.name}
+                            </button>
+                          `).join("")}
+                        </div>
+                      </div>
+
+                      <!-- Preset Avatars Grid -->
+                      <div>
+                        <div class="dicebear-section-label">
+                          <span>Choose Character</span>
+                        </div>
+                        <div class="dicebear-grid" id="dicebear-presets-grid">
+                          <!-- Injected dynamically -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="dicebear-picker-footer">
+                      <button type="button" id="cancel-dicebear-btn" class="dicebear-btn-cancel">Cancel</button>
+                      <button type="button" id="save-dicebear-btn" class="dicebear-btn-save">Set Avatar</button>
+                    </div>
+                  </div>
+                </div>
+                `;
+
+                document.body.insertAdjacentHTML("beforeend", pickerMarkup);
+
+                const pickerModal = document.getElementById("dicebear-picker-modal");
+                const liveImg = document.getElementById("dicebear-live-preview-img");
+                const styleBadge = document.getElementById("dicebear-preview-badge");
+                const seedLabel = document.getElementById("dicebear-preview-seed-label");
+                const presetsGrid = document.getElementById("dicebear-presets-grid");
+
+                // Animate in
+                setTimeout(() => {
+                  if (pickerModal) {
+                    pickerModal.style.opacity = "1";
+                    const m = pickerModal.querySelector(".dicebear-picker-modal");
+                    if (m) m.style.transform = "scale(1) translateY(0)";
+                  }
+                }, 10);
+
+                const updatePreview = () => {
+                  const url = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent`;
+                  if (liveImg) liveImg.src = url;
+                  if (styleBadge) styleBadge.textContent = selectedStyle;
+                  if (seedLabel) seedLabel.textContent = selectedSeed;
+                };
+
+                const renderPresets = () => {
+                  const currentStyleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
+                  if (!presetsGrid) return;
+                  presetsGrid.innerHTML = currentStyleObj.presets.map(preset => {
+                    const presetUrl = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(preset)}&backgroundColor=transparent`;
+                    const isSelected = selectedSeed.toLowerCase() === preset.toLowerCase();
+                    return `
+                      <div class="dicebear-avatar-card ${isSelected ? 'is-selected' : ''}" data-seed="${escapeHtml(preset)}">
+                        <div class="dicebear-avatar-thumb">
+                          <img src="${presetUrl}" alt="${escapeHtml(preset)}" loading="lazy" />
+                        </div>
+                        <span class="dicebear-avatar-name">${escapeHtml(preset)}</span>
+                      </div>
+                    `;
+                  }).join("");
+
+                  presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(card => {
+                    card.addEventListener("click", () => {
+                      selectedSeed = card.dataset.seed;
+                      presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(c => c.classList.remove("is-selected"));
+                      card.classList.add("is-selected");
+                      updatePreview();
+                    });
+                  });
+                };
+
+                renderPresets();
+
+                // Style chip click
+                document.querySelectorAll(".dicebear-style-chip").forEach(chip => {
+                  chip.addEventListener("click", () => {
+                    document.querySelectorAll(".dicebear-style-chip").forEach(c => c.classList.remove("is-active"));
+                    chip.classList.add("is-active");
+                    selectedStyle = chip.dataset.style;
+                    const styleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
+                    selectedSeed = styleObj.presets[0];
+                    renderPresets();
+                    updatePreview();
+                  });
+                });
+
+                // Random pick button
+                document.getElementById("dicebear-randomize-btn")?.addEventListener("click", () => {
+                  const currentStyleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
+                  const randomPreset = currentStyleObj.presets[Math.floor(Math.random() * currentStyleObj.presets.length)];
+                  selectedSeed = randomPreset;
+                  presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(c => {
+                    c.classList.toggle("is-selected", c.dataset.seed.toLowerCase() === selectedSeed.toLowerCase());
+                  });
+                  updatePreview();
+                });
+
+                // Close helper
+                const closePicker = () => {
+                  if (pickerModal) {
+                    pickerModal.style.opacity = "0";
+                    const m = pickerModal.querySelector(".dicebear-picker-modal");
+                    if (m) m.style.transform = "scale(0.92) translateY(20px)";
+                    setTimeout(() => pickerModal.remove(), 250);
+                  }
+                };
+
+                document.getElementById("close-dicebear-picker-btn")?.addEventListener("click", closePicker);
+                document.getElementById("cancel-dicebear-btn")?.addEventListener("click", closePicker);
+                pickerModal.addEventListener("click", (e) => {
+                  if (e.target === pickerModal) closePicker();
+                });
+
+                // Save button
+                document.getElementById("save-dicebear-btn")?.addEventListener("click", async () => {
+                  const saveBtn = document.getElementById("save-dicebear-btn");
+                  const newAvatarUrl = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent`;
+
+                  if (saveBtn) {
+                    saveBtn.textContent = "Saving...";
+                    saveBtn.disabled = true;
+                  }
+
+                  currentAvatarUrl = newAvatarUrl;
+                  profileData.avatar = newAvatarUrl;
+
+                  // Update UI elements immediately
+                  const modalAvatarImg = document.getElementById("profile-modal-avatar-img");
+                  if (modalAvatarImg) modalAvatarImg.src = newAvatarUrl;
+
+                  const navAvatarImg = document.querySelector("#profile-avatar-btn img");
+                  if (navAvatarImg) navAvatarImg.src = newAvatarUrl;
+
+                  // Save locally
+                  localStorage.setItem(`user_avatar_${profileData.email}`, newAvatarUrl);
+                  try {
+                    const cached = JSON.parse(localStorage.getItem("user") || "{}");
+                    cached.avatar = newAvatarUrl;
+                    localStorage.setItem("user", JSON.stringify(cached));
+                  } catch { }
+
+                  // Sync with backend
+                  try {
+                    const currentAuthToken = localStorage.getItem("token") || token;
+                    await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
+                      method: "PUT",
+                      credentials: "include",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${currentAuthToken}`
+                      },
+                      body: JSON.stringify({ avatar: newAvatarUrl })
+                    });
+                  } catch (e) {
+                    console.warn("Could not sync avatar with backend:", e);
+                  }
+
+                  closePicker();
+                });
+              };
+
+              // Hook up avatar edit button and avatar frame click
+              document.getElementById("edit-profile-avatar-btn")?.addEventListener("click", (e) => {
+                e.stopPropagation();
+                openDicebearPicker();
+              });
+              document.getElementById("profile-avatar-frame")?.addEventListener("click", () => {
+                openDicebearPicker();
               });
 
               // Name edit handlers
