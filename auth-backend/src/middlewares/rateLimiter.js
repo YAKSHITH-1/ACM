@@ -1,7 +1,6 @@
-// rateLimiter.js
-// Custom rate limiter with IP+account key and exponential backoff for auth routes
-
 import { config } from "dotenv";
+import rateLimit from "express-rate-limit";
+
 config();
 
 const attempts = new Map(); // key -> { count, firstTime, lastReset }
@@ -10,6 +9,19 @@ const attempts = new Map(); // key -> { count, firstTime, lastReset }
 const WINDOW_MS = parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // 15 min
 const MAX_ATTEMPTS = parseInt(process.env.AUTH_RATE_LIMIT_MAX) || 5; // max attempts per window
 const BASE_RETRY_MS = parseInt(process.env.AUTH_BASE_RETRY_MS) || 60 * 1000; // 1 min base
+
+// Periodically clean up stale rate-limit records to prevent memory leak
+const cleanupTimer = setInterval(() => {
+  const now = Date.now();
+  for (const [key, record] of attempts.entries()) {
+    if (now - record.lastReset > WINDOW_MS * 2) {
+      attempts.delete(key);
+    }
+  }
+}, 30 * 60 * 1000);
+if (cleanupTimer.unref) {
+  cleanupTimer.unref();
+}
 
 /**
  * Middleware for auth routes with IP+account tracking and exponential backoff
@@ -94,7 +106,6 @@ function defaultKeyGenerator(req) {
 }
 
 // Export a simpler limiter for public endpoints using standard express-rate-limit
-import rateLimit from "express-rate-limit";
 
 /**
  * General API rate limiter (moderate) - IP based

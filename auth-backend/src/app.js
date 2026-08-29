@@ -37,6 +37,13 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+// Allowed origins list: defaults to current temporary Vercel domain + optional environment variables
+const configuredOrigins = [
+  "https://jyothyacm.vercel.app",
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",").map(o => o.trim().replace(/\/$/, "")) : []),
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim().replace(/\/$/, "")) : [])
+].filter(Boolean);
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -49,14 +56,14 @@ app.use(
         origin === "http://localhost" ||
         origin === "http://127.0.0.1";
 
-      const isProductionClient =
-        origin === "https://jyothyacm.vercel.app";
+      const isAllowedOrigin =
+        configuredOrigins.includes(origin) ||
+        (origin.endsWith(".vercel.app") && origin.includes("jyothy"));
 
-
-      if (isLocalhost || isProductionClient) {
+      if (isLocalhost || isAllowedOrigin) {
         return callback(null, true);
       }
-      return callback(new Error("Not allowed by CORS"));
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     credentials: true,
   })

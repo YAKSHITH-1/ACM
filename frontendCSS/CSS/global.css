@@ -2158,6 +2158,22 @@ select {
   gap: 0.75rem;
 }
 
+.logo-light {
+  display: none !important;
+}
+.logo-dark {
+  display: inline-block !important;
+}
+
+body.light-theme .logo-dark,
+html.light-theme .logo-dark {
+  display: none !important;
+}
+body.light-theme .logo-light,
+html.light-theme .logo-light {
+  display: inline-block !important;
+}
+
 .nav-logo-mark {
   display: grid;
   place-items: center;

@@ -161,12 +161,16 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- CONFIGURATION ---
-  // When deployed, change the fallback URL to your production backend URL
-  const PROD_BACKEND_URL = "https://acm-backend-dwu8.onrender.com/api";
+  // API URL is configurable via window.APP_CONFIG or defaults to the active backend
+  const DEFAULT_PROD_API = "https://acm-backend-dwu8.onrender.com/api";
+  const configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
+    ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
+    : DEFAULT_PROD_API;
   const isLocal = window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1" ||
     window.location.protocol === "file:";
-  const API_BASE_URL = isLocal ? "http://localhost:5000/api" : PROD_BACKEND_URL;
+  const API_BASE_URL = isLocal ? "http://localhost:5000/api" : configuredApi;
+  const PROD_BACKEND_URL = configuredApi;
   // ---------------------
 
   // --- Dark/Light Theme Custom Design System Overrides ---
@@ -1788,6 +1792,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const rawHref = anchor.getAttribute("href");
         if (rawHref && !rawHref.startsWith("#")) {
           anchor.href = new URL(rawHref, navbarUrl).href;
+        }
+      });
+      mount.querySelectorAll("img[src]").forEach((img) => {
+        const rawSrc = img.getAttribute("src");
+        if (rawSrc && !rawSrc.startsWith("http") && !rawSrc.startsWith("data:") && !rawSrc.startsWith("//")) {
+          img.src = new URL(rawSrc, navbarUrl).href;
         }
       });
       const links = mount.querySelectorAll(".nav-link");

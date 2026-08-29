@@ -29,8 +29,6 @@ const computeRegistrationStatus = (event) => {
 export const getEvents = asyncHandler(async (req, res) => {
   const events = await Event.find().sort({ createdAt: -1 }).lean();
 
-  const now = new Date();
-
   const upcoming = events
     .filter(e => e.type === "upcoming")
     .map(e => ({

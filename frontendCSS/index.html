@@ -21,6 +21,8 @@
   }
   </script>
   <link rel="icon" href="assets/Logo.png" type="image/png">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -645,7 +647,8 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand">
-          <img src="assets/Logo.png" alt="ACM Logo" style="width: 2rem; height: 2rem; object-fit: contain;" />
+          <img src="assets/jit1logo.png" alt="ACM Logo" class="logo-dark" style="width: 2rem; height: 2rem; object-fit: contain;" />
+          <img src="assets/jit2logo.png" alt="ACM Logo" class="logo-light" style="width: 2rem; height: 2rem; object-fit: contain;" />
           ACM JIT · ISE Student Chapter
         </div>
         <div class="footer-links">
@@ -700,8 +703,11 @@
       const cardEl = document.getElementById('hero-next-event-card');
       let next = null;
       try {
-        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        const API_BASE_URL = isLocal ? "http://localhost:5000/api" : "https://acm-backend-dwu8.onrender.com/api";
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:";
+        const configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
+          ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
+          : "https://acm-backend-dwu8.onrender.com/api";
+        const API_BASE_URL = isLocal ? "http://localhost:5000/api" : configuredApi;
         const res = await fetch(`${API_BASE_URL}/events`);
         const data = await res.json();
         if (data.success && Array.isArray(data.upcoming) && data.upcoming.length > 0) {

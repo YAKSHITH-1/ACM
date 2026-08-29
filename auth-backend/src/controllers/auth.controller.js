@@ -8,10 +8,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import sendEmail from "../utils/sendEmail.js";
 import { normalizeEmail } from "../utils/stringUtils.js";
 
-import {
-  registerService,
-  loginService
-} from "../services/auth.service.js";
+import { loginService } from "../services/auth.service.js";
 
 
 const buildVerificationEmail = (verificationCode) => {
@@ -282,8 +279,12 @@ const buildResetPasswordEmail = (rawToken) => `
 `;
 
 // AES-256-GCM Authenticated Encryption for Ephemeral Signup Tickets
-const getTicketKey = () =>
-  crypto.createHash("sha256").update(process.env.JWT_ACCESS_SECRET || "acm_secret_fallback_key").digest();
+const getTicketKey = () => {
+  if (!process.env.JWT_ACCESS_SECRET) {
+    throw new Error("JWT_ACCESS_SECRET is required but missing from environment variables.");
+  }
+  return crypto.createHash("sha256").update(process.env.JWT_ACCESS_SECRET).digest();
+};
 
 const encryptSignupTicket = (payload) => {
   const iv = crypto.randomBytes(12);

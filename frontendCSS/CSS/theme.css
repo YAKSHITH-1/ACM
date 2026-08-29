@@ -101,6 +101,31 @@ h1, h2, h3, h4, h5, h6, .hero-eyebrow, .section-label, .btn {
   box-shadow: 0 4px 0px var(--v-text) !important;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
+/* Dynamic Theme Logos */
+.logo-light {
+  display: none !important;
+}
+.logo-dark {
+  display: inline-block !important;
+}
+
+body.light-theme .logo-dark,
+html.light-theme .logo-dark {
+  display: none !important;
+}
+body.light-theme .logo-light,
+html.light-theme .logo-light {
+  display: inline-block !important;
+}
+
+.nav-logo-img {
+  transition: transform 0.2s ease;
+}
+
+.nav-logo:hover .nav-logo-img {
+  transform: scale(1.05);
+}
+
 .nav-logo-text {
   color: var(--v-text) !important;
   font-family: var(--font-heading, 'Space Grotesk', sans-serif) !important;

@@ -14,7 +14,9 @@
   <link rel="stylesheet" href="../CSS/global.css">
   <link rel="stylesheet" href="../CSS/theme.css">
   <link rel="stylesheet" href="../CSS/typography.css">
-  <link rel="icon" href="assets/Logo.png" type="image/png">
+  <link rel="icon" href="../assets/Logo.png" type="image/png">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 
 <body>
@@ -91,7 +93,11 @@
 
   <script>
     (function () {
-      const API_BASE = "https://acm-backend-dwu8.onrender.com/api/events";
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:";
+      const configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
+        ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
+        : "https://acm-backend-dwu8.onrender.com/api";
+      const API_BASE = (isLocal ? "http://localhost:5000/api" : configuredApi) + "/events";
       const token = localStorage.getItem("token");
 
       const escapeHtml = (val) =>
