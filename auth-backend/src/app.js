@@ -37,8 +37,10 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// Allowed origins list: defaults to current temporary Vercel domain + optional environment variables
+// Allowed origins list: defaults to acmjit.com, current Vercel domain, + optional environment variables
 const configuredOrigins = [
+  "https://acmjit.com",
+  "https://www.acmjit.com",
   "https://jyothyacm.vercel.app",
   ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",").map(o => o.trim().replace(/\/$/, "")) : []),
   ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim().replace(/\/$/, "")) : [])
@@ -58,7 +60,10 @@ app.use(
 
       const isAllowedOrigin =
         configuredOrigins.includes(origin) ||
-        (origin.endsWith(".vercel.app") && origin.includes("jyothy"));
+        origin === "https://acmjit.com" ||
+        origin === "https://www.acmjit.com" ||
+        origin.endsWith(".acmjit.com") ||
+        (origin.endsWith(".vercel.app") && (origin.includes("jyothy") || origin.includes("acm")));
 
       if (isLocalhost || isAllowedOrigin) {
         return callback(null, true);
