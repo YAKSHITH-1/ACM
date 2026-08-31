@@ -1774,7 +1774,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ── Navbar injection ── */
   const mount = document.getElementById("global-navbar");
   if (!mount) return;
-  const mainScript = document.querySelector('script[src$="main.js"]');
+  const mainScript = document.querySelector('script[src*="main.js"]');
   const navbarUrl = mainScript ? new URL("navbar.html", mainScript.src).href : "navbar.html";
 
   fetch(navbarUrl)
