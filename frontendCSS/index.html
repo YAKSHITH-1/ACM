@@ -647,8 +647,10 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand">
-          <img src="assets/jit1logo.png" alt="ACM Logo" class="logo-dark" style="width: 2rem; height: 2rem; object-fit: contain;" />
-          <img src="assets/jit2logo.png" alt="ACM Logo" class="logo-light" style="width: 2rem; height: 2rem; object-fit: contain;" />
+          <img src="assets/jit1logo.png" alt="ACM Logo" class="logo-dark"
+            style="width: 2rem; height: 2rem; object-fit: contain;" />
+          <img src="assets/jit2logo.png" alt="ACM Logo" class="logo-light"
+            style="width: 2rem; height: 2rem; object-fit: contain;" />
           ACM JIT · ISE Student Chapter
         </div>
         <div class="footer-links">
@@ -661,14 +663,18 @@
       <!-- Contact & Social Links -->
       <div class="footer-social-contact">
         <a href="mailto:acmjyothy@gmail.com" class="footer-contact-pill" title="Email ACM JIT">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <rect width="20" height="16" x="2" y="4" rx="2"></rect>
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
           </svg>
           <span>acmjyothy@gmail.com</span>
         </a>
-        <a href="https://www.instagram.com/acmjyothyofficial?igsi=Y3Z5cmFkNmxveXUw" target="_blank" rel="noopener noreferrer" class="footer-contact-pill instagram" title="Follow @acmjyothyofficial on Instagram">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <a href="https://www.instagram.com/acmjyothyofficial?igsi=Y3Z5cmFkNmxveXUw" target="_blank"
+          rel="noopener noreferrer" class="footer-contact-pill instagram"
+          title="Follow @acmjyothyofficial on Instagram">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
             <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
             <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
@@ -706,7 +712,7 @@
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:";
         const configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
           ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
-          : "https://acm-backend-dwu8.onrender.com/api";
+          : "https://api.acmjit.com/";
         const API_BASE_URL = isLocal ? "http://localhost:5000/api" : configuredApi;
         const res = await fetch(`${API_BASE_URL}/events`);
         const data = await res.json();

@@ -162,7 +162,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- CONFIGURATION ---
   // API URL is configurable via window.APP_CONFIG or defaults to the active backend
-  const DEFAULT_PROD_API = "https://acm-backend-dwu8.onrender.com/api";
+  const DEFAULT_PROD_API = "https://api.acmjit.com/";
   const configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
     ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
     : DEFAULT_PROD_API;
