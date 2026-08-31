@@ -46,33 +46,40 @@ const configuredOrigins = [
   ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim().replace(/\/$/, "")) : [])
 ].filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) {
-        return callback(null, true);
-      }
-      const isLocalhost =
-        origin.startsWith("http://localhost:") ||
-        origin.startsWith("http://127.0.0.1:") ||
-        origin === "http://localhost" ||
-        origin === "http://127.0.0.1";
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  const isLocalhost =
+    origin.startsWith("http://localhost:") ||
+    origin.startsWith("http://127.0.0.1:") ||
+    origin === "http://localhost" ||
+    origin === "http://127.0.0.1";
 
-      const isAllowedOrigin =
-        configuredOrigins.includes(origin) ||
-        origin === "https://acmjit.com" ||
-        origin === "https://www.acmjit.com" ||
-        origin.endsWith(".acmjit.com") ||
-        (origin.endsWith(".vercel.app") && (origin.includes("jyothy") || origin.includes("acm")));
+  if (isLocalhost) return true;
 
-      if (isLocalhost || isAllowedOrigin) {
-        return callback(null, true);
-      }
-      return callback(new Error(`Not allowed by CORS: ${origin}`));
-    },
-    credentials: true,
-  })
-);
+  return (
+    configuredOrigins.includes(origin) ||
+    origin === "https://acmjit.com" ||
+    origin === "https://www.acmjit.com" ||
+    origin.endsWith(".acmjit.com") ||
+    origin.endsWith(".vercel.app")
+  );
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
