@@ -712,7 +712,7 @@
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:";
         const configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
           ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
-          : "https://api.acmjit.com/";
+          : "https://api.acmjit.com";
         const API_BASE_URL = isLocal ? "http://localhost:5000/api" : configuredApi;
         const res = await fetch(`${API_BASE_URL}/events`);
         const data = await res.json();
