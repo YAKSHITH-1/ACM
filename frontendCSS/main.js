@@ -203,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
       name: user.name || user.fullName || "",
       email: user.email || "",
       role: user.role || "user",
+      avatar: user.avatar || "",
       isVerified: Boolean(user.isVerified)
     };
   };
@@ -882,7 +883,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!response.ok) {
             showPopup(
               "Login Failed",
-              data.message || "Invalid credentials"
+              data.message || data.error || "Invalid credentials"
             );
             return;
           }
@@ -894,14 +895,22 @@ document.addEventListener("DOMContentLoaded", () => {
           // Save new token and safe sanitized user
           localStorage.setItem("token", data.accessToken);
           if (data.user) {
-            localStorage.setItem("user", JSON.stringify(sanitizeUser(data.user)));
+            const safeUser = sanitizeUser(data.user);
+            localStorage.setItem("user", JSON.stringify(safeUser));
+            if (safeUser && safeUser.avatar) {
+              localStorage.setItem(`user_avatar_${safeUser.email}`, safeUser.avatar);
+            }
           }
 
           showPopup(
             "Success",
-            "Login successful",
-            { onClose: () => window.location.href = "index.html" }
+            "Login successful! Redirecting...",
+            { onClose: () => { window.location.href = "index.html"; } }
           );
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 600);
 
           loginForm.reset();
 
@@ -1037,7 +1046,11 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.removeItem("user");
           localStorage.setItem("token", data.accessToken);
           if (data.user) {
-            localStorage.setItem("user", JSON.stringify(sanitizeUser(data.user)));
+            const safeUser = sanitizeUser(data.user);
+            localStorage.setItem("user", JSON.stringify(safeUser));
+            if (safeUser && safeUser.avatar) {
+              localStorage.setItem(`user_avatar_${safeUser.email}`, safeUser.avatar);
+            }
           }
 
           showPopup(
@@ -1856,7 +1869,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentToken = refreshData.accessToken;
                 localStorage.setItem("token", currentToken);
                 if (refreshData.user) {
-                  localStorage.setItem("user", JSON.stringify(sanitizeUser(refreshData.user)));
+                  const refreshedUser = sanitizeUser(refreshData.user);
+                  localStorage.setItem("user", JSON.stringify(refreshedUser));
+                  if (refreshedUser && refreshedUser.avatar) {
+                    localStorage.setItem(`user_avatar_${refreshedUser.email}`, refreshedUser.avatar);
+                  }
                 }
                 // Retry profile fetch with new access token
                 res = await fetch(`${API_BASE_URL}/auth/profile`, {
@@ -1893,7 +1910,12 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!profileData) return;
 
           // Update local user storage with fresh sanitized profile
-          try { localStorage.setItem('user', JSON.stringify(profileData)); } catch { }
+          try {
+            localStorage.setItem('user', JSON.stringify(profileData));
+            if (profileData.avatar) {
+              localStorage.setItem(`user_avatar_${profileData.email}`, profileData.avatar);
+            }
+          } catch { }
           // Hide auth links (register / join-us) for authenticated user
           menu.querySelectorAll("a").forEach(link => {
             const href = link.getAttribute("href");
@@ -1909,19 +1931,25 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           const rightControls = document.getElementById("nav-right-controls") || document.getElementById("nav-menu-button");
-          if (rightControls && !document.getElementById("profile-avatar-container")) {
+          if (rightControls) {
             let currentAvatarUrl = profileData.avatar || localStorage.getItem(`user_avatar_${profileData.email}`) || `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(profileData.email)}&backgroundColor=transparent`;
 
-            rightControls.insertAdjacentHTML('beforeend', `
-            <div id="profile-avatar-container" class="profile-avatar-container" style="display:flex;align-items:center;position:relative;">
-              <button type="button" id="profile-avatar-btn" style="width:2.35rem;height:2.35rem;border-radius:50%;background:#facc15;border:2px solid #0B0F0D;box-shadow:2px 2px 0px #0B0F0D;cursor:pointer;display:grid;place-items:center;padding:0;overflow:hidden;transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='none'" title="View Profile">
-                <img src="${currentAvatarUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;" />
-              </button>
-            </div>
-          `);
+            const existingNavAvatarImg = document.querySelector("#profile-avatar-btn img");
+            if (existingNavAvatarImg) {
+              existingNavAvatarImg.src = currentAvatarUrl;
+            }
 
-            // Hook up avatar button click event to display profile modal
-            document.getElementById("profile-avatar-btn")?.addEventListener("click", () => {
+            if (!document.getElementById("profile-avatar-container")) {
+              rightControls.insertAdjacentHTML('beforeend', `
+              <div id="profile-avatar-container" class="profile-avatar-container" style="display:flex;align-items:center;position:relative;">
+                <button type="button" id="profile-avatar-btn" style="width:2.35rem;height:2.35rem;border-radius:50%;background:#facc15;border:2px solid #0B0F0D;box-shadow:2px 2px 0px #0B0F0D;cursor:pointer;display:grid;place-items:center;padding:0;overflow:hidden;transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='none'" title="View Profile">
+                  <img src="${currentAvatarUrl}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;" />
+                </button>
+              </div>
+            `);
+
+              // Hook up avatar button click event to display profile modal
+              document.getElementById("profile-avatar-btn")?.addEventListener("click", () => {
               // Check if modal already exists in DOM, if so remove it
               const existingModal = document.getElementById("profile-info-modal");
               if (existingModal) existingModal.remove();
@@ -2294,10 +2322,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     localStorage.setItem("user", JSON.stringify(cached));
                   } catch { }
 
-                  // Sync with backend
+                  // Sync with backend (with automatic silent refresh if access token expired)
                   try {
-                    const currentAuthToken = localStorage.getItem("token") || token;
-                    await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
+                    let currentAuthToken = localStorage.getItem("token") || token;
+                    let res = await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
                       method: "PUT",
                       credentials: "include",
                       headers: {
@@ -2306,6 +2334,40 @@ document.addEventListener("DOMContentLoaded", () => {
                       },
                       body: JSON.stringify({ avatar: newAvatarUrl })
                     });
+
+                    // If access token expired, try silent refresh
+                    if (res.status === 401) {
+                      const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+                        method: "POST",
+                        credentials: "include"
+                      });
+                      if (refreshRes.ok) {
+                        const refreshData = await refreshRes.json();
+                        if (refreshData.accessToken) {
+                          currentAuthToken = refreshData.accessToken;
+                          localStorage.setItem("token", currentAuthToken);
+                          res = await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
+                            method: "PUT",
+                            credentials: "include",
+                            headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": `Bearer ${currentAuthToken}`
+                            },
+                            body: JSON.stringify({ avatar: newAvatarUrl })
+                          });
+                        }
+                      }
+                    }
+
+                    if (res && res.ok) {
+                      const resData = await res.json().catch(() => ({}));
+                      if (resData.user && resData.user.avatar) {
+                        profileData.avatar = resData.user.avatar;
+                        localStorage.setItem(`user_avatar_${profileData.email}`, resData.user.avatar);
+                      }
+                    } else {
+                      console.warn("Could not sync avatar with backend, status:", res?.status);
+                    }
                   } catch (e) {
                     console.warn("Could not sync avatar with backend:", e);
                   }
@@ -2442,6 +2504,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
           }
+        }
 
           const isAdmin = !!(profileData && (profileData.isAdmin || (typeof profileData.role === 'string' && profileData.role.toLowerCase() === 'admin') || (Array.isArray(profileData.roles) && profileData.roles.map(r => String(r).toLowerCase()).includes('admin'))));
 

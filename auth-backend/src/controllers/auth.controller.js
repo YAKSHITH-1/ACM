@@ -9,6 +9,7 @@ import sendEmail from "../utils/sendEmail.js";
 import { normalizeEmail } from "../utils/stringUtils.js";
 
 import { loginService } from "../services/auth.service.js";
+import { clearRateLimit } from "../middlewares/rateLimiter.js";
 
 
 const buildVerificationEmail = (verificationCode) => {
@@ -409,6 +410,8 @@ export const login = asyncHandler(async (req, res) => {
       email,
       req.body.password
     );
+
+  clearRateLimit(req);
 
   res.cookie("accessToken", accessToken, getCookieOptions(15 * 60 * 1000));
   res.cookie("refreshToken", refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));

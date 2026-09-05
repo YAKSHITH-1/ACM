@@ -7,7 +7,7 @@ const attempts = new Map(); // key -> { count, firstTime, lastReset }
 
 // Configuration from env with defaults
 const WINDOW_MS = parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // 15 min
-const MAX_ATTEMPTS = parseInt(process.env.AUTH_RATE_LIMIT_MAX) || 5; // max attempts per window
+const MAX_ATTEMPTS = parseInt(process.env.AUTH_RATE_LIMIT_MAX) || 15; // max attempts per window
 const BASE_RETRY_MS = parseInt(process.env.AUTH_BASE_RETRY_MS) || 60 * 1000; // 1 min base
 
 // Periodically clean up stale rate-limit records to prevent memory leak
@@ -61,6 +61,8 @@ export function authRateLimiter(options = {}) {
 
       res.set("Retry-After", retryAfterSec.toString());
       return res.status(429).json({
+        success: false,
+        message: `Too many attempts. Please try again in ${retryAfterSec} seconds.`,
         error: "Too many requests, please try again later.",
         retryAfter: retryAfterSec,
       });
@@ -103,6 +105,18 @@ function defaultKeyGenerator(req) {
     return `${cleanIp}:${account}`;
   }
   return cleanIp;
+}
+
+/**
+ * Clear rate limit attempts for an IP/account (e.g. on successful login)
+ */
+export function clearRateLimit(req) {
+  try {
+    const key = defaultKeyGenerator(req);
+    if (key && attempts.has(key)) {
+      attempts.delete(key);
+    }
+  } catch {}
 }
 
 // Export a simpler limiter for public endpoints using standard express-rate-limit

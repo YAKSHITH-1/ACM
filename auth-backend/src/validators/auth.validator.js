@@ -15,8 +15,8 @@ export const registerValidator = [
     .normalizeEmail(),
 
   body("password")
-    .isLength({ min: 12 })
-    .withMessage("Password must be at least 12 characters")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters")
     .matches(/\d/)
     .withMessage("Password must contain at least one digit")
     .matches(/[!@#$%^&*(),.?":{}|<>]/)
@@ -31,7 +31,6 @@ export const loginValidator = [
     .normalizeEmail(),
 
   body("password")
-    .trim()
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 8 })
@@ -93,8 +92,8 @@ export const resetPasswordValidator = [
     return true;
   }),
   body("password")
-    .isLength({ min: 12 })
-    .withMessage("Password must be at least 12 characters")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters")
     .matches(/\d/)
     .withMessage("Password must contain at least one digit")
     .matches(/[!@#$%^&*(),.?":{}|<>]/)
