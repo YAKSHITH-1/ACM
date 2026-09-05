@@ -794,13 +794,14 @@ export const updateProfileName = asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false, message: "Name is required" });
   }
 
-  const user = await User.findById(req.user.id);
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    { name: name.trim() },
+    { new: true }
+  );
   if (!user) {
     return res.status(404).json({ success: false, message: "User not found" });
   }
-
-  user.name = name.trim();
-  await user.save();
 
   res.status(200).json({
     success: true,
@@ -814,17 +815,18 @@ export const updateProfileName = asyncHandler(async (req, res) => {
 export const updateProfileAvatar = asyncHandler(async (req, res) => {
   const { avatar } = req.body;
 
-  if (typeof avatar !== "string") {
+  if (typeof avatar !== "string" || !avatar.trim()) {
     return res.status(400).json({ success: false, message: "Avatar must be a valid string URL or config" });
   }
 
-  const user = await User.findById(req.user.id);
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    { avatar: avatar.trim() },
+    { new: true }
+  );
   if (!user) {
     return res.status(404).json({ success: false, message: "User not found" });
   }
-
-  user.avatar = avatar.trim();
-  await user.save();
 
   res.status(200).json({
     success: true,

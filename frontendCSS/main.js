@@ -1926,7 +1926,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const link = document.createElement("link");
             link.id = "profile-drawer-css";
             link.rel = "stylesheet";
-            link.href = "./CSS/profile-drawer.css";
+            link.href = "./CSS/profile-drawer.css?v=2.0.2";
             document.head.appendChild(link);
           }
 
@@ -2304,24 +2304,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     saveBtn.disabled = true;
                   }
 
-                  currentAvatarUrl = newAvatarUrl;
-                  profileData.avatar = newAvatarUrl;
-
-                  // Update UI elements immediately
-                  const modalAvatarImg = document.getElementById("profile-modal-avatar-img");
-                  if (modalAvatarImg) modalAvatarImg.src = newAvatarUrl;
-
-                  const navAvatarImg = document.querySelector("#profile-avatar-btn img");
-                  if (navAvatarImg) navAvatarImg.src = newAvatarUrl;
-
-                  // Save locally
-                  localStorage.setItem(`user_avatar_${profileData.email}`, newAvatarUrl);
-                  try {
-                    const cached = JSON.parse(localStorage.getItem("user") || "{}");
-                    cached.avatar = newAvatarUrl;
-                    localStorage.setItem("user", JSON.stringify(cached));
-                  } catch { }
-
                   // Sync with backend (with automatic silent refresh if access token expired)
                   try {
                     let currentAuthToken = localStorage.getItem("token") || token;
@@ -2361,18 +2343,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     if (res && res.ok) {
                       const resData = await res.json().catch(() => ({}));
-                      if (resData.user && resData.user.avatar) {
-                        profileData.avatar = resData.user.avatar;
-                        localStorage.setItem(`user_avatar_${profileData.email}`, resData.user.avatar);
-                      }
+                      const savedAvatar = (resData.user && resData.user.avatar) ? resData.user.avatar : newAvatarUrl;
+
+                      currentAvatarUrl = savedAvatar;
+                      profileData.avatar = savedAvatar;
+
+                      // Update UI elements immediately
+                      const modalAvatarImg = document.getElementById("profile-modal-avatar-img");
+                      if (modalAvatarImg) modalAvatarImg.src = savedAvatar;
+
+                      const navAvatarImg = document.querySelector("#profile-avatar-btn img");
+                      if (navAvatarImg) navAvatarImg.src = savedAvatar;
+
+                      // Save locally
+                      localStorage.setItem(`user_avatar_${profileData.email}`, savedAvatar);
+                      try {
+                        const cached = JSON.parse(localStorage.getItem("user") || "{}");
+                        cached.avatar = savedAvatar;
+                        localStorage.setItem("user", JSON.stringify(cached));
+                      } catch { }
+
+                      closePicker();
                     } else {
+                      const resData = await res?.json().catch(() => ({}));
                       console.warn("Could not sync avatar with backend, status:", res?.status);
+                      alert("Could not update avatar: " + (resData?.message || `Error ${res?.status || "Unknown"}`));
+                      if (saveBtn) {
+                        saveBtn.textContent = "Set Avatar";
+                        saveBtn.disabled = false;
+                      }
                     }
                   } catch (e) {
                     console.warn("Could not sync avatar with backend:", e);
+                    alert("Could not connect to server to update avatar.");
+                    if (saveBtn) {
+                      saveBtn.textContent = "Set Avatar";
+                      saveBtn.disabled = false;
+                    }
                   }
-
-                  closePicker();
                 });
               };
 
