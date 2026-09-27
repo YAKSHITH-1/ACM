@@ -224,6 +224,20 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("user");
   }
 
+  // --- GUEST ROUTE GUARD ---
+  // Redirect authenticated users away from guest-only auth pages (join-us, register)
+  const currentPath = window.location.pathname;
+  const currentPageName = currentPath.split("/").pop() || "index.html";
+  const isGuestAuthPage = currentPageName === "join-us.html" ||
+                          currentPageName === "register.html" ||
+                          currentPath.endsWith("/join-us") ||
+                          currentPath.endsWith("/register");
+
+  if (isGuestAuthPage && localStorage.getItem("token")) {
+    window.location.replace("index.html");
+    return;
+  }
+
   const DEFAULT_EVENTS = {
     upcoming: [],
     past: []
@@ -1916,6 +1930,18 @@ document.addEventListener("DOMContentLoaded", () => {
               localStorage.setItem(`user_avatar_${profileData.email}`, profileData.avatar);
             }
           } catch { }
+
+          // Redirect authenticated users away from guest-only auth pages
+          const currentFile = window.location.pathname.split("/").pop() || "index.html";
+          const isGuestAuth = currentFile === "join-us.html" || 
+                              currentFile === "register.html" || 
+                              window.location.pathname.endsWith("/join-us") || 
+                              window.location.pathname.endsWith("/register");
+          if (isGuestAuth) {
+            window.location.replace("index.html");
+            return;
+          }
+
           // Hide auth links (register / join-us) for authenticated user
           menu.querySelectorAll("a").forEach(link => {
             const href = link.getAttribute("href");
