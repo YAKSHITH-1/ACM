@@ -22,13 +22,14 @@
     globe: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
     star: `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
     rocket: `<svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`,
+    download: `<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
   };
 
   /* ── ACM JIT Community Hub Timeline Data ────────── */
   const timelineData = [
     {
       id: 1,
-      title: "Study Material",
+      title: "Resources",
       date: "Always Available",
       content: "Curated notes, starter repositories, lab references, and practice packs that help students move faster without feeling lost.",
       category: "Resources",
@@ -79,6 +80,67 @@
   const container = document.getElementById("orbital-timeline");
   if (!container) return; // Not on a page with the timeline
 
+  /* ── Student Material Modal Setup ────────────────── */
+  let modalBackdrop = document.getElementById("studyMaterialModal");
+  if (!modalBackdrop) {
+    modalBackdrop = document.createElement("div");
+    modalBackdrop.className = "orbital-modal-backdrop";
+    modalBackdrop.id = "studyMaterialModal";
+    modalBackdrop.innerHTML = `
+      <div class="orbital-modal-card">
+        <div class="orbital-modal-header">
+          <div>
+            <span class="orbital-modal-badge">Workshop Resource</span>
+            <h3 class="orbital-modal-title">Student Material</h3>
+            <p class="orbital-modal-subtitle">Essential technical handbook & guide for workshop participants</p>
+          </div>
+          <button type="button" class="orbital-modal-close" id="closeStudyModal" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="orbital-material-preview-card">
+          <div class="orbital-material-meta">
+            <span class="orbital-material-tag">Guide</span>
+            <span class="orbital-material-format">PDF &bull; 364 KB</span>
+          </div>
+          <h4 class="orbital-material-heading">Git &amp; GitHub &mdash; Student Workshop Guide</h4>
+          <p class="orbital-material-desc">Comprehensive reference covering repository setup, branching workflows, pull requests, merge conflict resolution, and best practices.</p>
+          <a href="assets/Resources/githandout.pdf" download="Git & GitHub — Student Workshop Guide.pdf" class="orbital-download-btn" id="studyModalDownload">
+            ${ICONS.download}
+            <span>Download PDF</span>
+          </a>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalBackdrop);
+  }
+
+  function openStudyMaterialModal() {
+    if (modalBackdrop) {
+      modalBackdrop.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function closeStudyMaterialModal() {
+    if (modalBackdrop) {
+      modalBackdrop.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+  }
+
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop || e.target.closest("#closeStudyModal")) {
+        closeStudyMaterialModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modalBackdrop.classList.contains("open")) {
+        closeStudyMaterialModal();
+      }
+    });
+  }
+
   const orbitArea = container.querySelector(".orbital-orbit-area");
   const nodes = {};
 
@@ -112,8 +174,25 @@
       toggleItem(item.id);
     });
 
-    // Prevent card clicks from bubbling weirdly
-    card.addEventListener("click", (e) => e.stopPropagation());
+    // Handle clicks inside detail card (triggers and connection buttons)
+    card.addEventListener("click", (e) => {
+      const modalTrigger = e.target.closest(".orbital-modal-trigger");
+      if (modalTrigger) {
+        e.stopPropagation();
+        openStudyMaterialModal();
+        return;
+      }
+
+      const connectionBtn = e.target.closest(".orbital-connection-btn");
+      if (connectionBtn) {
+        e.stopPropagation();
+        const targetId = parseInt(connectionBtn.dataset.target);
+        if (targetId) toggleItem(targetId);
+        return;
+      }
+
+      e.stopPropagation();
+    });
 
     orbitArea.appendChild(node);
     nodes[item.id] = node;
@@ -147,6 +226,21 @@
         </div>`;
     }
 
+    let resourcesHTML = "";
+    if (item.id === 3) {
+      resourcesHTML = `
+        <div class="orbital-connections-section">
+          <div class="orbital-connections-title">
+            ${ICONS.fileText} Student Material
+          </div>
+          <div class="orbital-connections-list">
+            <button type="button" class="orbital-connection-btn orbital-modal-trigger" title="Open Git & GitHub Student Workshop Guide">
+              Student Workshop Guide ${ICONS.arrowRight}
+            </button>
+          </div>
+        </div>`;
+    }
+
     return `
       <div class="orbital-card-header">
         <span class="orbital-status-badge ${item.status}">${statusLabel}</span>
@@ -154,6 +248,7 @@
       </div>
       <div class="orbital-card-title">${item.title}</div>
       <div class="orbital-card-content">${item.content}</div>
+      ${resourcesHTML}
       ${connectionsHTML}
     `;
   }
@@ -192,11 +287,18 @@
 
   /* ── Connected-node button delegation ───────────── */
   container.addEventListener("click", (e) => {
+    const modalTrigger = e.target.closest(".orbital-modal-trigger");
+    if (modalTrigger) {
+      e.stopPropagation();
+      openStudyMaterialModal();
+      return;
+    }
+
     const btn = e.target.closest(".orbital-connection-btn");
     if (btn) {
       e.stopPropagation();
       const targetId = parseInt(btn.dataset.target);
-      toggleItem(targetId);
+      if (targetId) toggleItem(targetId);
       return;
     }
 
@@ -259,6 +361,16 @@
 
   /* ── Start ──────────────────────────────────────── */
   render();
+
+  // Handle initial URL hash if pointing to a node
+  const initialHash = window.location.hash.toLowerCase();
+  if (initialHash === "#technical-guides" || initialHash === "#guides") {
+    toggleItem(3);
+  } else if (initialHash === "#resources" || initialHash === "#study-material") {
+    toggleItem(1);
+  } else if (initialHash === "#student-blogs" || initialHash === "#blogs") {
+    toggleItem(2);
+  }
 
   // Pause when tab is hidden
   document.addEventListener("visibilitychange", () => {
