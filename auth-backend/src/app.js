@@ -42,6 +42,7 @@ const configuredOrigins = [
   "https://acmjit.com",
   "https://www.acmjit.com",
   "https://jyothyacm.vercel.app",
+  "https://coral-chinchilla-393076.hostingersite.com",
   ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",").map(o => o.trim().replace(/\/$/, "")) : []),
   ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim().replace(/\/$/, "")) : [])
 ].filter(Boolean);
@@ -61,7 +62,8 @@ const isOriginAllowed = (origin) => {
     origin === "https://acmjit.com" ||
     origin === "https://www.acmjit.com" ||
     origin.endsWith(".acmjit.com") ||
-    origin.endsWith(".vercel.app")
+    origin.endsWith(".vercel.app") ||
+    origin.endsWith(".hostingersite.com")
   );
 };
 
