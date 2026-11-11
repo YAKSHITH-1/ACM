@@ -162,7 +162,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- CONFIGURATION ---
   // API URL is configurable via window.APP_CONFIG or defaults to the active backend
-  const DEFAULT_PROD_API = "https://api.acmjit.com/api";
+  const DEFAULT_PROD_API = "https://coral-chinchilla-393076.hostingersite.com/api";
   let configuredApi = (typeof window !== "undefined" && window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL)
     ? window.APP_CONFIG.API_BASE_URL.replace(/\/$/, "")
     : DEFAULT_PROD_API;
@@ -229,9 +229,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentPath = window.location.pathname;
   const currentPageName = currentPath.split("/").pop() || "index.html";
   const isGuestAuthPage = currentPageName === "join-us.html" ||
-                          currentPageName === "register.html" ||
-                          currentPath.endsWith("/join-us") ||
-                          currentPath.endsWith("/register");
+    currentPageName === "register.html" ||
+    currentPath.endsWith("/join-us") ||
+    currentPath.endsWith("/register");
 
   if (isGuestAuthPage && localStorage.getItem("token")) {
     window.location.replace("index.html");
@@ -1933,10 +1933,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Redirect authenticated users away from guest-only auth pages
           const currentFile = window.location.pathname.split("/").pop() || "index.html";
-          const isGuestAuth = currentFile === "join-us.html" || 
-                              currentFile === "register.html" || 
-                              window.location.pathname.endsWith("/join-us") || 
-                              window.location.pathname.endsWith("/register");
+          const isGuestAuth = currentFile === "join-us.html" ||
+            currentFile === "register.html" ||
+            window.location.pathname.endsWith("/join-us") ||
+            window.location.pathname.endsWith("/register");
           if (isGuestAuth) {
             window.location.replace("index.html");
             return;
@@ -1976,12 +1976,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
               // Hook up avatar button click event to display profile modal
               document.getElementById("profile-avatar-btn")?.addEventListener("click", () => {
-              // Check if modal already exists in DOM, if so remove it
-              const existingModal = document.getElementById("profile-info-modal");
-              if (existingModal) existingModal.remove();
+                // Check if modal already exists in DOM, if so remove it
+                const existingModal = document.getElementById("profile-info-modal");
+                if (existingModal) existingModal.remove();
 
-              // Inject modal markup
-              const modalHTML = `
+                // Inject modal markup
+                const modalHTML = `
               <div id="profile-info-modal">
                 <div id="profile-modal-body">
                   <button id="close-profile-modal-btn" class="profile-close-btn" title="Close">×</button>
@@ -2065,110 +2065,110 @@ document.addEventListener("DOMContentLoaded", () => {
               </style>
             `;
 
-              document.body.insertAdjacentHTML("beforeend", modalHTML);
+                document.body.insertAdjacentHTML("beforeend", modalHTML);
 
-              const modal = document.getElementById("profile-info-modal");
-              const modalBody = document.getElementById("profile-modal-body");
+                const modal = document.getElementById("profile-info-modal");
+                const modalBody = document.getElementById("profile-modal-body");
 
-              // Setup Theme Switcher Controls
-              const toggleBtn = document.getElementById("theme-toggle-btn");
-              const sunIcon = document.getElementById("theme-toggle-sun");
-              const moonIcon = document.getElementById("theme-toggle-moon");
-              const toggleLabel = document.getElementById("theme-toggle-label");
+                // Setup Theme Switcher Controls
+                const toggleBtn = document.getElementById("theme-toggle-btn");
+                const sunIcon = document.getElementById("theme-toggle-sun");
+                const moonIcon = document.getElementById("theme-toggle-moon");
+                const toggleLabel = document.getElementById("theme-toggle-label");
 
-              const updateToggleUI = (theme) => {
-                if (theme === "light") {
-                  if (sunIcon) sunIcon.style.display = "block";
-                  if (moonIcon) moonIcon.style.display = "none";
-                  if (toggleLabel) toggleLabel.textContent = "Light Mode";
-                } else {
-                  if (sunIcon) sunIcon.style.display = "none";
-                  if (moonIcon) moonIcon.style.display = "block";
-                  if (toggleLabel) toggleLabel.textContent = "Dark Mode";
-                }
-              };
-
-              const activeTheme = localStorage.getItem("theme") || "light";
-              updateToggleUI(activeTheme);
-
-              toggleBtn?.addEventListener("click", () => {
-                const isLight = document.body.classList.contains("light-theme");
-                const nextTheme = isLight ? "dark" : "light";
-
-                if (nextTheme === "light") {
-                  document.body.classList.add("light-theme");
-                  document.documentElement.classList.add("light-theme");
-                } else {
-                  document.body.classList.remove("light-theme");
-                  document.documentElement.classList.remove("light-theme");
-                }
-
-                localStorage.setItem("theme", nextTheme);
-                updateToggleUI(nextTheme);
-              });
-
-              // Animate in
-              setTimeout(() => {
-                if (modal) modal.style.opacity = "1";
-                if (modalBody) modalBody.style.transform = "translateX(0)";
-              }, 10);
-
-              // Close handlers
-              const closeModal = () => {
-                if (modal) modal.style.opacity = "0";
-                if (modalBody) modalBody.style.transform = "translateX(100%)";
-                setTimeout(() => {
-                  modal?.remove();
-                }, 400);
-              };
-
-              document.getElementById("close-profile-modal-btn")?.addEventListener("click", closeModal);
-              modal?.addEventListener("click", (e) => {
-                if (e.target === modal) closeModal();
-              });
-
-              // Logout handler
-              document.getElementById("profile-logout-btn")?.addEventListener("click", async () => {
-                try {
-                  await fetch(`${API_BASE_URL}/auth/logout`, {
-                    method: "POST",
-                    credentials: "include"
-                  });
-                } catch (e) { }
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                window.location.reload();
-              });
-
-              // DiceBear Avatar Picker Modal Function
-              const openDicebearPicker = () => {
-                const existingPicker = document.getElementById("dicebear-picker-modal");
-                if (existingPicker) existingPicker.remove();
-
-                const dicebearStyles = [
-                  { id: "micah", name: "Micah", icon: "", presets: ["Felix", "Luna", "Alex", "Milo", "Zoe", "Sam", "Leo", "Nova"] },
-                  { id: "adventurer", name: "Adventurer", icon: "", presets: ["Knight", "Mage", "Rogue", "Scout", "Hero", "Valkyrie", "Ranger", "Warrior"] },
-                  { id: "bottts", name: "Bottts", icon: "", presets: ["Cyber", "Sparky", "Gizmo", "Byte", "Pixel", "Unit-7", "Matrix", "Echo"] },
-                  { id: "fun-emoji", name: "Fun Emoji", icon: "", presets: ["Joy", "Wink", "Grin", "Star", "Happy", "Cool", "Love", "Cheer"] },
-                  { id: "pixel-art", name: "Pixel Art", icon: "", presets: ["Retro", "Arcade", "Gamer", "Quest", "Glitch", "Bit", "Chief", "Player1"] },
-                  { id: "lorelei", name: "Lorelei", icon: "", presets: ["Aria", "Elena", "Sophia", "Chloe", "Maya", "Ivy", "Lily", "Amara"] }
-                ];
-
-                let selectedStyle = "micah";
-                let selectedSeed = "Felix";
-
-                try {
-                  const urlObj = new URL(currentAvatarUrl);
-                  const pathParts = urlObj.pathname.split("/");
-                  if (pathParts.length >= 3 && pathParts[1] === "7.x") {
-                    const matchStyle = dicebearStyles.find(s => s.id === pathParts[2]);
-                    if (matchStyle) selectedStyle = matchStyle.id;
+                const updateToggleUI = (theme) => {
+                  if (theme === "light") {
+                    if (sunIcon) sunIcon.style.display = "block";
+                    if (moonIcon) moonIcon.style.display = "none";
+                    if (toggleLabel) toggleLabel.textContent = "Light Mode";
+                  } else {
+                    if (sunIcon) sunIcon.style.display = "none";
+                    if (moonIcon) moonIcon.style.display = "block";
+                    if (toggleLabel) toggleLabel.textContent = "Dark Mode";
                   }
-                  const seedParam = urlObj.searchParams.get("seed");
-                  if (seedParam) selectedSeed = decodeURIComponent(seedParam);
-                } catch { }
+                };
 
-                const pickerMarkup = `
+                const activeTheme = localStorage.getItem("theme") || "light";
+                updateToggleUI(activeTheme);
+
+                toggleBtn?.addEventListener("click", () => {
+                  const isLight = document.body.classList.contains("light-theme");
+                  const nextTheme = isLight ? "dark" : "light";
+
+                  if (nextTheme === "light") {
+                    document.body.classList.add("light-theme");
+                    document.documentElement.classList.add("light-theme");
+                  } else {
+                    document.body.classList.remove("light-theme");
+                    document.documentElement.classList.remove("light-theme");
+                  }
+
+                  localStorage.setItem("theme", nextTheme);
+                  updateToggleUI(nextTheme);
+                });
+
+                // Animate in
+                setTimeout(() => {
+                  if (modal) modal.style.opacity = "1";
+                  if (modalBody) modalBody.style.transform = "translateX(0)";
+                }, 10);
+
+                // Close handlers
+                const closeModal = () => {
+                  if (modal) modal.style.opacity = "0";
+                  if (modalBody) modalBody.style.transform = "translateX(100%)";
+                  setTimeout(() => {
+                    modal?.remove();
+                  }, 400);
+                };
+
+                document.getElementById("close-profile-modal-btn")?.addEventListener("click", closeModal);
+                modal?.addEventListener("click", (e) => {
+                  if (e.target === modal) closeModal();
+                });
+
+                // Logout handler
+                document.getElementById("profile-logout-btn")?.addEventListener("click", async () => {
+                  try {
+                    await fetch(`${API_BASE_URL}/auth/logout`, {
+                      method: "POST",
+                      credentials: "include"
+                    });
+                  } catch (e) { }
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("user");
+                  window.location.reload();
+                });
+
+                // DiceBear Avatar Picker Modal Function
+                const openDicebearPicker = () => {
+                  const existingPicker = document.getElementById("dicebear-picker-modal");
+                  if (existingPicker) existingPicker.remove();
+
+                  const dicebearStyles = [
+                    { id: "micah", name: "Micah", icon: "", presets: ["Felix", "Luna", "Alex", "Milo", "Zoe", "Sam", "Leo", "Nova"] },
+                    { id: "adventurer", name: "Adventurer", icon: "", presets: ["Knight", "Mage", "Rogue", "Scout", "Hero", "Valkyrie", "Ranger", "Warrior"] },
+                    { id: "bottts", name: "Bottts", icon: "", presets: ["Cyber", "Sparky", "Gizmo", "Byte", "Pixel", "Unit-7", "Matrix", "Echo"] },
+                    { id: "fun-emoji", name: "Fun Emoji", icon: "", presets: ["Joy", "Wink", "Grin", "Star", "Happy", "Cool", "Love", "Cheer"] },
+                    { id: "pixel-art", name: "Pixel Art", icon: "", presets: ["Retro", "Arcade", "Gamer", "Quest", "Glitch", "Bit", "Chief", "Player1"] },
+                    { id: "lorelei", name: "Lorelei", icon: "", presets: ["Aria", "Elena", "Sophia", "Chloe", "Maya", "Ivy", "Lily", "Amara"] }
+                  ];
+
+                  let selectedStyle = "micah";
+                  let selectedSeed = "Felix";
+
+                  try {
+                    const urlObj = new URL(currentAvatarUrl);
+                    const pathParts = urlObj.pathname.split("/");
+                    if (pathParts.length >= 3 && pathParts[1] === "7.x") {
+                      const matchStyle = dicebearStyles.find(s => s.id === pathParts[2]);
+                      if (matchStyle) selectedStyle = matchStyle.id;
+                    }
+                    const seedParam = urlObj.searchParams.get("seed");
+                    if (seedParam) selectedSeed = decodeURIComponent(seedParam);
+                  } catch { }
+
+                  const pickerMarkup = `
                 <div id="dicebear-picker-modal" class="dicebear-picker-overlay">
                   <div class="dicebear-picker-modal">
                     <div class="dicebear-picker-header">
@@ -2228,37 +2228,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 `;
 
-                document.body.insertAdjacentHTML("beforeend", pickerMarkup);
+                  document.body.insertAdjacentHTML("beforeend", pickerMarkup);
 
-                const pickerModal = document.getElementById("dicebear-picker-modal");
-                const liveImg = document.getElementById("dicebear-live-preview-img");
-                const styleBadge = document.getElementById("dicebear-preview-badge");
-                const seedLabel = document.getElementById("dicebear-preview-seed-label");
-                const presetsGrid = document.getElementById("dicebear-presets-grid");
+                  const pickerModal = document.getElementById("dicebear-picker-modal");
+                  const liveImg = document.getElementById("dicebear-live-preview-img");
+                  const styleBadge = document.getElementById("dicebear-preview-badge");
+                  const seedLabel = document.getElementById("dicebear-preview-seed-label");
+                  const presetsGrid = document.getElementById("dicebear-presets-grid");
 
-                // Animate in
-                setTimeout(() => {
-                  if (pickerModal) {
-                    pickerModal.style.opacity = "1";
-                    const m = pickerModal.querySelector(".dicebear-picker-modal");
-                    if (m) m.style.transform = "scale(1) translateY(0)";
-                  }
-                }, 10);
+                  // Animate in
+                  setTimeout(() => {
+                    if (pickerModal) {
+                      pickerModal.style.opacity = "1";
+                      const m = pickerModal.querySelector(".dicebear-picker-modal");
+                      if (m) m.style.transform = "scale(1) translateY(0)";
+                    }
+                  }, 10);
 
-                const updatePreview = () => {
-                  const url = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent`;
-                  if (liveImg) liveImg.src = url;
-                  if (styleBadge) styleBadge.textContent = selectedStyle;
-                  if (seedLabel) seedLabel.textContent = selectedSeed;
-                };
+                  const updatePreview = () => {
+                    const url = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent`;
+                    if (liveImg) liveImg.src = url;
+                    if (styleBadge) styleBadge.textContent = selectedStyle;
+                    if (seedLabel) seedLabel.textContent = selectedSeed;
+                  };
 
-                const renderPresets = () => {
-                  const currentStyleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
-                  if (!presetsGrid) return;
-                  presetsGrid.innerHTML = currentStyleObj.presets.map(preset => {
-                    const presetUrl = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(preset)}&backgroundColor=transparent`;
-                    const isSelected = selectedSeed.toLowerCase() === preset.toLowerCase();
-                    return `
+                  const renderPresets = () => {
+                    const currentStyleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
+                    if (!presetsGrid) return;
+                    presetsGrid.innerHTML = currentStyleObj.presets.map(preset => {
+                      const presetUrl = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(preset)}&backgroundColor=transparent`;
+                      const isSelected = selectedSeed.toLowerCase() === preset.toLowerCase();
+                      return `
                       <div class="dicebear-avatar-card ${isSelected ? 'is-selected' : ''}" data-seed="${escapeHtml(preset)}">
                         <div class="dicebear-avatar-thumb">
                           <img src="${presetUrl}" alt="${escapeHtml(preset)}" loading="lazy" />
@@ -2266,233 +2266,233 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="dicebear-avatar-name">${escapeHtml(preset)}</span>
                       </div>
                     `;
-                  }).join("");
+                    }).join("");
 
-                  presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(card => {
-                    card.addEventListener("click", () => {
-                      selectedSeed = card.dataset.seed;
-                      presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(c => c.classList.remove("is-selected"));
-                      card.classList.add("is-selected");
+                    presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(card => {
+                      card.addEventListener("click", () => {
+                        selectedSeed = card.dataset.seed;
+                        presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(c => c.classList.remove("is-selected"));
+                        card.classList.add("is-selected");
+                        updatePreview();
+                      });
+                    });
+                  };
+
+                  renderPresets();
+
+                  // Style chip click
+                  document.querySelectorAll(".dicebear-style-chip").forEach(chip => {
+                    chip.addEventListener("click", () => {
+                      document.querySelectorAll(".dicebear-style-chip").forEach(c => c.classList.remove("is-active"));
+                      chip.classList.add("is-active");
+                      selectedStyle = chip.dataset.style;
+                      const styleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
+                      selectedSeed = styleObj.presets[0];
+                      renderPresets();
                       updatePreview();
                     });
                   });
-                };
 
-                renderPresets();
-
-                // Style chip click
-                document.querySelectorAll(".dicebear-style-chip").forEach(chip => {
-                  chip.addEventListener("click", () => {
-                    document.querySelectorAll(".dicebear-style-chip").forEach(c => c.classList.remove("is-active"));
-                    chip.classList.add("is-active");
-                    selectedStyle = chip.dataset.style;
-                    const styleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
-                    selectedSeed = styleObj.presets[0];
-                    renderPresets();
+                  // Random pick button
+                  document.getElementById("dicebear-randomize-btn")?.addEventListener("click", () => {
+                    const currentStyleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
+                    const randomPreset = currentStyleObj.presets[Math.floor(Math.random() * currentStyleObj.presets.length)];
+                    selectedSeed = randomPreset;
+                    presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(c => {
+                      c.classList.toggle("is-selected", c.dataset.seed.toLowerCase() === selectedSeed.toLowerCase());
+                    });
                     updatePreview();
                   });
-                });
 
-                // Random pick button
-                document.getElementById("dicebear-randomize-btn")?.addEventListener("click", () => {
-                  const currentStyleObj = dicebearStyles.find(s => s.id === selectedStyle) || dicebearStyles[0];
-                  const randomPreset = currentStyleObj.presets[Math.floor(Math.random() * currentStyleObj.presets.length)];
-                  selectedSeed = randomPreset;
-                  presetsGrid.querySelectorAll(".dicebear-avatar-card").forEach(c => {
-                    c.classList.toggle("is-selected", c.dataset.seed.toLowerCase() === selectedSeed.toLowerCase());
+                  // Close helper
+                  const closePicker = () => {
+                    if (pickerModal) {
+                      pickerModal.style.opacity = "0";
+                      const m = pickerModal.querySelector(".dicebear-picker-modal");
+                      if (m) m.style.transform = "scale(0.92) translateY(20px)";
+                      setTimeout(() => pickerModal.remove(), 250);
+                    }
+                  };
+
+                  document.getElementById("close-dicebear-picker-btn")?.addEventListener("click", closePicker);
+                  document.getElementById("cancel-dicebear-btn")?.addEventListener("click", closePicker);
+                  pickerModal.addEventListener("click", (e) => {
+                    if (e.target === pickerModal) closePicker();
                   });
-                  updatePreview();
-                });
 
-                // Close helper
-                const closePicker = () => {
-                  if (pickerModal) {
-                    pickerModal.style.opacity = "0";
-                    const m = pickerModal.querySelector(".dicebear-picker-modal");
-                    if (m) m.style.transform = "scale(0.92) translateY(20px)";
-                    setTimeout(() => pickerModal.remove(), 250);
-                  }
+                  // Save button
+                  document.getElementById("save-dicebear-btn")?.addEventListener("click", async () => {
+                    const saveBtn = document.getElementById("save-dicebear-btn");
+                    const newAvatarUrl = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent`;
+
+                    if (saveBtn) {
+                      saveBtn.textContent = "Saving...";
+                      saveBtn.disabled = true;
+                    }
+
+                    // Sync with backend (with automatic silent refresh if access token expired)
+                    try {
+                      let currentAuthToken = localStorage.getItem("token") || token;
+                      let res = await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
+                        method: "PUT",
+                        credentials: "include",
+                        headers: {
+                          "Content-Type": "application/json",
+                          "Authorization": `Bearer ${currentAuthToken}`
+                        },
+                        body: JSON.stringify({ avatar: newAvatarUrl })
+                      });
+
+                      // If access token expired, try silent refresh
+                      if (res.status === 401) {
+                        const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+                          method: "POST",
+                          credentials: "include"
+                        });
+                        if (refreshRes.ok) {
+                          const refreshData = await refreshRes.json();
+                          if (refreshData.accessToken) {
+                            currentAuthToken = refreshData.accessToken;
+                            localStorage.setItem("token", currentAuthToken);
+                            res = await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
+                              method: "PUT",
+                              credentials: "include",
+                              headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${currentAuthToken}`
+                              },
+                              body: JSON.stringify({ avatar: newAvatarUrl })
+                            });
+                          }
+                        }
+                      }
+
+                      if (res && res.ok) {
+                        const resData = await res.json().catch(() => ({}));
+                        const savedAvatar = (resData.user && resData.user.avatar) ? resData.user.avatar : newAvatarUrl;
+
+                        currentAvatarUrl = savedAvatar;
+                        profileData.avatar = savedAvatar;
+
+                        // Update UI elements immediately
+                        const modalAvatarImg = document.getElementById("profile-modal-avatar-img");
+                        if (modalAvatarImg) modalAvatarImg.src = savedAvatar;
+
+                        const navAvatarImg = document.querySelector("#profile-avatar-btn img");
+                        if (navAvatarImg) navAvatarImg.src = savedAvatar;
+
+                        // Save locally
+                        localStorage.setItem(`user_avatar_${profileData.email}`, savedAvatar);
+                        try {
+                          const cached = JSON.parse(localStorage.getItem("user") || "{}");
+                          cached.avatar = savedAvatar;
+                          localStorage.setItem("user", JSON.stringify(cached));
+                        } catch { }
+
+                        closePicker();
+                      } else {
+                        const resData = await res?.json().catch(() => ({}));
+                        console.warn("Could not sync avatar with backend, status:", res?.status);
+                        alert("Could not update avatar: " + (resData?.message || `Error ${res?.status || "Unknown"}`));
+                        if (saveBtn) {
+                          saveBtn.textContent = "Set Avatar";
+                          saveBtn.disabled = false;
+                        }
+                      }
+                    } catch (e) {
+                      console.warn("Could not sync avatar with backend:", e);
+                      alert("Could not connect to server to update avatar.");
+                      if (saveBtn) {
+                        saveBtn.textContent = "Set Avatar";
+                        saveBtn.disabled = false;
+                      }
+                    }
+                  });
                 };
 
-                document.getElementById("close-dicebear-picker-btn")?.addEventListener("click", closePicker);
-                document.getElementById("cancel-dicebear-btn")?.addEventListener("click", closePicker);
-                pickerModal.addEventListener("click", (e) => {
-                  if (e.target === pickerModal) closePicker();
+                // Hook up avatar edit button and avatar frame click
+                document.getElementById("edit-profile-avatar-btn")?.addEventListener("click", (e) => {
+                  e.stopPropagation();
+                  openDicebearPicker();
+                });
+                document.getElementById("profile-avatar-frame")?.addEventListener("click", () => {
+                  openDicebearPicker();
                 });
 
-                // Save button
-                document.getElementById("save-dicebear-btn")?.addEventListener("click", async () => {
-                  const saveBtn = document.getElementById("save-dicebear-btn");
-                  const newAvatarUrl = `https://api.dicebear.com/7.x/${selectedStyle}/svg?seed=${encodeURIComponent(selectedSeed)}&backgroundColor=transparent`;
+                // Name edit handlers
+                const nameDisplayContainer = document.getElementById("profile-name-display-container");
+                const nameEditContainer = document.getElementById("profile-name-edit-container");
+                const nameDisplay = document.getElementById("profile-name-display");
+                const nameInput = document.getElementById("profile-name-input");
+                const saveNameBtn = document.getElementById("save-profile-name-btn");
 
-                  if (saveBtn) {
-                    saveBtn.textContent = "Saving...";
-                    saveBtn.disabled = true;
-                  }
+                document.getElementById("edit-profile-name-btn")?.addEventListener("click", () => {
+                  nameDisplayContainer.style.display = "none";
+                  nameEditContainer.style.display = "flex";
+                  nameInput.focus();
+                });
 
-                  // Sync with backend (with automatic silent refresh if access token expired)
+                document.getElementById("cancel-profile-name-btn")?.addEventListener("click", () => {
+                  nameEditContainer.style.display = "none";
+                  nameDisplayContainer.style.display = "flex";
+                  nameInput.value = nameDisplay.textContent.trim();
+                });
+
+                saveNameBtn?.addEventListener("click", async () => {
+                  const newName = nameInput.value.trim();
+                  if (!newName) return;
+
+                  saveNameBtn.textContent = "...";
+                  saveNameBtn.disabled = true;
+
                   try {
-                    let currentAuthToken = localStorage.getItem("token") || token;
-                    let res = await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
+                    const currentAuthToken = localStorage.getItem("token") || token;
+                    const res = await fetch(`${API_BASE_URL}/auth/profile/name`, {
                       method: "PUT",
                       credentials: "include",
                       headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${currentAuthToken}`
                       },
-                      body: JSON.stringify({ avatar: newAvatarUrl })
+                      body: JSON.stringify({ name: newName })
                     });
-
-                    // If access token expired, try silent refresh
-                    if (res.status === 401) {
-                      const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
-                        method: "POST",
-                        credentials: "include"
-                      });
-                      if (refreshRes.ok) {
-                        const refreshData = await refreshRes.json();
-                        if (refreshData.accessToken) {
-                          currentAuthToken = refreshData.accessToken;
-                          localStorage.setItem("token", currentAuthToken);
-                          res = await fetch(`${API_BASE_URL}/auth/profile/avatar`, {
-                            method: "PUT",
-                            credentials: "include",
-                            headers: {
-                              "Content-Type": "application/json",
-                              "Authorization": `Bearer ${currentAuthToken}`
-                            },
-                            body: JSON.stringify({ avatar: newAvatarUrl })
-                          });
-                        }
-                      }
-                    }
-
-                    if (res && res.ok) {
-                      const resData = await res.json().catch(() => ({}));
-                      const savedAvatar = (resData.user && resData.user.avatar) ? resData.user.avatar : newAvatarUrl;
-
-                      currentAvatarUrl = savedAvatar;
-                      profileData.avatar = savedAvatar;
-
-                      // Update UI elements immediately
-                      const modalAvatarImg = document.getElementById("profile-modal-avatar-img");
-                      if (modalAvatarImg) modalAvatarImg.src = savedAvatar;
-
-                      const navAvatarImg = document.querySelector("#profile-avatar-btn img");
-                      if (navAvatarImg) navAvatarImg.src = savedAvatar;
-
-                      // Save locally
-                      localStorage.setItem(`user_avatar_${profileData.email}`, savedAvatar);
-                      try {
-                        const cached = JSON.parse(localStorage.getItem("user") || "{}");
-                        cached.avatar = savedAvatar;
-                        localStorage.setItem("user", JSON.stringify(cached));
-                      } catch { }
-
-                      closePicker();
+                    const data = await res.json();
+                    if (data.success) {
+                      nameDisplay.textContent = newName;
+                      const cachedUser = sanitizeUser(JSON.parse(localStorage.getItem('user') || "{}")) || {};
+                      cachedUser.name = newName;
+                      localStorage.setItem('user', JSON.stringify(cachedUser));
                     } else {
-                      const resData = await res?.json().catch(() => ({}));
-                      console.warn("Could not sync avatar with backend, status:", res?.status);
-                      alert("Could not update avatar: " + (resData?.message || `Error ${res?.status || "Unknown"}`));
-                      if (saveBtn) {
-                        saveBtn.textContent = "Set Avatar";
-                        saveBtn.disabled = false;
-                      }
+                      alert("Failed to update name: " + (data.message || "Unknown error"));
                     }
                   } catch (e) {
-                    console.warn("Could not sync avatar with backend:", e);
-                    alert("Could not connect to server to update avatar.");
-                    if (saveBtn) {
-                      saveBtn.textContent = "Set Avatar";
-                      saveBtn.disabled = false;
-                    }
+                    alert("Error updating name.");
                   }
+
+                  saveNameBtn.textContent = "Save";
+                  saveNameBtn.disabled = false;
+                  nameEditContainer.style.display = "none";
+                  nameDisplayContainer.style.display = "flex";
                 });
-              };
 
-              // Hook up avatar edit button and avatar frame click
-              document.getElementById("edit-profile-avatar-btn")?.addEventListener("click", (e) => {
-                e.stopPropagation();
-                openDicebearPicker();
-              });
-              document.getElementById("profile-avatar-frame")?.addEventListener("click", () => {
-                openDicebearPicker();
-              });
-
-              // Name edit handlers
-              const nameDisplayContainer = document.getElementById("profile-name-display-container");
-              const nameEditContainer = document.getElementById("profile-name-edit-container");
-              const nameDisplay = document.getElementById("profile-name-display");
-              const nameInput = document.getElementById("profile-name-input");
-              const saveNameBtn = document.getElementById("save-profile-name-btn");
-
-              document.getElementById("edit-profile-name-btn")?.addEventListener("click", () => {
-                nameDisplayContainer.style.display = "none";
-                nameEditContainer.style.display = "flex";
-                nameInput.focus();
-              });
-
-              document.getElementById("cancel-profile-name-btn")?.addEventListener("click", () => {
-                nameEditContainer.style.display = "none";
-                nameDisplayContainer.style.display = "flex";
-                nameInput.value = nameDisplay.textContent.trim();
-              });
-
-              saveNameBtn?.addEventListener("click", async () => {
-                const newName = nameInput.value.trim();
-                if (!newName) return;
-
-                saveNameBtn.textContent = "...";
-                saveNameBtn.disabled = true;
-
-                try {
-                  const currentAuthToken = localStorage.getItem("token") || token;
-                  const res = await fetch(`${API_BASE_URL}/auth/profile/name`, {
-                    method: "PUT",
-                    credentials: "include",
-                    headers: {
-                      "Content-Type": "application/json",
-                      "Authorization": `Bearer ${currentAuthToken}`
-                    },
-                    body: JSON.stringify({ name: newName })
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                    nameDisplay.textContent = newName;
-                    const cachedUser = sanitizeUser(JSON.parse(localStorage.getItem('user') || "{}")) || {};
-                    cachedUser.name = newName;
-                    localStorage.setItem('user', JSON.stringify(cachedUser));
-                  } else {
-                    alert("Failed to update name: " + (data.message || "Unknown error"));
+                // Fetch registrations from new endpoint!
+                fetch(`${API_BASE_URL}/events/my-registrations`, {
+                  headers: {
+                    "Authorization": `Bearer ${token}`
                   }
-                } catch (e) {
-                  alert("Error updating name.");
-                }
+                })
+                  .then(res => res.json())
+                  .then(data => {
+                    const loader = document.getElementById("my-events-loader");
+                    const container = document.getElementById("my-events-list");
+                    const countBadge = document.getElementById("profile-event-badge");
+                    if (loader) loader.style.display = "none";
+                    if (container) container.style.display = "flex";
 
-                saveNameBtn.textContent = "Save";
-                saveNameBtn.disabled = false;
-                nameEditContainer.style.display = "none";
-                nameDisplayContainer.style.display = "flex";
-              });
-
-              // Fetch registrations from new endpoint!
-              fetch(`${API_BASE_URL}/events/my-registrations`, {
-                headers: {
-                  "Authorization": `Bearer ${token}`
-                }
-              })
-                .then(res => res.json())
-                .then(data => {
-                  const loader = document.getElementById("my-events-loader");
-                  const container = document.getElementById("my-events-list");
-                  const countBadge = document.getElementById("profile-event-badge");
-                  if (loader) loader.style.display = "none";
-                  if (container) container.style.display = "flex";
-
-                  if (!data.success || !data.registrations || data.registrations.length === 0) {
-                    if (countBadge) countBadge.textContent = "0";
-                    if (container) {
-                      container.innerHTML = `
+                    if (!data.success || !data.registrations || data.registrations.length === 0) {
+                      if (countBadge) countBadge.textContent = "0";
+                      if (container) {
+                        container.innerHTML = `
                     <div class="profile-empty-state">
                       <p>You haven't registered for any events yet.</p>
                       <a href="events.html" class="profile-browse-btn">
@@ -2500,14 +2500,14 @@ document.addEventListener("DOMContentLoaded", () => {
                       </a>
                     </div>
                   `;
+                      }
+                      return;
                     }
-                    return;
-                  }
 
-                  if (countBadge) countBadge.textContent = data.registrations.length;
+                    if (countBadge) countBadge.textContent = data.registrations.length;
 
-                  if (container) {
-                    container.innerHTML = data.registrations.map(reg => `
+                    if (container) {
+                      container.innerHTML = data.registrations.map(reg => `
                   <div class="profile-event-card">
                     <div class="profile-event-top">
                       <h5 class="profile-event-title">${reg.eventTitle}</h5>
@@ -2527,18 +2527,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                   </div>
                 `).join("");
-                  }
-                })
-                .catch(err => {
-                  console.error(err);
-                  const loader = document.getElementById("my-events-loader");
-                  if (loader) {
-                    loader.innerHTML = `<span style="color:var(--rose-300);font-family:var(--font-body,'Inter',sans-serif);">⚠️ Error loading your events. Please try again.</span>`;
-                  }
-                });
-            });
+                    }
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    const loader = document.getElementById("my-events-loader");
+                    if (loader) {
+                      loader.innerHTML = `<span style="color:var(--rose-300);font-family:var(--font-body,'Inter',sans-serif);">⚠️ Error loading your events. Please try again.</span>`;
+                    }
+                  });
+              });
+            }
           }
-        }
 
           const isAdmin = !!(profileData && (profileData.isAdmin || (typeof profileData.role === 'string' && profileData.role.toLowerCase() === 'admin') || (Array.isArray(profileData.roles) && profileData.roles.map(r => String(r).toLowerCase()).includes('admin'))));
 
